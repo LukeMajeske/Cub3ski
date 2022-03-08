@@ -10,8 +10,7 @@ export default function Numblock(props){
     const {selectNumblock} = useNumbleUpdateContext();
     const {index, num,x,y,updateGrid} = props;
     const [selected, toggleSelected] = useState(false);
-    const [direction, setDirection] = useState([0,0]);//[x,y] => [1,0] move block right 1, [0,1] move block down 1
-    const [animation, setAnimation] = useState(props.animation);
+
 
     const {pop} = useSpring({
         from:{x:0},
@@ -52,9 +51,7 @@ export default function Numblock(props){
     let handleSelect = () => {
         toggleSelected(!selected);
     }
-    useEffect(()=>{
 
-    },[animation]);
     return(
         <>
             {activeNumblock.index === props.index 
@@ -63,7 +60,7 @@ export default function Numblock(props){
                 onClick={() => {handleSelect(); numblockLogic(props);}}>
                     <p className={styles.noselect}>{num}</p>
                 </animated.div>
-                :<animated.div className={styles.card} style={{...animation}}  onClick={() => {handleSelect(); numblockLogic(props);}}>
+                :<animated.div className={styles.card}  onClick={() => {handleSelect(); numblockLogic(props);}}>
                     <p className={styles.noselect}>{num}</p>
                 </animated.div>
             }
