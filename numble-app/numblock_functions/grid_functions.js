@@ -95,7 +95,6 @@ let checkForMatches = (grid) =>{
                     if((xpos < 0 || xpos > 4)||(ypos < 0 || ypos > 4)){
                         end = true;
                         if(cur_match.length >= 3){
-                            //cur_match.sort((a,b)=>{return a-b});
                             if(cleanMatches(match_indexes,cur_match) != true){
                                 match_indexes.push(cur_match);
                             }
@@ -103,7 +102,6 @@ let checkForMatches = (grid) =>{
                     }
                 }
                 else if(cur_match.length >= 3){
-                    //cur_match.sort((a,b)=>{return a-b});
                     if(cleanMatches(match_indexes,cur_match) != true){
                         match_indexes.push(cur_match);
                     }
@@ -123,20 +121,11 @@ let randomNumber = () =>{
     return Math.floor(Math.random() * 10) + 1;
 }
 
-let newNumblocks = (grid) => {
-    //fill in empty spaces with new numbers
-    console.log("New Numblocks", grid);
-    for(var i = 25; i >= 0; i--){
-        if(grid[i] == ""){
-            grid[i] = randomNumber();
-        }
-    }
-    return grid;
-}
 
 
 
 
 
 
-export {scoreMatches,checkForMatches, removeMatches, newNumblocks};
+
+export {scoreMatches,checkForMatches, removeMatches,randomNumber};

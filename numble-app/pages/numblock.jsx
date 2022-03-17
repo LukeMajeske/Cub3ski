@@ -1,14 +1,14 @@
 import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext';
 import styles from '../styles/Home.module.css';
 import { useState, useEffect } from "react";
-import {useSpring, animated, config} from "react-spring";
+import {Spring, useSpring, animated, config} from "react-spring";
 
 
 
 export default function Numblock(props){
     const {activeNumblock} = useNumbleContext();
     const {selectNumblock} = useNumbleUpdateContext();
-    const {index, num,x,y,updateGrid} = props;
+    const {index,num, x,y,updateGrid,animation} = props;
     const [selected, toggleSelected] = useState(false);
 
 
@@ -52,6 +52,9 @@ export default function Numblock(props){
         toggleSelected(!selected);
     }
 
+    useEffect(()=>{
+        console.log("Render!");
+    },[animation])
     return(
         <>
             {activeNumblock.index === props.index 
@@ -60,9 +63,10 @@ export default function Numblock(props){
                 onClick={() => {handleSelect(); numblockLogic(props);}}>
                     <p className={styles.noselect}>{num}</p>
                 </animated.div>
-                :<animated.div className={styles.card}  onClick={() => {handleSelect(); numblockLogic(props);}}>
-                    <p className={styles.noselect}>{num}</p>
-                </animated.div>
+                : <animated.div className={styles.card} style={animation}  onClick={() => {handleSelect(); numblockLogic(props);}}>
+                        <p className={styles.noselect}>{num}</p>
+                    </animated.div>
+
             }
         </>
     )
