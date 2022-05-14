@@ -1,4 +1,16 @@
 
+let getEmptyIndexes = (grid) => {
+    let empty_indexes = [];
+
+    grid.forEach((number,ind) => {
+        if(number === ""){
+            empty_indexes.push(ind);
+        }
+    })
+    return empty_indexes;
+}
+
+
 let cleanMatches = (match_indexes, cur_matches) =>{
     //If the current match is already in match_indexes, then do not add again to match indexes
     let exists = false;
@@ -60,39 +72,48 @@ let scoreMatches = (grid,match_indexes) => {
     return addToScore;
 }
 
-let removeMatches = (grid, match_indexes) => {
-    match_indexes.forEach(match => {
-        match.forEach(index => {
-            grid[index] = "";
-        })
-    })
-    return grid;
-}
+
 
 //Check for matches of 3 in a row or more
 let checkForMatches = (grid) =>{
     let match_indexes =[];
+    //1= right block,5 = below block, -1= left block, -5 = above block 
+    let directions = [1,5,-1,-5];
     for(var i = 0; i < grid.length; i++){
         let match_number = grid[i];
         if(match_number === ""){
             continue;
         }
-        //1= right block,5 = below block, -1= left block, -5 = above block 
-        let directions = [1,5,-1,-5];
+        console.log("Current Search Index: ", i);
         directions.forEach(direction => {
+            console.log("Direction: ",direction);
             let searchIndex = i;
+            let ydir = Math.abs(direction)===5 ? Math.sign(direction) : 0;
+            let xdir = Math.abs(direction)===1 ? Math.sign(direction) : 0;
             let cur_match = [i];
             //if search index reaches the end of a row or column, check for matches and end while loop
             let end = false;
+            
             while(!end){
+                //Get current x and y position of searchIndex.
+                let xpos = (searchIndex) % 5;
+                let ypos = Math.floor((searchIndex)/5);
                 //If match is found, continue in that direction
+                if((xpos+xdir < 0 || xpos+xdir > 4)||(ypos+ydir < 0 || ypos+ydir > 4)){
+                    console.log("OUT OF BOUNDS");
+                    end = true;
+                }
                 if(match_number === grid[searchIndex+direction]){
                     searchIndex += direction;
                     cur_match.push(searchIndex);
+                    //Get x and y position of next searchIndex.
+                    xpos = (searchIndex) % 5;
+                    ypos = Math.floor((searchIndex)/5);
                     //If next searchIndex is out of bounds, then end while loop
-                    let xpos = (searchIndex) % 5;
-                    let ypos = Math.floor((searchIndex)/5);
-                    if((xpos < 0 || xpos > 4)||(ypos < 0 || ypos > 4)){
+                    console.log("X",xpos,"Y",ypos,"Match Number",match_number);
+                    console.log('XPOS+XDIR: ',xpos+xdir,'YPOS-YDIR: ',ypos+ydir);
+                    if((xpos+xdir < 0 || xpos+xdir > 4)||(ypos+ydir < 0 || ypos+ydir > 4)){
+                        console.log("OUT OF BOUNDS");
                         end = true;
                         if(cur_match.length >= 3){
                             if(cleanMatches(match_indexes,cur_match) != true){
@@ -128,4 +149,4 @@ let randomNumber = () =>{
 
 
 
-export {scoreMatches,checkForMatches, removeMatches,randomNumber};
+export {scoreMatches,checkForMatches,randomNumber, getEmptyIndexes};

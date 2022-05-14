@@ -9,7 +9,7 @@ import {useSpring, animated, config, useSprings, useTransition} from "react-spri
 export default function Home() {
   let gen_grid = () => {
     console.log("Generating grid...");
-    let new_grid = [1,2,2,3,2,1,2,3,4,2,3,1,3,1,1,3,2,1,3,3,9,8,3,6,5];
+    let new_grid = [1,2,2,3,2,1,2,3,4,3,3,1,4,1,1,3,2,1,3,3,9,8,3,6,5];
 
     return new_grid;
     /*for(var i = 1; i < 26; i++){

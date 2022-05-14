@@ -3,8 +3,8 @@ import Numblock from './numblock'
 import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext'
 import Score from './score'
 import { useEffect, useRef, useState } from 'react';
-import {scoreMatches,checkForMatches,removeMatches,randomNumber} from '../numblock_functions/grid_functions'
-import {useSpringRef,useSpring, useSprings, config, useChain} from "react-spring";
+import {scoreMatches,checkForMatches, randomNumber, getEmptyIndexes} from '../numblock_functions/grid_functions'
+import {useSpringRef,useSpring, useSprings, config, useChain, to} from "react-spring";
 
 
 
@@ -12,34 +12,59 @@ export default function Grid(props){
     const [numblock_grid,setNumblockGrid] = useState(props.numblock_grid);
     const [numblocks, setNumblocks] = useState([]);
     const initial_render = useRef(0);
+    const empty_indexes = useRef([]);
+    const cur_grid = useRef(props.numblock_grid);
     const key_count = useRef(1);
     //const [score, setScore] = useState(0);
     const matchSpringRef = useSpringRef();
 
     const [springs,api] = useSprings(25, index => ({
-        from:{y:-80, x:0, opacity:0},
-        to:{y:0, x:0, opacity:1},
+        from:{y:-80, x:0, opacity:0,scale:1},
+        to:{y:0, x:0, opacity:1, scale:1},
         delay:200, 
         config: config.wobbly
     }));
 
-    const match_spring = useSpring({
-        ref:matchSpringRef,
-        from:{y:0, x:0, opacity:1},
-        to:{y:0, x:0, opacity:0},
-        delay:200, 
-        config: config.wobbly
-    })
-
-    useChain([matchSpringRef,api]);
-
+    let handleMatchCheck = () =>{
+        if(cur_grid.current === undefined){
+            return;
+        }
+        empty_indexes.current = checkForMatches(cur_grid.current);
+        console.log("empty indexs: ", empty_indexes.current);
+        if(empty_indexes.current.length > 0){
+            //score = scoreMatches(new_grid, empty_indexes);
+            //console.log("Total Scored", score);
+            //setScore(prevScore => prevScore += score);
+            removeMatches(empty_indexes.current);
+            
+        }
+        else{
+            console.log("No matches found");
+            return;
+            //newNumblocks(cur_grid.current);
+            //empty_indexes = checkForMatches(new_grid);
+        }
+    }
+    let handleDropPhase = () => {
+        console.log("Drop Phase");
+        //newNumblocks(cur_grid.current); 
+    }
+    let handleGridUpdate = () => {
+        if(cur_grid.current !== undefined){
+            console.log("updating after drop:",cur_grid.current);
+            setNumblockGrid(prevGrid => prevGrid = cur_grid.current);
+        }
+    }
     let setDropNumblock = (numblock_index) => {
         api.start(index => {
             if (index === numblock_index){
                 return({
-                    from:{y:-80, x:0, opacity:1},
+                    from:{y:-80, x:0, opacity:1,scale:1},
                     to:{y:0, x:0, opacity:1},
-                    config: config.molasses
+                    duration:1000,
+                    onStart: ()=>{handleDropPhase()},
+                    onRest: ()=>{handleMatchCheck()},
+                    config: config.stiff
                 });
             }
         })
@@ -48,28 +73,43 @@ export default function Grid(props){
     let setMatchNumblock = (numblock_index) => {
         api.start(index => {
             if (index === numblock_index){
+                console.log("Starting anim for index: ", index);
                 return({
-                    from:{y:0, x:0, opacity:1},
-                    to:{y:0, x:0, opacity:0},
-                    config: config.molasses
+                    from:{opacity:1,scale:1},
+                    to:{opacity:0,scale:0},
+                    onRest:()=>{dropNumblocks(cur_grid.current);},
+                    delay:500,
+                    duration:1000,
+                    config: config.wobbly
+                    
                 });
             }
         })
     }
 
-    let newNumblocks = (grid) => {
+    let removeMatches = (match_indexes) => {
+        match_indexes.forEach(match => {
+            console.log("match",match);
+            match.forEach(index => {
+                setMatchNumblock(index);
+                cur_grid.current[index] = "";
+            })
+        })
+    }
+
+    let newNumblocks = () => {
         //fill in empty spaces with new numbers
-        console.log("New Numblocks", grid);
+        console.log("New Numblocks", cur_grid.current);
         for(var i = 25; i >= 0; i--){
-            if(grid[i] == ""){
-                grid[i] = randomNumber();
+            if(cur_grid.current[i] == ""){
+                cur_grid.current[i] = randomNumber();
                 setDropNumblock(i);
             }
         }
-        return grid;
+        updateNumblocks();
     }
 
-    let createNumblock = (index, animation,num=numblock_grid[index]) =>{
+    let createNumblock = (index, animation, num=cur_grid.current[index]) =>{
         let xpos = (index) % 5;
         let ypos = Math.floor((index)/5);
         let numblock = <Numblock key={key_count.current}
@@ -77,17 +117,17 @@ export default function Grid(props){
                             x={xpos} y={ypos} 
                             index={index}
                             updateGrid={updateGrid}
-                            animation = {animation}/>;
+                            animation = {animation}
+                            />;
         key_count.current += 1;
         return(numblock)
     }
 
     let initNumblocks = () =>{
-        console.log("Initial Numblocks...");
         let new_numblocks = [];
 
         for(var i = 1; i < 26; i++){
-            console.log(springs[i-1]);
+            //console.log(springs[i-1]);
             new_numblocks.push(createNumblock(i-1,springs[i-1]));
         }
 
@@ -112,8 +152,10 @@ export default function Grid(props){
 
     //If numblock has empty space beneath it, let it drop to the bottom.
     //give index or indexes of empty spaces
-    let dropNumblocks = (emptyIndexes, grid) => {
+    let dropNumblocks = (grid) => {
         console.log("Dropping Block", grid);
+        console.log("EMPTY INDEXS", getEmptyIndexes(grid));
+        let emptyIndexes = getEmptyIndexes(grid);
         let drop_grid = [...grid];
         emptyIndexes.forEach(startIndex => {
             let searchIndex = startIndex - 5;
@@ -122,14 +164,16 @@ export default function Grid(props){
                 if(drop_grid[searchIndex] !== ""){
                     drop_grid[startIndex] = drop_grid[searchIndex];
                     drop_grid[searchIndex] = "";
-                    setDropNumblock(startIndex);
+                    setDropNumblock(startIndex,drop_grid);
                     startIndex -= 5;
                     console.log("Drop!");
                 }
                 searchIndex -= 5;
             }
         })
-        return drop_grid;
+        cur_grid.current = drop_grid;
+        newNumblocks(cur_grid.current);
+        updateNumblocks();
     }
 
     let getNumblocks = () =>{
@@ -140,40 +184,15 @@ export default function Grid(props){
     let updateGrid = (numblocksUpdate) => {
         //Adding two numblocks together
         console.log("Updating Grid");
-        let new_grid = [...numblock_grid];
         let activeIndex = [numblocksUpdate[1].index];
         
         numblocksUpdate.forEach(numblock => {
-            new_grid[numblock.index] = numblock.num;
+            cur_grid.current[numblock.index] = numblock.num;
         });
     
         //repeat until there are no matches or empty spaces
-        let match = true;
-        let empty_indexes = activeIndex;
-        while(match){
-            new_grid = dropNumblocks(empty_indexes.flat(),new_grid);
-            //Indexes of matched numbers will be given here, these will turn into empty blocks
-            empty_indexes = checkForMatches(new_grid);
-            if(empty_indexes.length > 0){
-                //score = scoreMatches(new_grid, empty_indexes);
-                //console.log("Total Scored", score);
-                //setScore(prevScore => prevScore += score);
-                console.log(empty_indexes);
-                setMatchNumblock(empty_indexes[0]);
-                new_grid = removeMatches(new_grid,empty_indexes);
-                console.log("after new blocks", new_grid);
-            }
-            else{
-                console.log("No matches found");
-                new_grid = newNumblocks(new_grid);
-                empty_indexes = checkForMatches(new_grid);
-                if(empty_indexes.length == 0){
-                    match = false;
-                }
-            }
-        }
-    
-        setNumblockGrid(prevGrid => prevGrid = new_grid);
+        //empty_indexes.current = activeIndex;
+        dropNumblocks(cur_grid.current);
     }
 
 
@@ -187,8 +206,7 @@ export default function Grid(props){
         else{
             updateNumblocks();
         }
-        console.log("Grid", numblock_grid);
-    },[numblock_grid])
+    },[])
 
     return(
         <>

@@ -1,7 +1,7 @@
 import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext';
 import styles from '../styles/Home.module.css';
 import { useState, useEffect } from "react";
-import {Spring, useSpring, animated, config} from "react-spring";
+import { useSpring, animated, config} from "react-spring";
 
 
 
@@ -63,10 +63,10 @@ export default function Numblock(props){
                 onClick={() => {handleSelect(); numblockLogic(props);}}>
                     <p className={styles.noselect}>{num}</p>
                 </animated.div>
-                : <animated.div className={styles.card} style={animation}  onClick={() => {handleSelect(); numblockLogic(props);}}>
+                :
+                <animated.div className={styles.card} style={animation}  onClick={() => {handleSelect(); numblockLogic(props);}}>
                         <p className={styles.noselect}>{num}</p>
-                    </animated.div>
-
+                </animated.div>
             }
         </>
     )
