@@ -2,6 +2,7 @@ import styles from '../styles/Home.module.css'
 import Numblock from './numblock'
 import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext'
 import Score from './score'
+import Instructions from './instructions'
 import { useEffect, useRef, useState } from 'react';
 import {scoreMatches,checkForMatches, randomNumber, getEmptyIndexes} from '../numblock_functions/grid_functions'
 import {useSpringRef,useSpring, useSprings, config, useChain, to} from "react-spring";
@@ -15,7 +16,7 @@ export default function Grid(props){
     const empty_indexes = useRef([]);
     const cur_grid = useRef(props.numblock_grid);
     const key_count = useRef(1);
-    //const [score, setScore] = useState(0);
+    const [score, setScore] = useState(0);
     const matchSpringRef = useSpringRef();
 
     const [springs,api] = useSprings(25, index => ({
@@ -32,9 +33,10 @@ export default function Grid(props){
         empty_indexes.current = checkForMatches(cur_grid.current);
         console.log("empty indexs: ", empty_indexes.current);
         if(empty_indexes.current.length > 0){
-            //score = scoreMatches(new_grid, empty_indexes);
-            //console.log("Total Scored", score);
-            //setScore(prevScore => prevScore += score);
+            //Before removing the matches, empty_indexes.current represents the current matches on the grid.
+            score = scoreMatches(cur_grid.current, empty_indexes.current);
+            console.log("Total Scored", score);
+            setScore(prevScore => prevScore += score);
             removeMatches(empty_indexes.current);
             
         }
@@ -78,7 +80,7 @@ export default function Grid(props){
                     from:{opacity:1,scale:1},
                     to:{opacity:0,scale:0},
                     onRest:()=>{dropNumblocks(cur_grid.current);},
-                    delay:500,
+                    delay:300,
                     duration:1000,
                     config: config.wobbly
                     
@@ -210,9 +212,15 @@ export default function Grid(props){
 
     return(
         <>
-        
-        <div className={styles.grid}>
-            {getNumblocks()}
+        <Score score={score}/>
+        <div className={styles.instructGrid}>
+            <Instructions/>
+            <div className={styles.grid}>
+                {getNumblocks()}
+            </div>
+            <div style={{width:"33%",flexGrow:"1"}}>
+
+            </div>
         </div>
         </>
     )

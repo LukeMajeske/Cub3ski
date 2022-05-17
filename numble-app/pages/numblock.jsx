@@ -7,7 +7,7 @@ import { useSpring, animated, config} from "react-spring";
 
 export default function Numblock(props){
     const {activeNumblock} = useNumbleContext();
-    const {selectNumblock} = useNumbleUpdateContext();
+    const {selectNumblock,deSelectNumblock} = useNumbleUpdateContext();
     const {index,num, x,y,updateGrid,animation} = props;
     const [selected, toggleSelected] = useState(false);
 
@@ -23,8 +23,10 @@ export default function Numblock(props){
             selectNumblock({index:-1,num:0,x:-10,y:-10});
             return;
         }
-        else if((num + activeNumblock.num) > 10 || num === "" || activeNumblock.num == ""){
-          //do nothing, or warn user they can't go over 10 
+        else if((num + activeNumblock.num) > 10 || num === ""){
+            //deselect numblocks and shake numblock to show it can't be added to make a number over 10
+            deSelectNumblock();
+            return;
         }
         else if((Math.abs(x - activeNumblock.x) ===  1)&&((y - activeNumblock.y)===0)){
             num += activeNumblock.num;
@@ -59,7 +61,7 @@ export default function Numblock(props){
         <>
             {activeNumblock.index === props.index 
                 ?<animated.div className={styles.selected} style={{scale:pop.to({range:[0,0.25,0.5,0.75,1],
-                output:[1,0.9,1.2,0.95,1]})}} 
+                    output:[1,0.9,1.2,0.95,1]})}}
                 onClick={() => {handleSelect(); numblockLogic(props);}}>
                     <p className={styles.noselect}>{num}</p>
                 </animated.div>

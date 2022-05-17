@@ -15,6 +15,10 @@ export function NumbleProvider({ children }) {
         setActiveNumblock(prevNumblock => prevNumblock = numblock);
     }
 
+    let deSelectNumblock = () => {
+        setActiveNumblock(prevNumblock => prevNumblock = {index:-1,num:0,x:-10,y:-10});
+    }
+
     /*let deleteNumblock = (index) => {
         /*setNumblockGrid(prevGrid => {
             prevGrid = [...numblock_grid];
@@ -33,7 +37,7 @@ export function NumbleProvider({ children }) {
   
     return (
       <NumbleContext.Provider value={{activeNumblock, numblock_grid}}>
-          <NumbleUpdateContext.Provider value={{selectNumblock, updateNumblockGrid}}>
+          <NumbleUpdateContext.Provider value={{selectNumblock, deSelectNumblock, updateNumblockGrid}}>
             {children}
           </NumbleUpdateContext.Provider>
       </NumbleContext.Provider>
