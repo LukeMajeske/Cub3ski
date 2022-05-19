@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-cub3ski-dev-195037-authRole",
+      "UnauthRoleArn": "arn:aws:iam::619609431383:role/amplify-cub3ski-dev-195037-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::619609431383:role/amplify-cub3ski-dev-195037-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-cub3ski-dev-195037-deployment",
+      "UnauthRoleName": "amplify-cub3ski-dev-195037-unauthRole",
+      "StackName": "amplify-cub3ski-dev-195037",
+      "StackId": "arn:aws:cloudformation:us-east-2:619609431383:stack/amplify-cub3ski-dev-195037/8a8efe70-d644-11ec-b2c6-0a271cf07fca",
+      "AmplifyAppId": "dfzoawvfysbox"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "dfzoawvfysbox",
+          "type": "manual"
+        }
+      }
+    }
+  }
+}

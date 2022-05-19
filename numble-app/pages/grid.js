@@ -2,6 +2,7 @@ import styles from '../styles/Home.module.css'
 import Numblock from './numblock'
 import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext'
 import Score from './score'
+import Modal from './modal'
 import Instructions from './instructions'
 import { useEffect, useRef, useState } from 'react';
 import {scoreMatches,checkForMatches, randomNumber, getEmptyIndexes} from '../numblock_functions/grid_functions'
@@ -214,13 +215,16 @@ export default function Grid(props){
         <>
         <Score score={score}/>
         <div className={styles.instructGrid}>
-            <Instructions/>
-            <div className={styles.grid}>
-                {getNumblocks()}
-            </div>
-            <div style={{width:"33%",flexGrow:"1"}}>
+            <div className={styles.sidebar}>
+                        <Instructions/>
 
             </div>
+            <div className={styles.gridCont}>
+                <div className={styles.grid}>
+                    {getNumblocks()}
+                </div> 
+            </div>
+
         </div>
         </>
     )

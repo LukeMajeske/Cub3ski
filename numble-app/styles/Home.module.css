@@ -65,36 +65,123 @@
     Bitstream Vera Sans Mono, Courier New, monospace;
 }
 
+.instructGrid{
+  display: flex;
+  width:100%;
+  justify-content: center;
+}
+.gridCont{
+  display: flex;
+  flex:1 0 400px;
+}
+.sidebar{
+  display:flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  flex:1;
+}
+.sidebarButton{
+  cursor: pointer;
+  margin-right:15px;
+}
+.spacer{
+  flex:1 1 0px;
+}
+
 .grid {
   display: flex;
-  flex-grow: 1;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   max-width: 400px;
 }
 
-.instructGrid{
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-evenly;
-  width:100%;
-}
-.noselect{
-  user-select: none;
-}
-
 .card {
   cursor: pointer;
   margin: 0px;
+  flex-shrink:1;
   padding: 1.5rem;
   text-align: center;
   text-decoration: none;
   border: 1px solid #eaeaea;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
-  width: 80px;
-  height: 80px;
+  width:100%;
+  max-width: 80px;
+}
+/*FOR MOBILE*/
+@media screen and (max-width:467px){
+  .gridCont{
+    display: flex;
+    justify-content: center;
+    flex:1 0;
+  }
+
+  .grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 300px;
+  }
+
+  .instructGrid{
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  .sidebarButton{
+    cursor: pointer;
+    margin-right:0px;
+    margin-top:15px;
+  }
+  .card {
+    cursor: pointer;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    width: 60px;
+    height: 60px;
+  }
+
+  .noselect{
+    user-select: none;
+    padding-top: 14px;
+  }
+
+  .selected{
+    cursor: pointer;
+    margin: 0px;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    width: 60px;
+    height: 60px;
+    color: #0070f3;
+    border-color: #0070f3;
+  }
+
+}
+
+.instructions{
+  padding-right:20px;
+}
+
+
+/*@media screen and (max-width:900px){
+  .instructGrid{
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+}*/
+.noselect{
+  user-select: none;
 }
 
 .selected{
@@ -124,11 +211,6 @@
 }
 
 
-.card h2 {
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
-}
-
 .card p, .selected p{
   margin: 0;
   font-size: 1.25rem;
@@ -140,9 +222,36 @@
   margin-left: 0.5rem;
 }
 
-@media (max-width: 600px) {
-  .grid {
-    width: 100%;
-    flex-direction: column;
-  }
+/*MODAL*/
+.modal{
+  position: fixed;
+  left:0;
+  top:0;
+  right:0;
+  bottom:0;
+  background-color: rgba(0,0,0,0.5);
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContent{
+  width:500px;
+  border-radius: 1.5rem;
+  background-color: white;
+}
+
+.modalHeader, .modalFooter{
+  padding:10px;
+}
+
+.modalTitle{
+  margin:0;
+  padding-left: 10px;
+}
+
+.modalBody{
+  padding:10px;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
 }
