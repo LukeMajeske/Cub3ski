@@ -28,16 +28,6 @@
   flex-grow: 1;
 }
 
-.title a {
-  color: #0070f3;
-  text-decoration: none;
-}
-
-.title a:hover,
-.title a:focus,
-.title a:active {
-  text-decoration: underline;
-}
 
 .title {
   margin: 0;
@@ -109,8 +99,35 @@
   width:100%;
   max-width: 80px;
 }
+
+/*This messes up mobile view .card:hover{
+  color: #0070f3;
+  border-color: #0070f3;
+}*/
+
+.selected{
+  cursor: pointer;
+  margin: 0px;
+  padding: 1.5rem;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  width: 80px;
+  height: 80px;
+  color: #0070f3;
+  border-color: #0070f3;
+}
+
 /*FOR MOBILE*/
 @media screen and (max-width:467px){
+  .title {
+    margin: 0;
+    line-height: 1.15;
+    font-size: 3rem;
+  }
+
   .gridCont{
     display: flex;
     justify-content: center;
@@ -135,18 +152,7 @@
     margin-right:0px;
     margin-top:15px;
   }
-  .card {
-    cursor: pointer;
-    margin: 0px;
-    padding: 0px;
-    text-align: center;
-    text-decoration: none;
-    border: 1px solid #eaeaea;
-    border-radius: 10px;
-    transition: color 0.15s ease, border-color 0.15s ease;
-    width: 60px;
-    height: 60px;
-  }
+
 
   .noselect{
     user-select: none;
@@ -156,6 +162,7 @@
   .selected{
     cursor: pointer;
     margin: 0px;
+    padding: 0px;
     text-align: center;
     text-decoration: none;
     border: 1px solid #eaeaea;
@@ -167,11 +174,23 @@
     border-color: #0070f3;
   }
 
+  .card {
+    cursor: pointer;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    color:black;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    width: 60px;
+    height: 60px;
+  }
+
 }
 
-.instructions{
-  padding-right:20px;
-}
+
 
 
 /*@media screen and (max-width:900px){
@@ -184,31 +203,9 @@
   user-select: none;
 }
 
-.selected{
-  cursor: pointer;
-  margin: 0px;
-  padding: 1.5rem;
-  text-align: center;
-  text-decoration: none;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
-  width: 80px;
-  height: 80px;
-  color: #0070f3;
-  border-color: #0070f3;
-}
 
-.card:hover,
-.card:focus{
-  color: #0070f3;
-  border-color: #0070f3;
-}
-.card:active {
-  cursor: grabbing;
-  color: #0070f3;
-  border-color: #0070f3;
-}
+
+
 
 
 .card p, .selected p{

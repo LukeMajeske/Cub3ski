@@ -12,20 +12,25 @@ import {useSpringRef,useSpring, useSprings, config, useChain, to} from "react-sp
 
 export default function Grid(props){
     const [numblock_grid,setNumblockGrid] = useState(props.numblock_grid);
+    const size = props.numblock_grid.length;
+    const tutorialMode = props.tutorialMode;
     const [numblocks, setNumblocks] = useState([]);
     const initial_render = useRef(0);
     const empty_indexes = useRef([]);
     const cur_grid = useRef(props.numblock_grid);
-    const key_count = useRef(1);
+    const {key_count,match_anim_status} = useNumbleContext();
+    const {handleTutorial} = useNumbleUpdateContext();
     const [score, setScore] = useState(0);
     const matchSpringRef = useSpringRef();
 
-    const [springs,api] = useSprings(25, index => ({
+    const [springs,api] = useSprings(size, index => ({
         from:{y:-80, x:0, opacity:0,scale:1},
         to:{y:0, x:0, opacity:1, scale:1},
-        delay:200, 
-        config: config.wobbly
+        delay:600,
+        config: {tension:300,bounce:5}
     }));
+
+    
 
     let handleMatchCheck = () =>{
         if(cur_grid.current === undefined){
@@ -63,8 +68,7 @@ export default function Grid(props){
             if (index === numblock_index){
                 return({
                     from:{y:-80, x:0, opacity:1,scale:1},
-                    to:{y:0, x:0, opacity:1},
-                    duration:1000,
+                    to:{y:0, x:0, opacity:1,scale:1},
                     onStart: ()=>{handleDropPhase()},
                     onRest: ()=>{handleMatchCheck()},
                     config: config.stiff
@@ -79,11 +83,12 @@ export default function Grid(props){
                 console.log("Starting anim for index: ", index);
                 return({
                     from:{opacity:1,scale:1},
-                    to:{opacity:0,scale:0},
-                    onRest:()=>{dropNumblocks(cur_grid.current);},
-                    delay:300,
-                    duration:1000,
-                    config: config.wobbly
+                    to:[{opacity:1, scale:0.5},
+                        {opacity:1, scale:1},
+                        {opacity:0,scale:0}],
+                    onStart:() => {match_anim_status.current = true;},
+                    onRest:()=>{match_anim_status.current = false; dropNumblocks(cur_grid.current); handleTutorial(4);},
+                    config:{tension:450,friction:30}
                     
                 });
             }
@@ -91,19 +96,20 @@ export default function Grid(props){
     }
 
     let removeMatches = (match_indexes) => {
-        match_indexes.forEach(match => {
-            console.log("match",match);
-            match.forEach(index => {
-                setMatchNumblock(index);
-                cur_grid.current[index] = "";
-            })
+        match_indexes = match_indexes.flat();
+        match_indexes = [...new Set(match_indexes)];
+        console.log("Remove Matches",match_indexes);
+        match_indexes.forEach(index => {
+            setMatchNumblock(index);
+            cur_grid.current[index] = "";
         })
+
     }
 
     let newNumblocks = () => {
         //fill in empty spaces with new numbers
         console.log("New Numblocks", cur_grid.current);
-        for(var i = 25; i >= 0; i--){
+        for(var i = size; i >= 0; i--){
             if(cur_grid.current[i] == ""){
                 cur_grid.current[i] = randomNumber();
                 setDropNumblock(i);
@@ -120,6 +126,7 @@ export default function Grid(props){
                             x={xpos} y={ypos} 
                             index={index}
                             updateGrid={updateGrid}
+                            tutorialMode={tutorialMode}
                             animation = {animation}
                             />;
         key_count.current += 1;
@@ -129,7 +136,7 @@ export default function Grid(props){
     let initNumblocks = () =>{
         let new_numblocks = [];
 
-        for(var i = 1; i < 26; i++){
+        for(var i = 1; i < size+1; i++){
             //console.log(springs[i-1]);
             new_numblocks.push(createNumblock(i-1,springs[i-1]));
         }
@@ -145,7 +152,7 @@ export default function Grid(props){
         let new_numblocks = [];
 
         
-        for(var i = 1; i < 26; i++){
+        for(var i = 1; i < size+1; i++){
             new_numblocks.push(createNumblock(i-1,springs[i-1]));
             //new_numblocks.push(createNumblock(i-1,match_spring));
         }
@@ -156,6 +163,9 @@ export default function Grid(props){
     //If numblock has empty space beneath it, let it drop to the bottom.
     //give index or indexes of empty spaces
     let dropNumblocks = (grid) => {
+        if(match_anim_status.current === true){
+            return;
+        }
         console.log("Dropping Block", grid);
         console.log("EMPTY INDEXS", getEmptyIndexes(grid));
         let emptyIndexes = getEmptyIndexes(grid);
@@ -198,6 +208,36 @@ export default function Grid(props){
         dropNumblocks(cur_grid.current);
     }
 
+    let renderGrid = () => {
+        if(tutorialMode){
+            return(
+                <div className={styles.grid} style={{maxWidth:'100%'}}>
+                    {getNumblocks()}
+                </div> 
+            )
+        }
+        return(
+            <>
+            {props.showScore ? <Score score={score}/> : null}
+            <div className={styles.instructGrid}>
+                {props.showSidebar ?
+                    <div className={styles.sidebar}>
+                            <Instructions/>
+                    </div>
+                    : null}
+
+                <div className={styles.gridCont}>
+                    <div className={styles.grid}>
+                        {getNumblocks()}
+                    </div> 
+                </div>
+
+            </div>
+            </>
+        )
+    }
+
+
 
 
     useEffect(()=>{
@@ -211,21 +251,5 @@ export default function Grid(props){
         }
     },[])
 
-    return(
-        <>
-        <Score score={score}/>
-        <div className={styles.instructGrid}>
-            <div className={styles.sidebar}>
-                        <Instructions/>
-
-            </div>
-            <div className={styles.gridCont}>
-                <div className={styles.grid}>
-                    {getNumblocks()}
-                </div> 
-            </div>
-
-        </div>
-        </>
-    )
+    return(renderGrid())
 }

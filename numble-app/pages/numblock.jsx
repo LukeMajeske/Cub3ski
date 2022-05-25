@@ -6,11 +6,10 @@ import { useSpring, animated, config} from "react-spring";
 
 
 export default function Numblock(props){
-    const {activeNumblock} = useNumbleContext();
-    const {selectNumblock,deSelectNumblock} = useNumbleUpdateContext();
+    const {activeNumblock,tutorialMode,step,match_anim_status} = useNumbleContext();
+    const {selectNumblock,deSelectNumblock,handleTutorial} = useNumbleUpdateContext();
     const {index,num, x,y,updateGrid,animation} = props;
     const [selected, toggleSelected] = useState(false);
-
 
     const {pop} = useSpring({
         from:{x:0},
@@ -19,12 +18,15 @@ export default function Numblock(props){
     })
 
     let numblockLogic = () => {
+        console.log("Match Anim Status: ", match_anim_status.current);
         if(index === activeNumblock.index){
+            //deselect numblock
             selectNumblock({index:-1,num:0,x:-10,y:-10});
             return;
         }
-        else if((num + activeNumblock.num) > 10 || num === ""){
+        else if((num + activeNumblock.num) > 10 || num === "" || match_anim_status.current === true){
             //deselect numblocks and shake numblock to show it can't be added to make a number over 10
+            handleTutorial(3);
             deSelectNumblock();
             return;
         }
@@ -34,6 +36,7 @@ export default function Numblock(props){
             //Delete previous numblock;
             updateGrid(numblocks);
             selectNumblock({index:-1,num:0,x:-10,y:-10});
+            handleTutorial(2);
             return;
         }
         else if((Math.abs(y - activeNumblock.y) ===  1)&&((x - activeNumblock.x)===0)){
@@ -51,6 +54,7 @@ export default function Numblock(props){
     }
 
     let handleSelect = () => {
+        handleTutorial(1);
         toggleSelected(!selected);
     }
 
