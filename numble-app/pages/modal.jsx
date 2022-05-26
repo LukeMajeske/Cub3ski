@@ -1,4 +1,5 @@
 import styles from '../styles/Home.module.css'
+import { useSpring, animated, config} from "react-spring";
 
 export default function Modal(props){
     if(!props.show){

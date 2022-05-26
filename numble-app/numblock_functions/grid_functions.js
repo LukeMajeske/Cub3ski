@@ -72,6 +72,29 @@ let scoreMatches = (grid,match_indexes) => {
     return addToScore;
 }
 
+let checkGameOver = (grid) => {
+    let direction = [1,5] //1=right one, 5=down one
+    for(var i = 0; i < grid.length; i++){
+        let numberToAdd = grid[i];
+        console.log("Number to Add",numberToAdd," Index: ", i);
+        for (const dir of direction){
+            let ydir = dir===5 ? 1 : 0;
+            let xdir = dir===1 ? 1 : 0;
+            let xpos = (i) % 5;
+            let ypos = Math.floor((i)/5);
+            //If out of bounds, skip this step and move on to next.
+            if((xpos+xdir < 0 || xpos+xdir > 4)||(ypos+ydir < 0 || ypos+ydir > 4)){
+                continue;
+            }
+            console.log("Number Total", numberToAdd + grid[i+dir]);
+            if((numberToAdd + grid[i+dir]) <= 10){
+                return false;
+            }
+        }
+    }
+    console.log("Game Over!");
+    return true;
+}
 
 
 //Check for matches of 3 in a row or more
@@ -149,4 +172,4 @@ let randomNumber = () =>{
 
 
 
-export {scoreMatches,checkForMatches,randomNumber, getEmptyIndexes};
+export {scoreMatches,checkForMatches,randomNumber, getEmptyIndexes,checkGameOver};

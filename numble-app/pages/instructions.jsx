@@ -15,7 +15,6 @@ export default  function Instructions(){
         setShow(true);
         setTutorialMode(true);
         deSelectNumblock();
-
     }
 
     let handleClose = () => {

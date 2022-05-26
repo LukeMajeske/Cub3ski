@@ -4,9 +4,11 @@ import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleConte
 import Score from './score'
 import Modal from './modal'
 import Instructions from './instructions'
+import GameOver from './gameOver'
 import { useEffect, useRef, useState } from 'react';
-import {scoreMatches,checkForMatches, randomNumber, getEmptyIndexes} from '../numblock_functions/grid_functions'
+import {scoreMatches,checkForMatches, randomNumber, getEmptyIndexes,checkGameOver} from '../numblock_functions/grid_functions'
 import {useSpringRef,useSpring, useSprings, config, useChain, to} from "react-spring";
+
 
 
 
@@ -19,7 +21,7 @@ export default function Grid(props){
     const empty_indexes = useRef([]);
     const cur_grid = useRef(props.numblock_grid);
     const {key_count,match_anim_status} = useNumbleContext();
-    const {handleTutorial} = useNumbleUpdateContext();
+    const {handleTutorial, setGameOver} = useNumbleUpdateContext();
     const [score, setScore] = useState(0);
     const matchSpringRef = useSpringRef();
 
@@ -160,6 +162,7 @@ export default function Grid(props){
             //new_numblocks.push(createNumblock(i-1,match_spring));
         }
         console.log(new_numblocks);
+        setGameOver(checkGameOver(cur_grid.current));
         setNumblocks(prevBlocks => prevBlocks = new_numblocks);
     }
 
@@ -226,6 +229,7 @@ export default function Grid(props){
                 {props.showSidebar ?
                     <div className={styles.sidebar}>
                             <Instructions/>
+                            <GameOver/>
                     </div>
                     : null}
 
