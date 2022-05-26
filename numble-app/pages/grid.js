@@ -24,10 +24,11 @@ export default function Grid(props){
     const matchSpringRef = useSpringRef();
 
     const [springs,api] = useSprings(size, index => ({
-        from:{y:-80, x:0, opacity:0,scale:1},
-        to:{y:0, x:0, opacity:1, scale:1},
+        from:{y:-80, x:0, opacity:0,scale:1,zIndex:1},
+        to:{y:0, x:0, opacity:1, scale:1,zIndex:1},
         delay:600,
-        config: {tension:300,bounce:5}
+        config: {tension:300,bounce:5},
+        immediate: key => key === "zIndex"
     }));
 
     
@@ -67,11 +68,12 @@ export default function Grid(props){
         api.start(index => {
             if (index === numblock_index){
                 return({
-                    from:{y:-80, x:0, opacity:1,scale:1},
-                    to:{y:0, x:0, opacity:1,scale:1},
+                    from:{y:-80, x:0, opacity:1,scale:1,zIndex:1},
+                    to:{y:0, x:0, opacity:1,scale:1,zIndex:1},
                     onStart: ()=>{handleDropPhase()},
                     onRest: ()=>{handleMatchCheck()},
-                    config: config.stiff
+                    config: config.stiff,
+                    immediate: key => key === "zIndex"
                 });
             }
         })
@@ -128,6 +130,7 @@ export default function Grid(props){
                             updateGrid={updateGrid}
                             tutorialMode={tutorialMode}
                             animation = {animation}
+                            anim_api = {api}
                             />;
         key_count.current += 1;
         return(numblock)

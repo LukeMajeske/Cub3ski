@@ -8,8 +8,9 @@ import { useSpring, animated, config} from "react-spring";
 export default function Numblock(props){
     const {activeNumblock,tutorialMode,step,match_anim_status} = useNumbleContext();
     const {selectNumblock,deSelectNumblock,handleTutorial} = useNumbleUpdateContext();
-    const {index,num, x,y,updateGrid,animation} = props;
+    const {index,num, x,y,updateGrid,animation,anim_api} = props;
     const [selected, toggleSelected] = useState(false);
+    const [z_index, setZIndex]= useState(1);
 
     const {pop} = useSpring({
         from:{x:0},
@@ -17,8 +18,25 @@ export default function Numblock(props){
         config: config.wobbly
     })
 
+    let startAddAnimation = (cube_index,cubes_to_update,xDir, yDir) =>{
+        anim_api.start(ind => {
+            if (ind === cube_index){
+                console.log("Starting anim for index: ", index);
+                return({
+                    from:{x:0,y:0,zIndex:1},
+                    to:{x:80*xDir,y:80*yDir,zIndex:0},
+                    onRest:()=>{ updateGrid(cubes_to_update);},
+                    immediate: key => key === "zIndex"
+                });
+            }
+        })
+    }
+
     let numblockLogic = () => {
         console.log("Match Anim Status: ", match_anim_status.current);
+        let xDir = x - activeNumblock.x;
+        let yDir = y - activeNumblock.y;
+
         if(index === activeNumblock.index){
             //deselect numblock
             selectNumblock({index:-1,num:0,x:-10,y:-10});
@@ -34,7 +52,7 @@ export default function Numblock(props){
             num += activeNumblock.num;
             let numblocks = [{index:index, num:num}, {index:activeNumblock.index,num:""}];
             //Delete previous numblock;
-            updateGrid(numblocks);
+            startAddAnimation(activeNumblock.index,numblocks, xDir, yDir);
             selectNumblock({index:-1,num:0,x:-10,y:-10});
             handleTutorial(2);
             return;
@@ -42,8 +60,9 @@ export default function Numblock(props){
         else if((Math.abs(y - activeNumblock.y) ===  1)&&((x - activeNumblock.x)===0)){
             num += activeNumblock.num;
             let numblocks = [{index:index, num:num}, {index:activeNumblock.index,num:""}];
-            updateGrid(numblocks);
+            startAddAnimation(activeNumblock.index,numblocks, xDir, yDir);
             selectNumblock({index:-1,num:0,x:-10,y:-10});
+            
             return;
 
         }
@@ -65,12 +84,12 @@ export default function Numblock(props){
         <>
             {activeNumblock.index === props.index 
                 ?<animated.div className={styles.selected} style={{scale:pop.to({range:[0,0.25,0.5,0.75,1],
-                    output:[1,0.9,1.2,0.95,1]})}}
+                    output:[1,0.9,1.2,0.95,1]}),zIndex:2}}
                 onClick={() => {handleSelect(); numblockLogic(props);}}>
                     <p className={styles.noselect}>{num}</p>
                 </animated.div>
                 :
-                <animated.div className={styles.card} style={animation}  onClick={() => {handleSelect(); numblockLogic(props);}}>
+                <animated.div className={styles.card} style={{...animation}}  onClick={() => {handleSelect(); numblockLogic(props);}}>
                         <p className={styles.noselect}>{num}</p>
                 </animated.div>
             }
