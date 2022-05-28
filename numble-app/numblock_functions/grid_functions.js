@@ -1,4 +1,3 @@
-
 let getEmptyIndexes = (grid) => {
     let empty_indexes = [];
 
@@ -27,7 +26,7 @@ let cleanMatches = (match_indexes, cur_matches) =>{
 }
 
 let scoreMatches = (grid,match_indexes) => {
-
+    console.log("Matches to Score: ",match_indexes);
     let matches_triple_scored = [];
     let addToScore = 0;
     if(match_indexes.length == 0){
@@ -64,19 +63,25 @@ let scoreMatches = (grid,match_indexes) => {
             })
         }
         if(!matches_triple_scored.includes(i)){
-            addToScore = (100*num*multiplier);
+            addToScore += (100*num*multiplier);
             console.log("Points Scored", addToScore, "Multiplier", multiplier);
             //setScore(prevScore => prevScore += addToScore);
         }
     }
+    addToScore *= Math.pow(1, match_indexes.length);
     return addToScore;
 }
 
 let checkGameOver = (grid) => {
+    let matchesFound = checkForMatches(grid);
+    console.log("Matches Found, game continues:", matchesFound);
+    if(matchesFound.length != 0){
+        return false;
+    }
     let direction = [1,5] //1=right one, 5=down one
     for(var i = 0; i < grid.length; i++){
         let numberToAdd = grid[i];
-        console.log("Number to Add",numberToAdd," Index: ", i);
+        //console.log("Number to Add",numberToAdd," Index: ", i);
         for (const dir of direction){
             let ydir = dir===5 ? 1 : 0;
             let xdir = dir===1 ? 1 : 0;
@@ -86,13 +91,15 @@ let checkGameOver = (grid) => {
             if((xpos+xdir < 0 || xpos+xdir > 4)||(ypos+ydir < 0 || ypos+ydir > 4)){
                 continue;
             }
-            console.log("Number Total", numberToAdd + grid[i+dir]);
+            //console.log("Number Total", numberToAdd + grid[i+dir]);
             if((numberToAdd + grid[i+dir]) <= 10){
+                console.log("Game not over, move at index:",i);
                 return false;
             }
         }
     }
     console.log("Game Over!");
+    //debugger;
     return true;
 }
 
@@ -107,9 +114,9 @@ let checkForMatches = (grid) =>{
         if(match_number === ""){
             continue;
         }
-        console.log("Current Search Index: ", i);
+        //console.log("Current Search Index: ", i);
         directions.forEach(direction => {
-            console.log("Direction: ",direction);
+            //console.log("Direction: ",direction);
             let searchIndex = i;
             let ydir = Math.abs(direction)===5 ? Math.sign(direction) : 0;
             let xdir = Math.abs(direction)===1 ? Math.sign(direction) : 0;
@@ -123,7 +130,7 @@ let checkForMatches = (grid) =>{
                 let ypos = Math.floor((searchIndex)/5);
                 //If match is found, continue in that direction
                 if((xpos+xdir < 0 || xpos+xdir > 4)||(ypos+ydir < 0 || ypos+ydir > 4)){
-                    console.log("OUT OF BOUNDS");
+                    //console.log("OUT OF BOUNDS");
                     end = true;
                 }
                 if(match_number === grid[searchIndex+direction]){
@@ -133,8 +140,8 @@ let checkForMatches = (grid) =>{
                     xpos = (searchIndex) % 5;
                     ypos = Math.floor((searchIndex)/5);
                     //If next searchIndex is out of bounds, then end while loop
-                    console.log("X",xpos,"Y",ypos,"Match Number",match_number);
-                    console.log('XPOS+XDIR: ',xpos+xdir,'YPOS-YDIR: ',ypos+ydir);
+                    //console.log("X",xpos,"Y",ypos,"Match Number",match_number);
+                    //console.log('XPOS+XDIR: ',xpos+xdir,'YPOS-YDIR: ',ypos+ydir);
                     if((xpos+xdir < 0 || xpos+xdir > 4)||(ypos+ydir < 0 || ypos+ydir > 4)){
                         console.log("OUT OF BOUNDS");
                         end = true;

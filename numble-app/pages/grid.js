@@ -21,8 +21,7 @@ export default function Grid(props){
     const empty_indexes = useRef([]);
     const cur_grid = useRef(props.numblock_grid);
     const {key_count,match_anim_status} = useNumbleContext();
-    const {handleTutorial, setGameOver} = useNumbleUpdateContext();
-    const [score, setScore] = useState(0);
+    const {handleTutorial,setGameOver, setScore} = useNumbleUpdateContext();
     const matchSpringRef = useSpringRef();
 
     const [springs,api] = useSprings(size, index => ({
@@ -33,19 +32,17 @@ export default function Grid(props){
         immediate: key => key === "zIndex"
     }));
 
-    
-
     let handleMatchCheck = () =>{
         if(cur_grid.current === undefined){
             return;
         }
         empty_indexes.current = checkForMatches(cur_grid.current);
-        console.log("empty indexs: ", empty_indexes.current);
+        //console.log("empty indexs: ", empty_indexes.current);
         if(empty_indexes.current.length > 0){
             //Before removing the matches, empty_indexes.current represents the current matches on the grid.
-            score = scoreMatches(cur_grid.current, empty_indexes.current);
-            console.log("Total Scored", score);
-            setScore(prevScore => prevScore += score);
+            const addScore = scoreMatches(cur_grid.current, empty_indexes.current);
+            //console.log("Total Scored", score);
+            setScore(prevScore => prevScore += addScore);
             removeMatches(empty_indexes.current);
             
         }
@@ -162,6 +159,8 @@ export default function Grid(props){
             //new_numblocks.push(createNumblock(i-1,match_spring));
         }
         console.log(new_numblocks);
+
+        //If there are no matches on the board, check to see if the game is over
         setGameOver(checkGameOver(cur_grid.current));
         setNumblocks(prevBlocks => prevBlocks = new_numblocks);
     }
@@ -224,7 +223,7 @@ export default function Grid(props){
         }
         return(
             <>
-            {props.showScore ? <Score score={score}/> : null}
+            {props.showScore ? <Score/> : null}
             <div className={styles.instructGrid}>
                 {props.showSidebar ?
                     <div className={styles.sidebar}>

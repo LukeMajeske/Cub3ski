@@ -11,7 +11,8 @@ import Page from './next-seo'
 export default function Home() {
   let gen_grid = () => {
     console.log("Generating grid...");
-    let new_grid = [9,8,7,6,7,10,9,8,7,8,1,10,9,6,10,10,5,7,10,10,9,7,5,8,1];
+    let new_grid = [9,8,10,9,10,10,9,8,7,8,1,10,9,6,10,10,5,7,10,10,9,7,5,9,1]; //to test game over
+    //let new_grid = [9,8,7,6,7,2,3,8,8,10,6,5,10,6,9,10,10,6,10,10,10,10,4,10,10]; //to test scoring
     //let new_grid = [1,2,2,3,2,1,2,3,4,3,3,1,4,1,1,3,2,1,3,3,9,8,3,6,5];
 
     return new_grid;
