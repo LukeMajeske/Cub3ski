@@ -58,7 +58,7 @@ let scoreMatches = (grid,match_indexes) => {
                     }
                     matches_triple_scored.push(j);
                     console.log("Triple Score!");
-                    multiplier *= 3;
+                    multiplier += 3;
                 }
             })
         }
@@ -68,7 +68,7 @@ let scoreMatches = (grid,match_indexes) => {
             //setScore(prevScore => prevScore += addToScore);
         }
     }
-    addToScore *= Math.pow(1, match_indexes.length);
+    addToScore *= match_indexes.length;
     return addToScore;
 }
 

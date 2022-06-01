@@ -2,12 +2,13 @@ import styles from '../styles/Home.module.css'
 import Numblock from './numblock'
 import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext'
 import Score from './score'
-import Modal from './modal'
 import Instructions from './instructions'
 import GameOver from './gameOver'
+import LeaderBoard from './leaderBoard'
 import { useEffect, useRef, useState } from 'react';
 import {scoreMatches,checkForMatches, randomNumber, getEmptyIndexes,checkGameOver} from '../numblock_functions/grid_functions'
 import {useSpringRef,useSpring, useSprings, config, useChain, to} from "react-spring";
+
 
 
 
@@ -161,7 +162,9 @@ export default function Grid(props){
         console.log(new_numblocks);
 
         //If there are no matches on the board, check to see if the game is over
-        setGameOver(checkGameOver(cur_grid.current));
+        if(!tutorialMode){
+            setGameOver(checkGameOver(cur_grid.current));
+        }
         setNumblocks(prevBlocks => prevBlocks = new_numblocks);
     }
 
@@ -229,6 +232,8 @@ export default function Grid(props){
                     <div className={styles.sidebar}>
                             <Instructions/>
                             <GameOver/>
+                            <LeaderBoard/>
+                            <button className={styles.sidebarButton} onClick={()=>setGameOver(true)}>End Game</button>
                     </div>
                     : null}
 

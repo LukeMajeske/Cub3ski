@@ -1,0 +1,6 @@
+type Highscores @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  score: Int
+  username: String
+}
+ 

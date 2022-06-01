@@ -1,0 +1,5 @@
+{
+  "AppSyncApiName": "Cub3Ski",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false
+}

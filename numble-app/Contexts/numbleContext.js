@@ -8,6 +8,7 @@ export const NumbleUpdateContext = createContext();
 export function NumbleProvider({ children }) {
     const [activeNumblock, setActiveNumblock] = useState({index:-1,num:0,x:-10,y:-10});
     const [tutorialMode, setTutorialMode] = useState(false);
+    const [showLeaderboard, setShowLeaderboard] = useState(false);
     const [gameOver, setGameOver] = useState(false);
     const [swap, setSwap] = useState(false);//When true, cubes swap places instead of being added
     const [step,setStep] = useState(1);//Keeps track of what step of the tutorial user is on.
@@ -41,6 +42,7 @@ export function NumbleProvider({ children }) {
         }
     }
 
+
     let updateNumblockGrid = (new_grid) => {
         setNumblockGrid(prevGrid => prevGrid = new_grid);
     }
@@ -49,9 +51,9 @@ export function NumbleProvider({ children }) {
   
     return (
       <NumbleContext.Provider value={{activeNumblock, numblock_grid, key_count, 
-      tutorialMode, step, match_anim_status, gameOver,score}}>
+      tutorialMode, step, match_anim_status, gameOver,score, showLeaderboard}}>
           <NumbleUpdateContext.Provider value={{selectNumblock, deSelectNumblock, 
-            updateNumblockGrid,setTutorialMode,handleTutorial, setStep,setGameOver, setScore}}>
+            updateNumblockGrid,setTutorialMode,handleTutorial, setStep,setGameOver, setScore, setShowLeaderboard}}>
             {children}
           </NumbleUpdateContext.Provider>
       </NumbleContext.Provider>
