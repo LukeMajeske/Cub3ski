@@ -8,6 +8,7 @@ import LeaderBoard from './leaderBoard'
 import { useEffect, useRef, useState } from 'react';
 import {scoreMatches,checkForMatches, randomNumber, getEmptyIndexes,checkGameOver} from '../numblock_functions/grid_functions'
 import {useSpringRef,useSpring, useSprings, config, useChain, to} from "react-spring";
+import Swap from './swap'
 
 
 
@@ -202,7 +203,7 @@ export default function Grid(props){
         return numblocks;
     }
 
-    let updateGrid = (numblocksUpdate) => {
+    let updateGrid = (numblocksUpdate, updateGridOnly = false, swap = false) => {
         //Adding two numblocks together
         console.log("Updating Grid");
         let activeIndex = [numblocksUpdate[1].index];
@@ -211,10 +212,20 @@ export default function Grid(props){
             cur_grid.current[numblock.index] = numblock.num;
         });
         
-        console.log("current grid",cur_grid.current)
         //repeat until there are no matches or empty spaces
         //empty_indexes.current = activeIndex;
-        dropNumblocks(cur_grid.current);
+        if(updateGridOnly === true){
+            newNumblocks(cur_grid.current);
+            updateNumblocks();
+        }
+        else if(swap === true){
+            handleMatchCheck();
+        }
+        else{
+            dropNumblocks(cur_grid.current);
+        }
+        
+
     }
 
     let renderGrid = () => {
@@ -227,7 +238,7 @@ export default function Grid(props){
         }
         return(
             <>
-            {props.showScore ? <Score/> : null}
+            {props.showScore ? <><Score/><Swap/></> : null}
             <div className={styles.instructGrid}>
                 {props.showSidebar ?
                     <div className={styles.sidebar}>
