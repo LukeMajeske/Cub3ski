@@ -21,9 +21,13 @@ export default function LeaderBoard(){
         });
 
         let scores = [];
-        for(const score of models){
+        for(const [index,score] of models.entries()){
+            if(index >= 10){
+                break;
+            }
             scores.push((
                 <tr key={score.id}>
+                    <td><strong>{index+1}:</strong></td>
                     <td>{score.username}</td>
                     <td>{score.score}</td>
                 </tr>
@@ -39,6 +43,7 @@ export default function LeaderBoard(){
             : 
             <table>
                 <tr>
+                    <th></th>
                     <th>Username</th>
                     <th>Score</th>
                 </tr>
@@ -51,21 +56,8 @@ export default function LeaderBoard(){
 
     useEffect(async ()=>{
         if(!scoresLoaded.current){
-            const models = await DataStore.query(Highscores,Predicates.ALL,{
-                sort: s => s.score(SortDirection.DESCENDING)
-            });
-
-            let scores = [];
-            for(const score of models){
-                scores.push((
-                    <tr key={score.id}>
-                        <td>{score.username}</td>
-                        <td>{score.score}</td>
-                    </tr>
-                ));
-            }
+            getHighscores();
             scoresLoaded.current = true;
-            setHighScores(scores);
         }
     });
 

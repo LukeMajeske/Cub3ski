@@ -25,7 +25,7 @@ export default function Numblock(props){
                 return({
                     from:{x:0,y:0,zIndex:1},
                     to:{x:80*xDir,y:80*yDir,zIndex:0},
-                    onRest:()=>{ updateGrid(cubes_to_update,false,false,-yDir);},
+                    onRest:()=>{ updateGrid(cubes_to_update,false,false,yDir !== 0 ? -yDir : -1);},
                     immediate: key => key === "zIndex"
                 });
             }
