@@ -210,7 +210,8 @@ export default function Grid(props){
         numblocksUpdate.forEach(numblock => {
             cur_grid.current[numblock.index] = numblock.num;
         });
-    
+        
+        console.log("current grid",cur_grid.current)
         //repeat until there are no matches or empty spaces
         //empty_indexes.current = activeIndex;
         dropNumblocks(cur_grid.current);

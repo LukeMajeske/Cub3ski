@@ -32,6 +32,26 @@ export default function Numblock(props){
         })
     }
 
+    let startSwapAnimation = (cube1_index,cube2_index,cubes_to_update,xDir, yDir) =>{
+        anim_api.start(ind => {
+            if (ind === cube1_index){
+                return({
+                    from:{x:0,y:0,zIndex:1},
+                    to:{x:80*xDir,y:80*yDir,zIndex:0},
+                    immediate: key => key === "zIndex"
+                });
+            }
+            if (ind === cube2_index){
+                return({
+                    from:{x:0,y:0,zIndex:1},
+                    to:{x:80*-xDir,y:80*-yDir,zIndex:1},
+                    onRest:()=>{ updateGrid(cubes_to_update);},
+                    immediate: key => key === "zIndex"
+                });
+            }
+        })
+    }
+
     let numblockLogic = () => {
         console.log("Match Anim Status: ", match_anim_status.current);
         let xDir = x - activeNumblock.x;
@@ -45,6 +65,9 @@ export default function Numblock(props){
         else if((num + activeNumblock.num) > 10 || num === "" || match_anim_status.current === true){
             //deselect numblocks and shake numblock to show it can't be added to make a number over 10
             handleTutorial(3);
+            let numblocks = [{index:index, num:num}, {index:activeNumblock.index,num:activeNumblock.num}];
+            //Swap Numbers
+            startSwapAnimation(activeNumblock.index,index,numblocks, xDir, yDir);
             deSelectNumblock();
             return;
         }

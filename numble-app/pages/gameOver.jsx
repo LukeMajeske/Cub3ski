@@ -9,7 +9,7 @@ export default function GameOver(){
     const {gameOver,score} = useNumbleContext();
     const {setGameOver} = useNumbleUpdateContext();
     const [localScore,setLocalScore] = useState([]);
-    const [username, setUsername] = useState("");
+    const [username, setUsername] = useState("anon");
     const scoreSorted = useRef(false); //If scores have been sorted, don't try again.
     const scorePosted = useRef(false);
     //const [show,setShow] = useState(false);

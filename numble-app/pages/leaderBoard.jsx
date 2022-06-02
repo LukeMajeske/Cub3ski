@@ -22,7 +22,12 @@ export default function LeaderBoard(){
 
         let scores = [];
         for(const score of models){
-            scores.push(<p key={score.id}>{score.username} {score.score}</p>);
+            scores.push((
+                <tr key={score.id}>
+                    <td>{score.username}</td>
+                    <td>{score.score}</td>
+                </tr>
+            ));
         }
         setHighScores(scores);
     }
@@ -30,7 +35,15 @@ export default function LeaderBoard(){
     let leaderBoardBody = () => {
         return(
             <div className='leaderBoard'>
-            {highScores.length === 0 ? <p>No Scores To Show</p> : highScores}
+            {highScores.length === 0 ? <p>No Scores To Show</p> 
+            : 
+            <table>
+                <tr>
+                    <th>Username</th>
+                    <th>Score</th>
+                </tr>
+                {highScores}
+            </table>}
             <button onClick={()=>getHighscores()}>Update Scores</button>
             </div>
         )
@@ -38,12 +51,18 @@ export default function LeaderBoard(){
 
     useEffect(async ()=>{
         if(!scoresLoaded.current){
-            const models = await DataStore.query(Highscores);
-            console.log(models);
+            const models = await DataStore.query(Highscores,Predicates.ALL,{
+                sort: s => s.score(SortDirection.DESCENDING)
+            });
 
             let scores = [];
             for(const score of models){
-                scores.push(<p key={score.id}>{score.username} {score.score}</p>);
+                scores.push((
+                    <tr key={score.id}>
+                        <td>{score.username}</td>
+                        <td>{score.score}</td>
+                    </tr>
+                ));
             }
             scoresLoaded.current = true;
             setHighScores(scores);
