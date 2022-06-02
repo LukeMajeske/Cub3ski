@@ -51,13 +51,11 @@ export default function Grid(props){
         else{
             console.log("No matches found");
             return;
-            //newNumblocks(cur_grid.current);
-            //empty_indexes = checkForMatches(new_grid);
+
         }
     }
     let handleDropPhase = () => {
         console.log("Drop Phase");
-        //newNumblocks(cur_grid.current); 
     }
     let handleGridUpdate = () => {
         if(cur_grid.current !== undefined){
@@ -65,11 +63,11 @@ export default function Grid(props){
             setNumblockGrid(prevGrid => prevGrid = cur_grid.current);
         }
     }
-    let setDropNumblock = (numblock_index) => {
+    let setDropNumblock = (numblock_index, yDir=-1) => {
         api.start(index => {
             if (index === numblock_index){
                 return({
-                    from:{y:-80, x:0, opacity:1,scale:1,zIndex:1},
+                    from:{y:80*yDir, x:0, opacity:1,scale:1,zIndex:1},
                     to:{y:0, x:0, opacity:1,scale:1,zIndex:1},
                     onStart: ()=>{handleDropPhase()},
                     onRest: ()=>{handleMatchCheck()},
@@ -109,13 +107,13 @@ export default function Grid(props){
 
     }
 
-    let newNumblocks = () => {
+    let newNumblocks = (dropDirection = -1) => {
         //fill in empty spaces with new numbers
         console.log("New Numblocks", cur_grid.current);
         for(var i = size; i >= 0; i--){
             if(cur_grid.current[i] == ""){
                 cur_grid.current[i] = randomNumber();
-                setDropNumblock(i);
+                setDropNumblock(i, dropDirection);
             }
         }
         updateNumblocks();
@@ -171,30 +169,29 @@ export default function Grid(props){
 
     //If numblock has empty space beneath it, let it drop to the bottom.
     //give index or indexes of empty spaces
-    let dropNumblocks = (grid) => {
+    let dropNumblocks = (grid,dropDirection = -5) => {
         if(match_anim_status.current === true){
             return;
         }
-        console.log("Dropping Block", grid);
-        console.log("EMPTY INDEXS", getEmptyIndexes(grid));
         let emptyIndexes = getEmptyIndexes(grid);
         let drop_grid = [...grid];
         emptyIndexes.forEach(startIndex => {
-            let searchIndex = startIndex - 5;
+            let searchIndex = startIndex + dropDirection;
             let new_numblocks = [];
-            while(searchIndex >= 0){
+            while(searchIndex >= 0 && searchIndex <= 24){
+                console.log("Drop Search Index:",searchIndex);
                 if(drop_grid[searchIndex] !== ""){
                     drop_grid[startIndex] = drop_grid[searchIndex];
                     drop_grid[searchIndex] = "";
-                    setDropNumblock(startIndex,drop_grid);
-                    startIndex -= 5;
+                    setDropNumblock(startIndex, Math.sign(dropDirection)); //Math.sign(x) gives the direction which to drop numblocks. Positive is up, negative is down.
+                    startIndex += dropDirection;
                     console.log("Drop!");
                 }
-                searchIndex -= 5;
+                searchIndex += dropDirection;
             }
         })
         cur_grid.current = drop_grid;
-        newNumblocks(cur_grid.current);
+        newNumblocks(Math.sign(dropDirection));
         updateNumblocks();
     }
 
@@ -203,7 +200,7 @@ export default function Grid(props){
         return numblocks;
     }
 
-    let updateGrid = (numblocksUpdate, updateGridOnly = false, swap = false) => {
+    let updateGrid = (numblocksUpdate, updateGridOnly = false, swap = false, dropDirection = -1) => {
         //Adding two numblocks together
         console.log("Updating Grid");
         let activeIndex = [numblocksUpdate[1].index];
@@ -215,14 +212,14 @@ export default function Grid(props){
         //repeat until there are no matches or empty spaces
         //empty_indexes.current = activeIndex;
         if(updateGridOnly === true){
-            newNumblocks(cur_grid.current);
+            newNumblocks();
             updateNumblocks();
         }
         else if(swap === true){
             handleMatchCheck();
         }
         else{
-            dropNumblocks(cur_grid.current);
+            dropNumblocks(cur_grid.current, dropDirection * 5);
         }
         
 
