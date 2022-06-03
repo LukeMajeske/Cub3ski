@@ -72,10 +72,10 @@ let scoreMatches = (grid,match_indexes) => {
     return addToScore;
 }
 
-let checkGameOver = (grid) => {
+let checkGameOver = (grid, swapCount) => {
     let matchesFound = checkForMatches(grid);
     console.log("Matches Found, game continues:", matchesFound);
-    if(matchesFound.length != 0){
+    if(matchesFound.length != 0 || swapCount > 0){
         return false;
     }
     let direction = [1,5] //1=right one, 5=down one

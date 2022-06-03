@@ -36,7 +36,8 @@ export default  function Instructions(){
                 return(<p><strong>2: </strong> Click the other cube to add them together.</p>);
                 break;
             case 3:
-                return(<p><strong>3: </strong> 10 is the highest number a cube can hold. Try adding the 2 cubes below.</p>);
+                return(<p><strong>3: </strong> 10 is the highest number a cube can hold. Combining two cubes whose sum is greater than 
+                10 will swap their positions. However, you can only swap a limited amount of times. Try swapping the cubes below!</p>);
                 break;
             case 4:
                 return(<p><strong>4: </strong>Score points by matching three or more numbers in a row! </p>);

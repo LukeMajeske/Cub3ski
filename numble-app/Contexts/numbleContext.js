@@ -9,8 +9,7 @@ export function NumbleProvider({ children }) {
     const [activeNumblock, setActiveNumblock] = useState({index:-1,num:0,x:-10,y:-10});
     const [tutorialMode, setTutorialMode] = useState(false);
     const [showLeaderboard, setShowLeaderboard] = useState(false);
-    const [gameOver, setGameOver] = useState(false);
-    const [swapCount, setSwapCount] = useState(3);//When > 0, cubes whose sum > 10 can be swapped. 
+    const [gameOver, setGameOver] = useState(false); 
     const [step,setStep] = useState(1);//Keeps track of what step of the tutorial user is on.
     const [numblock_grid, setNumblockGrid] = useState([]);
     const [score, setScore] = useState(0);
@@ -51,9 +50,9 @@ export function NumbleProvider({ children }) {
   
     return (
       <NumbleContext.Provider value={{activeNumblock, numblock_grid, key_count, 
-      tutorialMode, step, match_anim_status, gameOver,score, showLeaderboard, swapCount}}>
+      tutorialMode, step, match_anim_status, gameOver,score, showLeaderboard}}>
           <NumbleUpdateContext.Provider value={{selectNumblock, deSelectNumblock, 
-            updateNumblockGrid,setTutorialMode,handleTutorial, setStep,setGameOver, setScore, setShowLeaderboard, setSwapCount}}>
+            updateNumblockGrid,setTutorialMode,handleTutorial, setStep,setGameOver, setScore, setShowLeaderboard}}>
             {children}
           </NumbleUpdateContext.Provider>
       </NumbleContext.Provider>

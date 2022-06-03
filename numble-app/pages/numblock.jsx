@@ -6,9 +6,9 @@ import { useSpring, animated, config} from "react-spring";
 
 
 export default function Numblock(props){
-    const {activeNumblock,tutorialMode,step,match_anim_status, swapCount} = useNumbleContext();
-    const {selectNumblock,deSelectNumblock,handleTutorial, setSwapCount} = useNumbleUpdateContext();
-    const {index,num, x,y,updateGrid,animation,anim_api} = props;
+    const {activeNumblock,tutorialMode,step,match_anim_status} = useNumbleContext();
+    const {selectNumblock,deSelectNumblock,handleTutorial} = useNumbleUpdateContext();
+    const {index,num, x,y,updateGrid,setSwapCount,swapCount,animation,anim_api} = props;
     const [selected, toggleSelected] = useState(false);
     const [z_index, setZIndex]= useState(1);
 
@@ -46,7 +46,7 @@ export default function Numblock(props){
                     from:{x:80*-xDir,y:80*-yDir,zIndex:1},
                     to:{x:0,y:0,zIndex:1},
                     onStart:()=>{ updateGrid(cubes_to_update, true);},
-                    onRest:()=>{ updateGrid(cubes_to_update,false,true);},
+                    onRest:()=>{handleTutorial(3); updateGrid(cubes_to_update,false,true);},
                     immediate: key => key === "zIndex"
                 });
             }
@@ -64,7 +64,6 @@ export default function Numblock(props){
             return;
         }
         else if(num === "" || match_anim_status.current === true || ((num + activeNumblock.num) > 10 && swapCount <= 0)){
-            handleTutorial(3);
             //deselect numblocks and shake numblock to show it can't be added to make a number over 10
             deSelectNumblock();
             return;
@@ -75,7 +74,12 @@ export default function Numblock(props){
             //let numblocks = [{index:activeNumblock.index,num:activeNumblock.num}, {index:index, num:num}];
             //Swap Numbers
             startSwapAnimation(activeNumblock.index,index,numblocks, xDir, yDir);
-            setSwapCount(prevSwapCount => prevSwapCount -= 1);
+            //console.log("number of swaps ", swapCount);
+            
+            setSwapCount(prevSwapCount => prevSwapCount = prevSwapCount - 1);
+
+            console.log("number of swaps ", swapCount);
+            
             deSelectNumblock();
             return;
         }
