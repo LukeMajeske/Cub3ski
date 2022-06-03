@@ -53,13 +53,13 @@ export default  function Instructions(){
     let displayGrid= () => {
         if(step === 4){
             //setGrid(prevGrid => prevGrid = [4,6,10,10]);
-            return(<Grid key={3} numblock_grid={[4,6,10,10]} tutorialMode={true}></Grid>);
+            return(<Grid key={3} numblock_grid={[4,6,10,10]} tutorialMode={true} swapCount={0}></Grid>);
         }
         if(step === 7 || step === 8){
             //setGrid(prevGrid => prevGrid = [4,6,10,10]);
-            return(<Grid key={4} numblock_grid={[9,7,4,8,5,3,8,8,3,9]} tutorialMode={true}></Grid>);
+            return(<Grid key={4} numblock_grid={[9,7,4,8,5,3,8,8,3,9]} tutorialMode={true} swapCount={0}></Grid>);
         }
-        return(<Grid key={2} numblock_grid={[4,6]} tutorialMode={true}></Grid>);
+        return(<Grid key={2} numblock_grid={[4,6]} tutorialMode={true} swapCount={1}></Grid>);
     }
     let instructions = (<section className={styles.instructions}>
         {displayText()}

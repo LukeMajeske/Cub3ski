@@ -8,7 +8,7 @@ import { useSpring, animated, config} from "react-spring";
 export default function Numblock(props){
     const {activeNumblock,tutorialMode,step,match_anim_status} = useNumbleContext();
     const {selectNumblock,deSelectNumblock,handleTutorial} = useNumbleUpdateContext();
-    const {index,num, x,y,updateGrid,setSwapCount,swapCount,animation,anim_api} = props;
+    const {index,num, x,y,updateGrid,decrementSwapCount,swapCount,animation,anim_api} = props;
     const [selected, toggleSelected] = useState(false);
     const [z_index, setZIndex]= useState(1);
 
@@ -76,7 +76,7 @@ export default function Numblock(props){
             startSwapAnimation(activeNumblock.index,index,numblocks, xDir, yDir);
             //console.log("number of swaps ", swapCount);
             
-            setSwapCount(prevSwapCount => prevSwapCount = prevSwapCount - 1);
+            decrementSwapCount();
 
             console.log("number of swaps ", swapCount);
             
@@ -112,9 +112,6 @@ export default function Numblock(props){
         toggleSelected(!selected);
     }
 
-    useEffect(()=>{
-        console.log("Render!");
-    },[animation])
     return(
         <>
             {activeNumblock.index === props.index 

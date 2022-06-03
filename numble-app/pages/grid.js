@@ -22,10 +22,15 @@ export default function Grid(props){
     const initial_render = useRef(0);
     const empty_indexes = useRef([]);
     const cur_grid = useRef(props.numblock_grid);
-    const [swapCount, setSwapCount] = useState(3);//When > 0, cubes whose sum > 10 can be swapped.
+    //const [swapCount, setSwapCount] = useState(3);//When > 0, cubes whose sum > 10 can be swapped.
     const {key_count,match_anim_status} = useNumbleContext();
     const {handleTutorial,setGameOver, setScore} = useNumbleUpdateContext();
     const matchSpringRef = useSpringRef();
+    const swapCount = useRef(props.swapCount);
+
+    const decrementSwapCount=()=>{
+        swapCount.current--;
+    }
 
     const [springs,api] = useSprings(size, index => ({
         from:{y:-80, x:0, opacity:0,scale:1,zIndex:1},
@@ -123,7 +128,7 @@ export default function Grid(props){
         updateNumblocks();
     }
 
-    let createNumblock = (index, animation, num=cur_grid.current[index]) =>{
+    let createNumblock = (index, animation, num=cur_grid.current[index]) =>{ 
         let xpos = (index) % 5;
         let ypos = Math.floor((index)/5);
         let numblock = <Numblock key={key_count.current}
@@ -131,8 +136,8 @@ export default function Grid(props){
                             x={xpos} y={ypos} 
                             index={index}
                             updateGrid={updateGrid}
-                            setSwapCount = {setSwapCount}
-                            swapCount = {swapCount}
+                            decrementSwapCount = {decrementSwapCount}
+                            swapCount = {swapCount.current}
                             tutorialMode={tutorialMode}
                             animation = {animation}
                             anim_api = {api}
@@ -168,7 +173,7 @@ export default function Grid(props){
 
         //If there are no matches on the board, check to see if the game is over
         if(!tutorialMode){
-            setGameOver(checkGameOver(cur_grid.current, swapCount));
+            setGameOver(checkGameOver(cur_grid.current, swapCount.current));
         }
         setNumblocks(prevBlocks => prevBlocks = new_numblocks);
     }
@@ -235,14 +240,16 @@ export default function Grid(props){
     let renderGrid = () => {
         if(tutorialMode){
             return(
+                
                 <div className={styles.grid} style={{maxWidth:'100%'}}>
                     {getNumblocks()}
-                </div> 
+                </div>
+
             )
         }
         return(
             <>
-            {props.showScore ? <><Score/><Swap swapCount={swapCount}/></> : null}
+            {props.showScore ? <><Score/><Swap swapCount={swapCount.current}/></> : null}
             <div className={styles.instructGrid}>
                 {props.showSidebar ?
                     <div className={styles.sidebar}>
@@ -267,14 +274,9 @@ export default function Grid(props){
 
 
 
-    useEffect(()=>{
-        //refreshNumblocks();
-        
+    useEffect(()=>{        
         if(initial_render.current === 0){
             initNumblocks();
-        }
-        else{
-            updateNumblocks();
         }
     },[])
 

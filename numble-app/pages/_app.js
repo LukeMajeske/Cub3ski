@@ -11,9 +11,9 @@ function MyApp({ Component, pageProps }) {
 
   return(
     <>
-    <NumbleProvider>
-      <Home/>
-    </NumbleProvider>
+      <NumbleProvider>
+        <Home/>
+      </NumbleProvider>
     </>
   )
 }
