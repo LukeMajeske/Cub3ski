@@ -54,7 +54,7 @@ export default function LeaderBoard(){
         )
     }
 
-    useEffect(async ()=>{
+    useEffect(()=>{
         if(!scoresLoaded.current){
             getHighscores();
             scoresLoaded.current = true;
