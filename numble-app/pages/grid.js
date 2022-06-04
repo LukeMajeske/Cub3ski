@@ -10,10 +10,6 @@ import {scoreMatches,checkForMatches, randomNumber, getEmptyIndexes,checkGameOve
 import {useSpringRef,useSpring, useSprings, config, useChain, to} from "react-spring";
 import Swap from './swap'
 
-
-
-
-
 export default function Grid(props){
     const [numblock_grid,setNumblockGrid] = useState(props.numblock_grid);
     const size = props.numblock_grid.length;
@@ -24,7 +20,7 @@ export default function Grid(props){
     const cur_grid = useRef(props.numblock_grid);
     //const [swapCount, setSwapCount] = useState(3);//When > 0, cubes whose sum > 10 can be swapped.
     const {key_count,match_anim_status} = useNumbleContext();
-    const {handleTutorial,setGameOver, setScore} = useNumbleUpdateContext();
+    const {handleTutorial,setGameOver, setScore, getCubeWidth} = useNumbleUpdateContext();
     const matchSpringRef = useSpringRef();
     const swapCount = useRef(props.swapCount);
 
@@ -33,7 +29,7 @@ export default function Grid(props){
     }
 
     const [springs,api] = useSprings(size, index => ({
-        from:{y:-80, x:0, opacity:0,scale:1,zIndex:1},
+        from:{y:-(getCubeWidth()), x:0, opacity:0,scale:1,zIndex:1},
         to:{y:0, x:0, opacity:1, scale:1,zIndex:1},
         delay:600,
         config: {tension:300,bounce:5},
@@ -76,7 +72,7 @@ export default function Grid(props){
         api.start(index => {
             if (index === numblock_index){
                 return({
-                    from:{y:80*yDir, x:0, opacity:1,scale:1,zIndex:1},
+                    from:{y:getCubeWidth()*yDir, x:0, opacity:1,scale:1,zIndex:1},
                     to:{y:0, x:0, opacity:1,scale:1,zIndex:1},
                     onStart: ()=>{handleDropPhase()},
                     onRest: ()=>{handleMatchCheck()},
@@ -249,7 +245,7 @@ export default function Grid(props){
         }
         return(
             <>
-            {props.showScore ? <><Score/><Swap swapCount={swapCount.current}/></> : null}
+            {props.showScore ? <div className={styles.topbar}><Score/><Swap swapCount={swapCount.current}/></div> : null}
             <div className={styles.instructGrid}>
                 {props.showSidebar ?
                     <div className={styles.sidebar}>

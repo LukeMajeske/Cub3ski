@@ -7,7 +7,7 @@ import { useSpring, animated, config} from "react-spring";
 
 export default function Numblock(props){
     const {activeNumblock,tutorialMode,step,match_anim_status} = useNumbleContext();
-    const {selectNumblock,deSelectNumblock,handleTutorial} = useNumbleUpdateContext();
+    const {selectNumblock,deSelectNumblock,handleTutorial, getCubeWidth} = useNumbleUpdateContext();
     const {index,num, x,y,updateGrid,decrementSwapCount,swapCount,animation,anim_api} = props;
     const [selected, toggleSelected] = useState(false);
     const [z_index, setZIndex]= useState(1);
@@ -24,7 +24,7 @@ export default function Numblock(props){
                 console.log("Starting anim for index: ", index);
                 return({
                     from:{x:0,y:0,zIndex:1},
-                    to:{x:80*xDir,y:80*yDir,zIndex:0},
+                    to:{x:getCubeWidth()*xDir,y:getCubeWidth()*yDir,zIndex:0},
                     onRest:()=>{ updateGrid(cubes_to_update,false,false,yDir !== 0 ? -yDir : -1);},
                     immediate: key => key === "zIndex"
                 });
@@ -36,14 +36,14 @@ export default function Numblock(props){
         anim_api.start(ind => {
             if (ind === cube1_index){
                 return({
-                    from:{x:80*xDir,y:80*yDir,zIndex:0},
+                    from:{x:getCubeWidth()*xDir,y:getCubeWidth()*yDir,zIndex:0},
                     to:{x:0,y:0,zIndex:1},
                     immediate: key => key === "zIndex"
                 });
             }
             if (ind === cube2_index){
                 return({
-                    from:{x:80*-xDir,y:80*-yDir,zIndex:1},
+                    from:{x:getCubeWidth()*-xDir,y:getCubeWidth()*-yDir,zIndex:1},
                     to:{x:0,y:0,zIndex:1},
                     onStart:()=>{ updateGrid(cubes_to_update, true);},
                     onRest:()=>{handleTutorial(3); updateGrid(cubes_to_update,false,true);},
