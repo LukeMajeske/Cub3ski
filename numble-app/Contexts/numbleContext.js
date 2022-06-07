@@ -14,7 +14,8 @@ export function NumbleProvider({ children }) {
     const [step,setStep] = useState(1);//Keeps track of what step of the tutorial user is on.
     const [numblock_grid, setNumblockGrid] = useState([]);
     const [score, setScore] = useState(0);
-    const key_count = useRef(1);
+    const key_count = useRef(1);//For cubes
+    const grid_key_count = useRef(1);//For grids
     const match_anim_status = useRef(false); //True = match animation is in process
     //CHANGE CUBE ANIMATIONS BASED ON MEDIA QUERY
     const isMobile = useMediaQuery({ query: '(max-width: 467px)' });
@@ -59,11 +60,10 @@ export function NumbleProvider({ children }) {
         setNumblockGrid(prevGrid => prevGrid = new_grid);
     }
 
-
   
     return (
       <NumbleContext.Provider value={{activeNumblock, numblock_grid, key_count, 
-      tutorialMode, step, match_anim_status, gameOver,score, showLeaderboard}}>
+      tutorialMode, step, match_anim_status, gameOver,score, showLeaderboard, grid_key_count}}>
           <NumbleUpdateContext.Provider value={{selectNumblock, deSelectNumblock, 
             updateNumblockGrid,setTutorialMode,handleTutorial, setStep,setGameOver, 
             setScore, setShowLeaderboard, getCubeWidth}}>

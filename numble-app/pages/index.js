@@ -7,32 +7,43 @@ import Instructions from './instructions'
 import {useSpring, animated, config, useSprings, useTransition} from "react-spring";
 import Page from './next-seo'
 import cub3skiGrids from '../src/cub3ski_grids'
+import { useNumbleContext} from '../Contexts/numbleContext';
+import { useState } from 'react'
+
+
 
 export default function Home() {
-  let gen_grid = () => {
+  const handleRefresh = () => {
+    setGrid(prevGrid=> prevGrid = gen_grid());
+  }
+  
+  const gen_grid = () => {
     console.log("Generating grid...");
-
-
+  
+  
     //let new_grid = [9,8,10,9,10,10,9,8,7,8,1,10,9,6,10,10,5,7,10,10,9,7,5,9,1]; //to test game over
     //let new_grid = [9,8,7,6,7,2,3,10,8,10,6,5,10,6,9,10,10,6,10,10,10,10,4,10,10]; //to test scoring
     //let new_grid = [9,8,7,6,7,2,3,10,8,10,6,5,10,6,9,10,10,6,10,10,10,10,4,10,10]; //to test cube swap
     //const new_grid = [1,2,2,3,2,1,2,3,4,3,3,1,4,1,1,3,2,1,3,3,9,8,3,6,5];
-
+  
     const new_grid = cub3skiGrids[Math.floor(Math.random() * (cub3skiGrids.length+1))];
-
+  
     console.log("generate grid!", Math.random() * (cub3skiGrids.length+1));
-
-    return new_grid;
-    /*for(var i = 1; i < 26; i++){
-        var number = Math.floor(Math.random() * 10) + 1;
-        new_grid.push(number);
-        {<Component {...pageProps} />}
-    }*/
+  
+    const grid = <Grid key={grid_key_count.current} numblock_grid = {new_grid} 
+    showScore={true} showSidebar={true} tutorialMode={false} swapCount={3} refresh={handleRefresh}> </Grid>;
+  
+    grid_key_count.current++;
+  
+    return(grid);
   }
+
+  //DEFINE STATE
+  const {grid_key_count} = useNumbleContext();
+  const [grid, setGrid] = useState(gen_grid());
 
   return (
     <div className={styles.container}>
-
       {Page()}
       
       <Head>
@@ -51,7 +62,7 @@ export default function Home() {
         </h1>
         <p>(cube-skee)</p>
         
-        <Grid numblock_grid = {gen_grid()} showScore={true} showSidebar={true} tutorialMode={false} swapCount={3}></Grid>
+        {grid}
 
       </main>
 

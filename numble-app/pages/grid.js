@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import {scoreMatches,checkForMatches, randomNumber, getEmptyIndexes,checkGameOver} from '../numblock_functions/grid_functions'
 import {useSpringRef,useSpring, useSprings, config, useChain, to} from "react-spring";
 import Swap from './swap'
+import RefreshGrid from './refreshGrid'
 
 export default function Grid(props){
     const [numblock_grid,setNumblockGrid] = useState(props.numblock_grid);
@@ -26,6 +27,9 @@ export default function Grid(props){
 
     const decrementSwapCount=()=>{
         swapCount.current--;
+    }
+    const setSwapCount=(count)=>{
+        swapCount.current = count;
     }
 
     const [springs,api] = useSprings(size, index => ({
@@ -250,6 +254,7 @@ export default function Grid(props){
                 {props.showSidebar ?
                     <div className={styles.sidebar}>
                             <Instructions/>
+                            <RefreshGrid refresh={props.refresh} setSwapCount={setSwapCount}/>
                             <GameOver/>
                             <LeaderBoard/>
                             <button className={styles.sidebarButton} onClick={()=>setGameOver(true)}>End Game</button>

@@ -92,6 +92,7 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  min-height: 400px;
   max-width: 400px;
 }
 
@@ -153,6 +154,7 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+    min-height: 300px;
     max-width: 300px;
   }
 
@@ -215,7 +217,7 @@
 }
 
 /*FOR MOBILE*/
-@media screen and (max-width:330px){
+@media screen and (max-width:332px){
 
   .noselect{
     user-select: none;
@@ -235,6 +237,15 @@
     height: 55px;
     color: #0070f3;
     border-color: #0070f3;
+  }
+
+  .grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    min-height: 275px;
+    max-width: 275px;
   }
 
   .card {
