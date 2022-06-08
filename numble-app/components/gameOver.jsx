@@ -1,6 +1,6 @@
 import {useState, useEffect, useRef} from "react";
 import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext';
-import Modal from './modal'
+import Modal from '../components/modal'
 import {DataStore} from 'aws-amplify';
 import {Highscores} from "../src/models";
 

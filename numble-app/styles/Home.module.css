@@ -92,7 +92,6 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  min-height: 400px;
   max-width: 400px;
 }
 
@@ -154,7 +153,6 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    min-height: 300px;
     max-width: 300px;
   }
 
@@ -244,7 +242,6 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    min-height: 275px;
     max-width: 275px;
   }
 

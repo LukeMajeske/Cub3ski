@@ -1,11 +1,8 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import Grid from './grid'
-import Numblock from './numblock'
+import Grid from '../components/grid'
 import Script from 'next/script'
-import Instructions from './instructions'
-import {useSpring, animated, config, useSprings, useTransition} from "react-spring";
-import Page from './next-seo'
+import Page from '../components/next-seo'
 import cub3skiGrids from '../src/cub3ski_grids'
 import { useNumbleContext} from '../Contexts/numbleContext';
 import { useState } from 'react'

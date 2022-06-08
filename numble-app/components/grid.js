@@ -7,7 +7,7 @@ import GameOver from './gameOver'
 import LeaderBoard from './leaderBoard'
 import { useEffect, useRef, useState } from 'react';
 import {scoreMatches,checkForMatches, randomNumber, getEmptyIndexes,checkGameOver} from '../numblock_functions/grid_functions'
-import {useSpringRef,useSpring, useSprings, config, useChain, to} from "react-spring";
+import {useSpringRef, useSprings, config} from "react-spring";
 import Swap from './swap'
 import RefreshGrid from './refreshGrid'
 
@@ -22,8 +22,9 @@ export default function Grid(props){
     //const [swapCount, setSwapCount] = useState(3);//When > 0, cubes whose sum > 10 can be swapped.
     const {key_count,match_anim_status} = useNumbleContext();
     const {handleTutorial,setGameOver, setScore, getCubeWidth} = useNumbleUpdateContext();
-    const matchSpringRef = useSpringRef();
     const swapCount = useRef(props.swapCount);
+    let minHeight = ((Math.floor((cur_grid.current.length)/6)+1)*getCubeWidth())+'px';
+    console.log("minHeight",minHeight);
 
     const decrementSwapCount=()=>{
         swapCount.current--;
@@ -262,7 +263,7 @@ export default function Grid(props){
                     : null}
 
                 <div className={styles.gridCont}>
-                    <div className={styles.grid}>
+                    <div className={styles.grid} style={{minHeight:{minHeight}}}>
                         {getNumblocks()}
                     </div> 
                 </div>

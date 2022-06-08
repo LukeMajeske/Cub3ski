@@ -57,6 +57,9 @@ export default function Numblock(props){
         console.log("Match Anim Status: ", match_anim_status.current);
         let xDir = x - activeNumblock.x;
         let yDir = y - activeNumblock.y;
+        let isAdjacentX = (Math.abs(x - activeNumblock.x) ===  1)&&((y - activeNumblock.y)===0);
+        let isAdjacentY = (Math.abs(y - activeNumblock.y) ===  1)&&((x - activeNumblock.x)===0);
+        let isAdjacent = (isAdjacentX || isAdjacentY);
 
         if(index === activeNumblock.index){
             //deselect numblock
@@ -69,7 +72,7 @@ export default function Numblock(props){
             return;
         }
         //SWAP CUBES!!
-        else if((num + activeNumblock.num) > 10 && swapCount > 0){
+        else if((num + activeNumblock.num) > 10 && swapCount > 0 && isAdjacent){
             let numblocks = [{index:index, num:activeNumblock.num}, {index:activeNumblock.index,num:num}];
             //let numblocks = [{index:activeNumblock.index,num:activeNumblock.num}, {index:index, num:num}];
             //Swap Numbers
@@ -83,7 +86,7 @@ export default function Numblock(props){
             deSelectNumblock();
             return;
         }
-        else if((Math.abs(x - activeNumblock.x) ===  1)&&((y - activeNumblock.y)===0)){
+        else if(isAdjacent){
             num += activeNumblock.num;
             let numblocks = [{index:index, num:num}, {index:activeNumblock.index,num:""}];
             //Delete previous numblock;
@@ -92,15 +95,7 @@ export default function Numblock(props){
             handleTutorial(2);
             return;
         }
-        else if((Math.abs(y - activeNumblock.y) ===  1)&&((x - activeNumblock.x)===0)){
-            num += activeNumblock.num;
-            let numblocks = [{index:index, num:num}, {index:activeNumblock.index,num:""}];
-            startAddAnimation(activeNumblock.index,numblocks, xDir, yDir);
-            selectNumblock({index:-1,num:0,x:-10,y:-10});
-            
-            return;
 
-        }
         console.log("Active Numblock", activeNumblock);
         console.log("This Numblock", props);
 
