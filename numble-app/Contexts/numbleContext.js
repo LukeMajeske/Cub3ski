@@ -47,9 +47,9 @@ export function NumbleProvider({ children }) {
 
     }
 
-    let handleTutorial = (checkPoint) => {
-        if(tutorialMode & checkPoint === step){
-            setStep(prevStep => prevStep + 1);
+    let handleTutorial = (...args) => {
+        if(tutorialMode & args.includes(step)){
+            setStep(step + 1);
             console.log("Next Step");
         }
     }

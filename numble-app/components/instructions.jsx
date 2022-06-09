@@ -30,21 +30,24 @@ export default  function Instructions(){
         console.log("Current Step: ", step);
         switch(step){
             case 1:
-                return(<p><strong>1: </strong> Click to select one of the cubes below.</p>);
+                return(<p><strong>{step}: </strong> Click to select one of the cubes below.</p>);
                 break;
             case 2:
-                return(<p><strong>2: </strong> Click the other cube to add them together.</p>);
+                return(<p><strong>{step}: </strong> Click the other cube to add them together.</p>);
                 break;
             case 3:
-                return(<p><strong>3: </strong> 10 is the highest number a cube can hold. Combining two cubes whose sum is greater than 
+                return(<p><strong>{step}: </strong> 10 is the highest number a cube can hold. Combining two cubes whose sum is greater than 
                 10 will swap their positions. However, you can only swap a limited amount of times. Try swapping the cubes below!</p>);
                 break;
             case 4:
-                return(<p><strong>4: </strong>Score points by matching three or more numbers in a row! </p>);
+                return(<p><strong>{step}: </strong>Score points by matching three or more numbers in a row! </p>);
                 break;
-            case 7:
-            case 8:
-                return(<p><strong>5: </strong>The game ends when there are no possible moves left. Refresh the page to restart. <br/>Good Luck!</p>);
+            case 5:
+                return(<p><strong>{step}: </strong>Introducing the new Swap Cube! It can be used as any number to complete a match of 3 or more! When using the Swap Cube 
+                to complete a match, you also gain a +1 extra swap!</p>);
+                break;
+            case 6:
+                return(<p><strong>{step}: </strong>The game ends when there are no possible moves left. Refresh the page to restart. <br/>Good Luck!</p>);
                 break;
 
         }
@@ -55,15 +58,32 @@ export default  function Instructions(){
             //setGrid(prevGrid => prevGrid = [4,6,10,10]);
             return(<Grid key={3} numblock_grid={[4,6,10,10]} tutorialMode={true} swapCount={0}></Grid>);
         }
-        if(step === 7 || step === 8){
+        if(step === 5){
             //setGrid(prevGrid => prevGrid = [4,6,10,10]);
-            return(<Grid key={4} numblock_grid={[9,7,4,8,5,3,8,8,3,9]} tutorialMode={true} swapCount={0}></Grid>);
+            return(<Grid key={4} numblock_grid={[11,10,10]} tutorialMode={true} swapCount={1}></Grid>);
+        }
+        if(step === 6){
+            //setGrid(prevGrid => prevGrid = [4,6,10,10]);
+            return(<Grid key={5} numblock_grid={[9,7,4,8,5,3,8,8,3,9]} tutorialMode={true} swapCount={0}></Grid>);
         }
         return(<Grid key={2} numblock_grid={[4,6]} tutorialMode={true} swapCount={1}></Grid>);
+    }
+
+    const displayButtons = () => {
+        let buttons = []
+        if(step != 1){
+            buttons.push(<button onClick={()=>setStep(prevStep=>prevStep -= 1)}>Back</button>);
+        }
+        if(step != 6){
+            buttons.push(<button onClick={()=>setStep(prevStep=>prevStep += 1)}>Next</button>);
+        }
+        return(buttons);
+
     }
     let instructions = (<section className={styles.instructions}>
         {displayText()}
         {displayGrid()}
+        {displayButtons()}
 
     </section>)
 

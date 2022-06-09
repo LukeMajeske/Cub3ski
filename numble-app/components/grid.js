@@ -103,7 +103,7 @@ export default function Grid(props){
                         {opacity:1, scale:1},
                         {opacity:0,scale:0}],
                     onStart:() => {match_anim_status.current = true;},
-                    onRest:()=>{match_anim_status.current = false; dropNumblocks(cur_grid.current); handleTutorial(4);},
+                    onRest:()=>{match_anim_status.current = false; dropNumblocks(cur_grid.current); handleTutorial(4,5);},
                     config:{tension:450,friction:30}
                     
                 });
