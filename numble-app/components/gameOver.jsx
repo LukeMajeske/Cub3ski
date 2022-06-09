@@ -23,11 +23,15 @@ export default function GameOver(){
             alert("Must enter username to post score!");
             return;
         }
-        if(score === 0){
+        else if(username.length > 10){
+            alert("Username cannot be longer than 10 characters");
+            return;
+        }
+        else if(score === 0){
             alert("Can't Post a score of 0 :(");
             return;
         }
-        if(scorePosted.current === true){
+        else if(scorePosted.current === true){
             alert("Your score was already posted. Can't post score again!");
             return;
         }

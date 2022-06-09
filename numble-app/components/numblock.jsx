@@ -2,6 +2,7 @@ import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleConte
 import styles from '../styles/Home.module.css';
 import { useState, useEffect } from "react";
 import { useSpring, animated, config} from "react-spring";
+import {HiSwitchHorizontal} from 'react-icons/hi';
 
 
 
@@ -11,6 +12,7 @@ export default function Numblock(props){
     const {index,num, x,y,updateGrid,decrementSwapCount,swapCount,animation,anim_api} = props;
     const [selected, toggleSelected] = useState(false);
     const [z_index, setZIndex]= useState(1);
+    const displayItem = num === 11 ? <HiSwitchHorizontal/> : num;
 
     const {pop} = useSpring({
         from:{x:0},
@@ -113,11 +115,11 @@ export default function Numblock(props){
                 ?<animated.div className={styles.selected} style={{scale:pop.to({range:[0,0.25,0.5,0.75,1],
                     output:[1,0.9,1.2,0.95,1]}),zIndex:2}}
                 onClick={() => {handleSelect(); numblockLogic(props);}}>
-                    <p className={styles.noselect}>{num}</p>
+                    <p className={styles.noselect}>{displayItem}</p>
                 </animated.div>
                 :
                 <animated.div className={styles.card} style={{...animation}}  onClick={() => {handleSelect(); numblockLogic(props);}}>
-                        <p className={styles.noselect}>{num}</p>
+                        <p className={styles.noselect}>{displayItem}</p>
                 </animated.div>
             }
         </>

@@ -66,7 +66,7 @@ export default function LeaderBoard(){
             <Modal 
             onClose={()=>handleClose(false)} 
             show={showLeaderboard} 
-            title={<strong>Global Highscores</strong>}
+            title={<strong>Top 10 Global Highscores</strong>}
             body={leaderBoardBody()}/>
 
             <button className={styles.sidebarButton} 

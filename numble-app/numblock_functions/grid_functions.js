@@ -35,6 +35,17 @@ let scoreMatches = (grid,match_indexes) => {
     for(var i = 0; i < match_indexes.length; i++){
         let multiplier = 1;
         let num = grid[match_indexes[i][0]];//Number in the given set of matches
+        let isNumWildCard = num===11;
+        let count = 1;
+        while(isNumWildCard){
+            num = grid[match_indexes[i][count]];
+            console.log("Current Base Number Is:",num);
+            count++;
+            isNumWildCard = num === 11;
+            if(count >= match_indexes[i].length){
+                break;
+            }
+        }
 
         switch(match_indexes[i].length){
             case 4:
@@ -108,7 +119,8 @@ let checkGameOver = (grid, swapCount) => {
 let checkForMatches = (grid) =>{
     let match_indexes =[];
     //1= right block,5 = below block, -1= left block, -5 = above block 
-    let directions = [1,5,-1,-5];
+    //let directions = [1,5,-1,-5];
+    let directions = [1,5];
     for(var i = 0; i < grid.length; i++){
         let match_number = grid[i];
         if(match_number === ""){
@@ -133,7 +145,10 @@ let checkForMatches = (grid) =>{
                     //console.log("OUT OF BOUNDS");
                     end = true;
                 }
-                if(match_number === grid[searchIndex+direction]){
+                if(match_number === 11){
+                    match_number = grid[searchIndex+direction];
+                }
+                if(match_number === grid[searchIndex+direction] || grid[searchIndex+direction] === 11){
                     searchIndex += direction;
                     cur_match.push(searchIndex);
                     //Get x and y position of next searchIndex.
@@ -168,8 +183,22 @@ let checkForMatches = (grid) =>{
     return match_indexes;
 }
 
+const checkForSwapCubes = (grid, match_indexes) => {
+    match_indexes = match_indexes.flat();
+    match_indexes = [...new Set(match_indexes)];
+    const count = 0;
+    for(const index of match_indexes){
+        //11 === number for swap cube
+        if(grid[index] === 11){
+            count++;
+        }
+    }
+    return count;
+
+}
+
 let randomNumber = () =>{
-    return Math.floor(Math.random() * 10) + 1;
+    return Math.floor(Math.random() * 11) + 1;//11 is for the swap cube
 }
 
 
@@ -179,4 +208,4 @@ let randomNumber = () =>{
 
 
 
-export {scoreMatches,checkForMatches,randomNumber, getEmptyIndexes,checkGameOver};
+export {scoreMatches,checkForMatches,randomNumber, getEmptyIndexes,checkGameOver, checkForSwapCubes};

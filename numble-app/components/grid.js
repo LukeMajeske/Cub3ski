@@ -6,7 +6,7 @@ import Instructions from './instructions'
 import GameOver from './gameOver'
 import LeaderBoard from './leaderBoard'
 import { useEffect, useRef, useState } from 'react';
-import {scoreMatches,checkForMatches, randomNumber, getEmptyIndexes,checkGameOver} from '../numblock_functions/grid_functions'
+import {scoreMatches,checkForMatches, randomNumber, getEmptyIndexes,checkGameOver,checkForSwapCubes} from '../numblock_functions/grid_functions'
 import {useSpringRef, useSprings, config} from "react-spring";
 import Swap from './swap'
 import RefreshGrid from './refreshGrid'
@@ -32,6 +32,9 @@ export default function Grid(props){
     const setSwapCount=(count)=>{
         swapCount.current = count;
     }
+    const addToSwapCount=(count)=>{
+        swapCount.current += count;
+    }
 
     const [springs,api] = useSprings(size, index => ({
         from:{y:-(getCubeWidth()), x:0, opacity:0,scale:1,zIndex:1},
@@ -46,6 +49,8 @@ export default function Grid(props){
             return;
         }
         empty_indexes.current = checkForMatches(cur_grid.current);
+        addToSwapCount(checkForSwapCubes(cur_grid.current,empty_indexes.current));
+
         //console.log("empty indexs: ", empty_indexes.current);
         if(empty_indexes.current.length > 0){
             if(!tutorialMode){
