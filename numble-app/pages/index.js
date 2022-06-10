@@ -22,9 +22,13 @@ export default function Home() {
     //let new_grid = [9,8,7,6,7,2,3,10,8,10,6,5,10,6,9,10,10,6,10,10,10,10,4,10,10]; //to test scoring
     //let new_grid = [9,8,7,6,7,2,3,10,8,10,6,5,10,6,9,10,10,6,10,10,10,10,4,10,10]; //to test cube swap
     //const new_grid = [1,2,2,3,2,1,2,3,4,3,3,1,4,1,1,3,2,1,3,3,9,8,3,6,5];
-    //const new_grid = [1,2,10,2,2,11,9,8,7,6,3,1,3,1,1,3,2,1,3,3,9,8,3,6,5];
+    const new_grid = [11,2,10,2,2,
+                      3,9,8,7,6,
+                      3,1,3,1,1,
+                      5,2,1,3,3,
+                      9,8,3,6,5];
   
-    const new_grid = cub3skiGrids[Math.floor(Math.random() * (cub3skiGrids.length+1))];
+    //const new_grid = cub3skiGrids[Math.floor(Math.random() * (cub3skiGrids.length+1))];
   
     console.log("generate grid!", Math.random() * (cub3skiGrids.length+1));
   

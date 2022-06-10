@@ -6,7 +6,8 @@ import Instructions from './instructions'
 import GameOver from './gameOver'
 import LeaderBoard from './leaderBoard'
 import { useEffect, useRef, useState } from 'react';
-import {scoreMatches,checkForMatches, randomNumber, getEmptyIndexes,checkGameOver,checkForSwapCubes} from '../numblock_functions/grid_functions'
+import {scoreMatches,checkForMatches, randomNumber, 
+    getEmptyIndexes,checkGameOver,checkForSwapCubes, getYPos} from '../numblock_functions/grid_functions';
 import {useSpringRef, useSprings, config} from "react-spring";
 import Swap from './swap'
 import RefreshGrid from './refreshGrid'
@@ -37,10 +38,10 @@ export default function Grid(props){
     }
 
     const [springs,api] = useSprings(size, index => ({
-        from:{y:-(getCubeWidth()), x:0, opacity:0,scale:1,zIndex:1},
+        from:{y:-(5*getCubeWidth()), x:0, opacity:0,scale:1,zIndex:1},
         to:{y:0, x:0, opacity:1, scale:1,zIndex:1},
-        delay:600,
-        config: {tension:300,bounce:5},
+        delay:400,
+        config: {mass:2,tension:250,bounce:1},
         immediate: key => key === "zIndex"
     }));
 

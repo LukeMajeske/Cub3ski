@@ -14,7 +14,7 @@ let cleanMatches = (match_indexes, cur_matches) =>{
     //If the current match is already in match_indexes, then do not add again to match indexes
     let exists = false;
     match_indexes.forEach(match => {
-        console.log(cur_matches,match);
+        //console.log(cur_matches,match);
         if(exists === true){
             //do nothing
         }
@@ -26,7 +26,7 @@ let cleanMatches = (match_indexes, cur_matches) =>{
 }
 
 let scoreMatches = (grid,match_indexes) => {
-    console.log("Matches to Score: ",match_indexes);
+    //console.log("Matches to Score: ",match_indexes);
     let matches_triple_scored = [];
     let addToScore = 0;
     if(match_indexes.length == 0){
@@ -39,7 +39,7 @@ let scoreMatches = (grid,match_indexes) => {
         let count = 1;
         while(isNumWildCard){
             num = grid[match_indexes[i][count]];
-            console.log("Current Base Number Is:",num);
+            //console.log("Current Base Number Is:",num);
             count++;
             isNumWildCard = num === 11;
             if(count >= match_indexes[i].length){
@@ -68,14 +68,14 @@ let scoreMatches = (grid,match_indexes) => {
                             break;
                     }
                     matches_triple_scored.push(j);
-                    console.log("Triple Score!");
+                    //console.log("Triple Score!");
                     multiplier += 3;
                 }
             })
         }
         if(!matches_triple_scored.includes(i)){
             addToScore += (100*num*multiplier);
-            console.log("Points Scored", addToScore, "Multiplier", multiplier);
+            //console.log("Points Scored", addToScore, "Multiplier", multiplier);
             //setScore(prevScore => prevScore += addToScore);
         }
     }
@@ -85,7 +85,7 @@ let scoreMatches = (grid,match_indexes) => {
 
 let checkGameOver = (grid, swapCount) => {
     let matchesFound = checkForMatches(grid);
-    console.log("Matches Found, game continues:", matchesFound);
+    //console.log("Matches Found, game continues:", matchesFound);
     if(matchesFound.length != 0 || swapCount > 0){
         return false;
     }
@@ -104,12 +104,12 @@ let checkGameOver = (grid, swapCount) => {
             }
             //console.log("Number Total", numberToAdd + grid[i+dir]);
             if((numberToAdd + grid[i+dir]) <= 10){
-                console.log("Game not over, move at index:",i);
+                //console.log("Game not over, move at index:",i);
                 return false;
             }
         }
     }
-    console.log("Game Over!");
+    //console.log("Game Over!");
     //debugger;
     return true;
 }
@@ -122,12 +122,12 @@ let checkForMatches = (grid) =>{
     //let directions = [1,5,-1,-5];
     let directions = [1,5];
     for(var i = 0; i < grid.length; i++){
-        let match_number = grid[i];
-        if(match_number === ""){
-            continue;
-        }
         //console.log("Current Search Index: ", i);
         directions.forEach(direction => {
+            let match_number = grid[i];
+            if(match_number === ""){
+                return;
+            }
             //console.log("Direction: ",direction);
             let searchIndex = i;
             let ydir = Math.abs(direction)===5 ? Math.sign(direction) : 0;
@@ -147,6 +147,7 @@ let checkForMatches = (grid) =>{
                 }
                 if(match_number === 11){
                     match_number = grid[searchIndex+direction];
+                    //console.log("Started with 11, next num is",match_number);
                 }
                 if(match_number === grid[searchIndex+direction] || grid[searchIndex+direction] === 11){
                     searchIndex += direction;
@@ -158,7 +159,7 @@ let checkForMatches = (grid) =>{
                     //console.log("X",xpos,"Y",ypos,"Match Number",match_number);
                     //console.log('XPOS+XDIR: ',xpos+xdir,'YPOS-YDIR: ',ypos+ydir);
                     if((xpos+xdir < 0 || xpos+xdir > 4)||(ypos+ydir < 0 || ypos+ydir > 4)){
-                        console.log("OUT OF BOUNDS");
+                        //console.log("OUT OF BOUNDS");
                         end = true;
                         if(cur_match.length >= 3){
                             if(cleanMatches(match_indexes,cur_match) != true){
@@ -179,7 +180,7 @@ let checkForMatches = (grid) =>{
             }
         })
     }
-    console.table("Matches found", match_indexes);
+    //console.table("Matches found", match_indexes);
     return match_indexes;
 }
 
@@ -201,6 +202,9 @@ let randomNumber = () =>{
     return Math.floor(Math.random() * 11) + 1;//11 is for the swap cube
 }
 
+const getYPos = (index) =>{
+    return Math.floor((index)/5);
+}
 
 
 
@@ -208,4 +212,6 @@ let randomNumber = () =>{
 
 
 
-export {scoreMatches,checkForMatches,randomNumber, getEmptyIndexes,checkGameOver, checkForSwapCubes};
+
+export {scoreMatches,checkForMatches,randomNumber, 
+    getEmptyIndexes,checkGameOver, checkForSwapCubes, getYPos};
