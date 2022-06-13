@@ -228,7 +228,9 @@ export default function Grid(props){
 
     let getNumblocks = () =>{
         //console.log("Rendering Numblocks",numblocks);
-        return (<div className={styles.grid}>{numblocks}</div>);
+        return (<div className={styles.grid} style={{minHeight:minHeight,height:minHeight}}>
+                    {numblocks}
+                </div>);
     }
 
     let updateGrid = (numblocksUpdate, updateGridOnly = false, swap = false, dropDirection = -1) => {
@@ -260,11 +262,9 @@ export default function Grid(props){
     let renderGrid = () => {
         if(tutorialMode){
             return(
-                
-                <div className={styles.grid} style={{maxWidth:'100%'}}>
+                <>
                     {getNumblocks()}
-                </div>
-
+                </> 
             )
         }
         return(
