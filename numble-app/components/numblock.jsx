@@ -23,7 +23,7 @@ export default function Numblock(props){
     let startAddAnimation = (cube_index,cubes_to_update,xDir, yDir) =>{
         anim_api.start(ind => {
             if (ind === cube_index){
-                console.log("Starting anim for index: ", index);
+                //console.log("Starting anim for index: ", index);
                 return({
                     from:{x:0,y:0,zIndex:1},
                     to:{x:getCubeWidth()*xDir,y:getCubeWidth()*yDir,zIndex:0},
@@ -56,7 +56,7 @@ export default function Numblock(props){
     }
 
     let numblockLogic = () => {
-        console.log("Match Anim Status: ", match_anim_status.current);
+        //console.log("Match Anim Status: ", match_anim_status.current);
         let xDir = x - activeNumblock.x;
         let yDir = y - activeNumblock.y;
         let isAdjacentX = (Math.abs(x - activeNumblock.x) ===  1)&&((y - activeNumblock.y)===0);
@@ -83,7 +83,7 @@ export default function Numblock(props){
             
             decrementSwapCount();
 
-            console.log("number of swaps ", swapCount);
+            //console.log("number of swaps ", swapCount);
             
             deSelectNumblock();
             return;
@@ -98,8 +98,8 @@ export default function Numblock(props){
             return;
         }
 
-        console.log("Active Numblock", activeNumblock);
-        console.log("This Numblock", props);
+        //console.log("Active Numblock", activeNumblock);
+        //console.log("This Numblock", props);
 
         selectNumblock({index,num,x,y});
     }

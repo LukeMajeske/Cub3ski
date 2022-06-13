@@ -5,11 +5,12 @@ import {useNumbleUpdateContext} from '../Contexts/numbleContext'
 export default function RefreshGrid(props) {
     const refreshGrid = props.refresh;
     const setSwapCount = props.setSwapCount;
-    const {setScore} = useNumbleUpdateContext();
+    const {setScore,deSelectNumblock} = useNumbleUpdateContext();
 
     const handleRefresh = () => {
-        setScore(prevScore => prevScore = 0);
+        setScore(0);
         setSwapCount(0);
+        deSelectNumblock();
         refreshGrid();
     }
     return(

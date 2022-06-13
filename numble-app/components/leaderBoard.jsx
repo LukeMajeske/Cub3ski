@@ -19,7 +19,7 @@ export default function LeaderBoard(){
         const models = await DataStore.query(Highscores,Predicates.ALL,{
             sort: s => s.score(SortDirection.DESCENDING)
         });
-
+        
         let scores = [];
         for(const [index,score] of models.entries()){
             if(index >= 10){

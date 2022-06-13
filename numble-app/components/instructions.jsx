@@ -27,7 +27,7 @@ export default  function Instructions(){
 
 
     let displayText = () =>{
-        console.log("Current Step: ", step);
+        //console.log("Current Step: ", step);
         switch(step){
             case 1:
                 return(<p><strong>{step}: </strong> Click to select one of the cubes below.</p>);

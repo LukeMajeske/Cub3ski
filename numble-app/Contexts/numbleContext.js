@@ -9,10 +9,12 @@ export function NumbleProvider({ children }) {
     const [activeNumblock, setActiveNumblock] = useState({index:-1,num:0,x:-10,y:-10});
     const [tutorialMode, setTutorialMode] = useState(false);
     const [showLeaderboard, setShowLeaderboard] = useState(false);
-    const [gameOver, setGameOver] = useState(false); 
+    const [gameOver, setGameOver] = useState(false);
+    const [showGameOver, setShowGameOver] = useState(false);
     const [step,setStep] = useState(1);//Keeps track of what step of the tutorial user is on.
     const [numblock_grid, setNumblockGrid] = useState([]);
-    const [score, setScore] = useState(0);
+    //const [score, setScore] = useState(0);
+    const score = useRef(0);
     const key_count = useRef(1);//For cubes
     const grid_key_count = useRef(1);//For grids
     const match_anim_status = useRef(false); //True = match animation is in process
@@ -54,6 +56,19 @@ export function NumbleProvider({ children }) {
         }
     }
 
+    const handleGameOver = (gameOver) => {
+        setGameOver(gameOver);
+        setShowGameOver(gameOver);
+        localStorage.setItem("gameState",JSON.stringify({score:0,swaps:3,gridState:[],gameStatus:"gameOver"}));
+    }
+
+    const handleAddToScore = (addToScore) =>{
+        score.current += addToScore;
+    }
+
+    const setScore= (newScore) =>{
+        score.current = newScore;
+    }
 
     let updateNumblockGrid = (new_grid) => {
         setNumblockGrid(prevGrid => prevGrid = new_grid);
@@ -62,10 +77,10 @@ export function NumbleProvider({ children }) {
   
     return (
       <NumbleContext.Provider value={{activeNumblock, numblock_grid, key_count, 
-      tutorialMode, step, match_anim_status, gameOver,score, showLeaderboard, grid_key_count}}>
+      tutorialMode, step, match_anim_status,gameOver,showGameOver,score, showLeaderboard, grid_key_count}}>
           <NumbleUpdateContext.Provider value={{selectNumblock, deSelectNumblock, 
-            updateNumblockGrid,setTutorialMode,handleTutorial, setStep,setGameOver, 
-            setScore, setShowLeaderboard, getCubeWidth}}>
+            updateNumblockGrid,setTutorialMode,handleTutorial, setStep,handleGameOver,setShowGameOver, 
+            handleAddToScore, setScore,setShowLeaderboard, getCubeWidth}}>
             {children}
           </NumbleUpdateContext.Provider>
       </NumbleContext.Provider>

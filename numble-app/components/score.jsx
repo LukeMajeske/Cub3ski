@@ -5,7 +5,7 @@ export default function Score(){
     const {score} = useNumbleContext();
     return(
         <div>
-            <p>Score: {score}</p>
+            <p>Score: {score.current}</p>
         </div>
     )
 }

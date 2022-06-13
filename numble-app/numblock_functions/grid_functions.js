@@ -199,7 +199,12 @@ const checkForSwapCubes = (grid, match_indexes) => {
 }
 
 let randomNumber = () =>{
-    return Math.floor(Math.random() * 11) + 1;//11 is for the swap cube
+    //11 is for the swap cube
+    //If number is <= 1 cube is a swap cube, should be a 4% chance
+    if ((Math.floor(Math.random() * 100) + 1) <= 2){
+        return 11;
+    }
+    return Math.floor(Math.random() * 10) + 1;
 }
 
 const getYPos = (index) =>{

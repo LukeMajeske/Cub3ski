@@ -6,8 +6,8 @@ import {Highscores} from "../src/models";
 
 
 export default function GameOver(){
-    const {gameOver,score} = useNumbleContext();
-    const {setGameOver} = useNumbleUpdateContext();
+    const {gameOver,showGameOver,score} = useNumbleContext();
+    const {setShowGameOver} = useNumbleUpdateContext();
     const [localScore,setLocalScore] = useState([]);
     const [username, setUsername] = useState("anon");
     const scoreSorted = useRef(false); //If scores have been sorted, don't try again.
@@ -15,7 +15,7 @@ export default function GameOver(){
     //const [show,setShow] = useState(false);
 
     let handleClose = () => {
-        setGameOver(false);
+        setShowGameOver(false);
     }
 
     let handleScorePost = async () => {
@@ -36,12 +36,12 @@ export default function GameOver(){
             return;
         }
         try{
-            console.log("Saving Score", score);
+            //console.log("Saving Score", score);
             await DataStore.save(
             new Highscores(
                 {
                     "username":username,
-                    "score":score
+                    "score":score.current
                 }
             )
             );
@@ -49,7 +49,7 @@ export default function GameOver(){
             alert("Score Posted Successfully!");
         }
         catch(error){
-            console.log("Failed to save score",error);
+            //console.log("Failed to save score",error);
         }
     }
 
@@ -62,7 +62,7 @@ export default function GameOver(){
             }
             scoreCount++;
         }
-        console.log(localScore);
+        //console.log(localScore);
         return(
         <>
             <p>Game Over</p>
@@ -89,16 +89,15 @@ export default function GameOver(){
             localHighScores = JSON.parse(localStorage.getItem("highscore"));
             //If first time playing
             if(localHighScores === null){
-                console.log("Setting Score:", score);
-                localStorage.setItem("highscore",JSON.stringify([score,0,0,0,0]));
+                localStorage.setItem("highscore",JSON.stringify([score.current,0,0,0,0]));
             }
             //Else determine where current score goes.
             else{
                 let sorted_scores = [...localHighScores,0];//length of localScore.current + 1
                 for(var i = localHighScores.length - 1; i >= 0 ; i--){
-                    if(score > localHighScores[i]){
+                    if(score.current > localHighScores[i]){
                         sorted_scores[i+1] = localHighScores[i];
-                        sorted_scores[i] = score;
+                        sorted_scores[i] = score.current;
                     }
                     //If score is not greater than the next greatest score, end comparrison
                     else{
@@ -116,7 +115,7 @@ export default function GameOver(){
     return(
         <Modal 
         onClose={()=>handleClose(false)} 
-        show={gameOver} 
+        show={showGameOver} 
         title={<strong>Thanks for playing!</strong>}
         body={gameOverBody()}/>
     )
