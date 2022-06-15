@@ -9,7 +9,7 @@ export default function RefreshGrid(props) {
 
     const handleRefresh = () => {
         setScore(0);
-        setSwapCount(0);
+        setSwapCount(3);
         deSelectNumblock();
         refreshGrid();
     }

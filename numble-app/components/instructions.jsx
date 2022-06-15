@@ -8,20 +8,26 @@ import {BsFillQuestionCircleFill} from 'react-icons/bs';
 export default  function Instructions(){
     const {step} = useNumbleContext();
     const {setTutorialMode, deSelectNumblock,setStep} = useNumbleUpdateContext();
+    const [showOnLoad,setShowOnLoad] = useState(false);
     const [show,setShow] = useState(false);
     const [grid, setGrid] = useState([4,6]);
     
-    let handleShow = () => {
+    const handleShow = () => {
         setShow(true);
         setTutorialMode(true);
         deSelectNumblock();
     }
 
-    let handleClose = () => {
+    const handleClose = () => {
         setShow(false);
         setTutorialMode(false);
         setStep(prevStep => prevStep = 1);
         deSelectNumblock();
+    }
+
+    const handleShowOnLoad = () =>{
+        localStorage.setItem("showTutorial",JSON.stringify(!showOnLoad));
+        setShowOnLoad(!showOnLoad);
     }
 
 
@@ -77,6 +83,7 @@ export default  function Instructions(){
         if(step != 6){
             buttons.push(<button onClick={()=>setStep(prevStep=>prevStep += 1)}>Next</button>);
         }
+        buttons.push(<label><input type="checkbox" checked={!showOnLoad} onChange={handleShowOnLoad}/>Don't Show Me This Again</label>);
         return(buttons);
 
     }
@@ -86,6 +93,20 @@ export default  function Instructions(){
         {displayButtons()}
 
     </section>)
+
+
+    useEffect(()=>{
+        let showTutorial = JSON.parse(localStorage.getItem("showTutorial"));
+
+        if (showTutorial === null){
+            localStorage.setItem("showTutorial","true");
+            setShowOnLoad(true);
+            showTutorial = true;
+        }
+        if(showTutorial === true){
+            handleShow();
+        }
+    },[]) 
 
     return(
         <>
