@@ -56,6 +56,7 @@ export default function Home() {
 
     if(gameState === null){
       localStorage.setItem("gameState",JSON.stringify({score:0,swaps:3,gridState:[],gameStatus:"start"}));
+      gameState = {score:0,swaps:3,gridState:[],gameStatus:"start"};
     }
     if(gameState.gameStatus === "inProgress"){
       setScore(gameState.score);
