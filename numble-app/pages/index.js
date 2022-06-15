@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
   //DEFINE STATE
-  const {grid_key_count} = useNumbleContext();
+  const {grid_key_count,gameMode} = useNumbleContext();
   const {setScore} = useNumbleUpdateContext();
   let gameState = {};
   let generatedGrid = []
@@ -35,8 +35,8 @@ export default function Home() {
                       2,1,3,1,1,
                       3,2,1,3,3,
                       3,8,3,6,5];*/
-  
-    generatedGrid = cub3skiGrids[Math.floor(Math.random() * (cub3skiGrids.length+1))];
+    
+    generatedGrid = cub3skiGrids[gameMode.current][Math.floor(Math.random() * (cub3skiGrids[gameMode.current].length))];
   
     //console.log("generate grid!", Math.random() * (cub3skiGrids.length+1));
   

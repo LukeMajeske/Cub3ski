@@ -14,6 +14,7 @@ import RefreshGrid from './refreshGrid'
 
 export default function Grid(props){
     const [numblock_grid,setNumblockGrid] = useState(props.numblock_grid);
+    const [mode, setMode] = useState(1)//0=endlessMode, 1=puzzleMode
     const size = props.numblock_grid.length;
     const tutorialMode = props.tutorialMode;
     const [numblocks, setNumblocks] = useState([]);
@@ -135,10 +136,12 @@ export default function Grid(props){
     let newNumblocks = (dropDirection = -1) => {
         //fill in empty spaces with new numbers
         //console.log("New Numblocks", cur_grid.current);
-        for(var i = size; i >= 0; i--){
-            if(cur_grid.current[i] == ""){
-                cur_grid.current[i] = randomNumber();
-                setDropNumblock(i, dropDirection);
+        if(mode === 0){//If in endless mode
+            for(var i = size; i >= 0; i--){
+                if(cur_grid.current[i] == ""){
+                    cur_grid.current[i] = randomNumber();
+                    setDropNumblock(i, dropDirection);
+                }
             }
         }
         updateNumblocks();
@@ -201,6 +204,9 @@ export default function Grid(props){
     //If numblock has empty space beneath it, let it drop to the bottom.
     //give index or indexes of empty spaces
     let dropNumblocks = (grid,dropDirection = -5) => {
+        if(mode != 0){//if not in endless mode, always drop cubes downwards;
+            dropDirection = -5;
+        }
         if(match_anim_status.current === true){
             return;
         }

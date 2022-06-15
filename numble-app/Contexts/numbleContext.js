@@ -14,6 +14,7 @@ export function NumbleProvider({ children }) {
     const [step,setStep] = useState(1);//Keeps track of what step of the tutorial user is on.
     const [numblock_grid, setNumblockGrid] = useState([]);
     //const [score, setScore] = useState(0);
+    const gameMode = useRef(1)//0=endless, 1=puzzle
     const score = useRef(0);
     const key_count = useRef(1);//For cubes
     const grid_key_count = useRef(1);//For grids
@@ -77,7 +78,7 @@ export function NumbleProvider({ children }) {
   
     return (
       <NumbleContext.Provider value={{activeNumblock, numblock_grid, key_count, 
-      tutorialMode, step, match_anim_status,gameOver,showGameOver,score, showLeaderboard, grid_key_count}}>
+      tutorialMode, step, match_anim_status,gameOver,showGameOver,score, showLeaderboard, grid_key_count, gameMode}}>
           <NumbleUpdateContext.Provider value={{selectNumblock, deSelectNumblock, 
             updateNumblockGrid,setTutorialMode,handleTutorial, setStep,handleGameOver,setShowGameOver, 
             handleAddToScore, setScore,setShowLeaderboard, getCubeWidth}}>

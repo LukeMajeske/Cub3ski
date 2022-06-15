@@ -11,8 +11,8 @@ export default function Numblock(props){
     const {selectNumblock,deSelectNumblock,handleTutorial, getCubeWidth} = useNumbleUpdateContext();
     const {index,num, x,y,updateGrid,decrementSwapCount,swapCount,animation,anim_api} = props;
     const [selected, toggleSelected] = useState(false);
-    const [z_index, setZIndex]= useState(1);
     const displayItem = num === 11 ? <HiSwitchHorizontal/> : num;
+    const visible = num === "" ? "hidden" : "visible";
 
     const {pop} = useSpring({
         from:{x:0},
@@ -118,7 +118,7 @@ export default function Numblock(props){
                     <p className={styles.noselect}>{displayItem}</p>
                 </animated.div>
                 :
-                <animated.div className={styles.card} style={{...animation}}  onClick={() => {handleSelect(); numblockLogic(props);}}>
+                <animated.div className={styles.card} style={{...animation,visibility:visible}}  onClick={() => {handleSelect(); numblockLogic(props);}}>
                         <p className={styles.noselect}>{displayItem}</p>
                 </animated.div>
             }

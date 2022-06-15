@@ -83,7 +83,7 @@ export default  function Instructions(){
         if(step != 6){
             buttons.push(<button onClick={()=>setStep(prevStep=>prevStep += 1)}>Next</button>);
         }
-        buttons.push(<label><input type="checkbox" checked={!showOnLoad} onChange={handleShowOnLoad}/>Don't Show Me This Again</label>);
+        buttons.push(<label><input type="checkbox" checked={!showOnLoad} onChange={handleShowOnLoad}/>Dont Show Me This Again</label>);
         return(buttons);
 
     }
