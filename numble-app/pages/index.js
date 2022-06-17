@@ -5,7 +5,7 @@ import Script from 'next/script'
 import Page from '../components/next-seo'
 import cub3skiGrids from '../src/cub3ski_grids'
 import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext';
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 
 
@@ -14,17 +14,17 @@ export default function Home() {
   const {grid_key_count,gameMode} = useNumbleContext();
   const {setScore} = useNumbleUpdateContext();
   let gameState = {};
-  let generatedGrid = []
+  const generatedGrid = useRef();
   
 
 
   const handleRefresh = () => {
     setGrid(prevGrid=> prevGrid = gen_grid());
-    localStorage.setItem("gameState",JSON.stringify({score:0,swaps:3,gridState:generatedGrid,gameStatus:"start"}));
+    localStorage.setItem("gameState",JSON.stringify({score:0,swaps:3,gridState:generatedGrid.current,gameStatus:"start"}));
   }
   
   const gen_grid = () => {
-    //console.log("Generating grid...");
+    //console.log("Generating grid...");\
   
     //let new_grid = [9,8,10,9,10,10,9,8,7,8,1,10,9,6,10,10,5,7,10,10,9,7,5,9,1]; //to test game over
     //let new_grid = [9,8,7,6,7,2,3,10,8,10,6,5,10,6,9,10,10,6,10,10,10,10,4,10,10]; //to test scoring
@@ -36,11 +36,12 @@ export default function Home() {
                       3,2,1,3,3,
                       3,8,3,6,5];*/
     
-    generatedGrid = cub3skiGrids[gameMode.current][Math.floor(Math.random() * (cub3skiGrids[gameMode.current].length))];
+    generatedGrid.current = [...cub3skiGrids[gameMode.current][Math.floor(Math.random() * (cub3skiGrids[gameMode.current].length))]];
+    console.log("Generated Grid", generatedGrid.current);
   
     //console.log("generate grid!", Math.random() * (cub3skiGrids.length+1));
   
-    const grid = <Grid key={grid_key_count.current} numblock_grid = {generatedGrid} 
+    const grid = <Grid key={grid_key_count.current} numblock_grid = {generatedGrid.current} 
     showScore={true} showSidebar={true} tutorialMode={false} swapCount={3} refresh={handleRefresh}> </Grid>;
   
     grid_key_count.current++;

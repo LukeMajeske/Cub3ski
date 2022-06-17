@@ -12,6 +12,8 @@
   align-items: center;
 }
 
+
+
 .footer {
   display: flex;
   flex: 1;
@@ -83,6 +85,24 @@
   cursor: pointer;
   margin-right:15px;
 }
+.sidebarItem{
+  margin-right:15px;
+}
+
+.gameModeMenu{
+  background-color:#eaeaea;
+  padding:5px;
+  border-radius: 5px;
+}
+
+
+
+.selectedGameMode{
+  color: white;
+  user-select: none;
+  background-color: dodgerblue;
+}
+
 .spacer{
   flex:1 1 0px;
 }

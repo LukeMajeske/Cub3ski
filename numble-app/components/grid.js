@@ -4,6 +4,7 @@ import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleConte
 import Score from './score'
 import Instructions from './instructions'
 import GameOver from './gameOver'
+import GameMode from './gameMode'
 import LeaderBoard from './leaderBoard'
 import { useEffect, useRef, useState } from 'react';
 import {scoreMatches,checkForMatches, randomNumber, 
@@ -284,6 +285,7 @@ export default function Grid(props){
                             <GameOver/>
                             <LeaderBoard/>
                             <button className={styles.sidebarButton} onClick={()=>handleGameOver(true)}>End Game</button>
+                            <GameMode/>
                     </div>
                     : null}
 
