@@ -8,14 +8,16 @@ import GameMode from './gameMode'
 import LeaderBoard from './leaderBoard'
 import { useEffect, useRef, useState } from 'react';
 import {scoreMatches,checkForMatches, randomNumber, 
-    getEmptyIndexes,checkGameOver,checkForSwapCubes, getYPos} from '../numblock_functions/grid_functions';
+    getEmptyIndexes,checkGameOver,checkForSwapCubes, getYPos, checkPuzzleComplete} from '../numblock_functions/grid_functions';
 import {useSpringRef, useSprings, config} from "react-spring";
 import Swap from './swap'
 import RefreshGrid from './refreshGrid'
+import PuzzleEnd from './puzzleEnd'
+import Level from './level'
 
 export default function Grid(props){
     const [numblock_grid,setNumblockGrid] = useState(props.numblock_grid);
-    const [mode, setMode] = useState(1)//0=endlessMode, 1=puzzleMode
+    const [mode, setMode] = useState(props.gameMode)//0=endlessMode, 1=puzzleMode
     const size = props.numblock_grid.length;
     const tutorialMode = props.tutorialMode;
     const [numblocks, setNumblocks] = useState([]);
@@ -24,7 +26,7 @@ export default function Grid(props){
     const cur_grid = useRef(props.numblock_grid);
     //const [swapCount, setSwapCount] = useState(3);//When > 0, cubes whose sum > 10 can be swapped.
     const {key_count,match_anim_status,score} = useNumbleContext();
-    const {handleTutorial,handleGameOver, handleAddToScore, getCubeWidth} = useNumbleUpdateContext();
+    const {handleTutorial,handleGameOver, handleAddToScore, getCubeWidth, handlePuzzleComplete} = useNumbleUpdateContext();
     const swapCount = useRef(props.swapCount);
     let minHeight = ((Math.floor((cur_grid.current.length)/6)+1)*getCubeWidth())+'px';
     //console.log("minHeight",minHeight);
@@ -193,7 +195,13 @@ export default function Grid(props){
 
         //If there are no matches on the board, check to see if the game is over
         if(!tutorialMode){
-            handleGameOver(checkGameOver(cur_grid.current, swapCount.current));
+            if(mode === 0){
+                handleGameOver(checkGameOver(cur_grid.current, swapCount.current));
+            }
+            else if (mode === 1){
+                handlePuzzleComplete(checkPuzzleComplete(cur_grid.current));
+            }
+            
             //Save grid state into local storage
             //gameStatus:start,inProgress, gameOver
             //console.log("Localstorage Score:",score.current);
@@ -213,6 +221,7 @@ export default function Grid(props){
         }
         let emptyIndexes = getEmptyIndexes(grid);
         let drop_grid = [...grid];
+        let didDrop = false;//if no blocks dropped, still run a match check
         emptyIndexes.forEach(startIndex => {
             let searchIndex = startIndex + dropDirection;
             let new_numblocks = [];
@@ -223,14 +232,20 @@ export default function Grid(props){
                     drop_grid[searchIndex] = "";
                     setDropNumblock(startIndex, Math.sign(dropDirection)); //Math.sign(x) gives the direction which to drop numblocks. Positive is up, negative is down.
                     startIndex += dropDirection;
-                    //console.log("Drop!");
+                    didDrop = true;
                 }
                 searchIndex += dropDirection;
             }
         })
         cur_grid.current = drop_grid;
-        newNumblocks(Math.sign(dropDirection));
-        updateNumblocks();
+        if(didDrop === false){
+            updateNumblocks();
+            handleMatchCheck();
+        }
+        else{
+            newNumblocks(Math.sign(dropDirection));
+            updateNumblocks();
+        }
     }
 
     let getNumblocks = () =>{
@@ -277,15 +292,17 @@ export default function Grid(props){
         return(
             <>
             {props.showScore ? <div className={styles.topbar}><Score/><Swap swapCount={swapCount.current}/></div> : null}
+            {props.showLevel ? <div className={styles.topbar}><Level/></div> : null}
             <div className={styles.instructGrid}>
                 {props.showSidebar ?
                     <div className={styles.sidebar}>
                             <Instructions/>
                             <RefreshGrid refresh={props.refresh} setSwapCount={setSwapCount}/>
                             <GameOver/>
+                            <PuzzleEnd/>
                             <LeaderBoard/>
                             <button className={styles.sidebarButton} onClick={()=>handleGameOver(true)}>End Game</button>
-                            <GameMode/>
+                            <GameMode refresh={props.refresh}/>
                     </div>
                     : null}
 

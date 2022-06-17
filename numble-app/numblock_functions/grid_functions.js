@@ -114,6 +114,15 @@ let checkGameOver = (grid, swapCount) => {
     return true;
 }
 
+//If in puzzle mode, check if the grid is completely empty. If so the puzzle is complete!
+const checkPuzzleComplete = (grid) => {
+    const empty_cubes = getEmptyIndexes(grid);
+    if (empty_cubes.length === grid.length){
+        return true;
+    }
+    return false;
+}
+
 
 //Check for matches of 3 in a row or more
 let checkForMatches = (grid) =>{
@@ -219,4 +228,4 @@ const getYPos = (index) =>{
 
 
 export {scoreMatches,checkForMatches,randomNumber, 
-    getEmptyIndexes,checkGameOver, checkForSwapCubes, getYPos};
+    getEmptyIndexes,checkGameOver, checkPuzzleComplete, checkForSwapCubes, getYPos};

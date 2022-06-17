@@ -11,8 +11,8 @@ import { useEffect, useState, useRef } from 'react'
 
 export default function Home() {
   //DEFINE STATE
-  const {grid_key_count,gameMode} = useNumbleContext();
-  const {setScore} = useNumbleUpdateContext();
+  const {grid_key_count,gameMode, level} = useNumbleContext();
+  const {setScore, setLevel} = useNumbleUpdateContext();
   let gameState = {};
   const generatedGrid = useRef();
   
@@ -36,13 +36,28 @@ export default function Home() {
                       3,2,1,3,3,
                       3,8,3,6,5];*/
     
-    generatedGrid.current = [...cub3skiGrids[gameMode.current][Math.floor(Math.random() * (cub3skiGrids[gameMode.current].length))]];
-    console.log("Generated Grid", generatedGrid.current);
+    let gridNumber = 0;
+    let showScore = false;
+    let showLevel = false;
+    switch(gameMode.current){
+      case 0:
+        gridNumber = Math.floor(Math.random() * (cub3skiGrids[0].length));
+        showScore = true;
+        break;
+      case 1:
+        gridNumber = level.current - 1;
+        showLevel = true;
+        break;
+    }
+    console.log("Grid Number", gridNumber);
+    //debugger;
+    generatedGrid.current = [...cub3skiGrids[gameMode.current][gridNumber]];
+    
   
     //console.log("generate grid!", Math.random() * (cub3skiGrids.length+1));
   
-    const grid = <Grid key={grid_key_count.current} numblock_grid = {generatedGrid.current} 
-    showScore={true} showSidebar={true} tutorialMode={false} swapCount={3} refresh={handleRefresh}> </Grid>;
+    const grid = <Grid key={grid_key_count.current} gameMode={gameMode.current} numblock_grid = {generatedGrid.current} 
+    showScore={showScore} showLevel={showLevel} showSidebar={true} tutorialMode={false} swapCount={3} refresh={handleRefresh}> </Grid>;
   
     grid_key_count.current++;
   
@@ -51,8 +66,19 @@ export default function Home() {
 
   const [grid, setGrid] = useState();
 
+  const createLevelLocalStorage = () => {
+    const levelLocalStorage = JSON.parse(localStorage.getItem("levelState"));
+    if(levelLocalStorage === null){
+      localStorage.setItem("levelState",JSON.stringify({currentLevel:1,levelsCompleted:Array(100).fill(0)}));
+    }
+    else{
+      setLevel(levelLocalStorage.currentLevel);
+    }
+  }
 
   useEffect(()=>{
+    createLevelLocalStorage();
+
     gameState = JSON.parse(localStorage.getItem("gameState"));
 
     if(gameState === null){

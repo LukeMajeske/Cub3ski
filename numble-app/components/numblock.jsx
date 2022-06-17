@@ -11,8 +11,8 @@ export default function Numblock(props){
     const {selectNumblock,deSelectNumblock,handleTutorial, getCubeWidth} = useNumbleUpdateContext();
     const {index,num, x,y,updateGrid,decrementSwapCount,swapCount,animation,anim_api} = props;
     const [selected, toggleSelected] = useState(false);
+    const [visible, setVisible] = useState(num === "" ? "hidden" : "visible");
     const displayItem = num === 11 ? <HiSwitchHorizontal/> : num;
-    const visible = num === "" ? "hidden" : "visible";
 
     const {pop} = useSpring({
         from:{x:0},
@@ -23,11 +23,11 @@ export default function Numblock(props){
     let startAddAnimation = (cube_index,cubes_to_update,xDir, yDir) =>{
         anim_api.start(ind => {
             if (ind === cube_index){
-                //console.log("Starting anim for index: ", index);
+                console.log("Starting anim for index: ", cube_index);
                 return({
                     from:{x:0,y:0,zIndex:1},
                     to:{x:getCubeWidth()*xDir,y:getCubeWidth()*yDir,zIndex:0},
-                    onRest:()=>{ updateGrid(cubes_to_update,false,false,yDir !== 0 ? -yDir : -1);},
+                    onRest:()=>{updateGrid(cubes_to_update,false,false,yDir !== 0 ? -yDir : -1);},
                     immediate: key => key === "zIndex"
                 });
             }

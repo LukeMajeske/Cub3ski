@@ -12,6 +12,7 @@ a {
 }
 
 li{
+  cursor: pointer;
   margin:10px 0;
   user-select: none;
 }

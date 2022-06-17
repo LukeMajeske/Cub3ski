@@ -10,11 +10,14 @@ export function NumbleProvider({ children }) {
     const [tutorialMode, setTutorialMode] = useState(false);
     const [showLeaderboard, setShowLeaderboard] = useState(false);
     const [gameOver, setGameOver] = useState(false);
+    const [puzzleEnd, setPuzzleEnd] = useState(false);
     const [showGameOver, setShowGameOver] = useState(false);
+    const [showPuzzleEnd, setShowPuzzleEnd] = useState(false);
     const [step,setStep] = useState(1);//Keeps track of what step of the tutorial user is on.
     const [numblock_grid, setNumblockGrid] = useState([]);
     //const [score, setScore] = useState(0);
     const gameMode = useRef(1)//0=endless, 1=puzzle
+    const level = useRef(1);//Represents the current level for puzzle mode.
     const score = useRef(0);
     const key_count = useRef(1);//For cubes
     const grid_key_count = useRef(1);//For grids
@@ -32,6 +35,30 @@ export function NumbleProvider({ children }) {
         }
         return 80;
     }
+
+    const setGameMode = (mode) =>{
+        gameMode.current = mode;
+    }
+
+    const setLevel = (newLevel) =>{
+        level.current = newLevel;
+    }
+
+    const incrementLevel = () => {
+        level.current++;
+        let levelState = JSON.parse(localStorage.getItem('levelState'));
+        levelState.currentLevel = level.current;
+        localStorage.setItem('levelState',JSON.stringify(levelState));
+    }
+
+    const decrementLevel = () => {
+        level.current--;
+        let levelState = JSON.parse(localStorage.getItem('levelState'));
+        levelState.currentLevel = level.current;
+        localStorage.setItem('levelState',JSON.stringify(levelState));
+    }
+
+    
 
     let selectNumblock = (numblock) =>{ 
         /*if(tutorialMode){
@@ -63,6 +90,16 @@ export function NumbleProvider({ children }) {
         localStorage.setItem("gameState",JSON.stringify({score:0,swaps:3,gridState:[],gameStatus:"gameOver"}));
     }
 
+    const handlePuzzleComplete = (puzzleComplete) => {
+        if(puzzleComplete){
+            let levelState = JSON.parse(localStorage.getItem("levelState"));
+            levelState.levelsCompleted[level.current] = 1;
+            localStorage.setItem("levelState",JSON.stringify(levelState));
+            setShowPuzzleEnd(true);
+            setPuzzleEnd(true);
+        }
+    }
+
     const handleAddToScore = (addToScore) =>{
         score.current += addToScore;
     }
@@ -75,13 +112,14 @@ export function NumbleProvider({ children }) {
         setNumblockGrid(prevGrid => prevGrid = new_grid);
     }
 
+
   
     return (
       <NumbleContext.Provider value={{activeNumblock, numblock_grid, key_count, 
-      tutorialMode, step, match_anim_status,gameOver,showGameOver,score, showLeaderboard, grid_key_count, gameMode}}>
+      tutorialMode, step, match_anim_status,gameOver,showGameOver,score, level, showLeaderboard, grid_key_count, gameMode, showPuzzleEnd}}>
           <NumbleUpdateContext.Provider value={{selectNumblock, deSelectNumblock, 
-            updateNumblockGrid,setTutorialMode,handleTutorial, setStep,handleGameOver,setShowGameOver, 
-            handleAddToScore, setScore,setShowLeaderboard, getCubeWidth}}>
+            updateNumblockGrid,setTutorialMode,handleTutorial, setStep,handleGameOver, handlePuzzleComplete,setShowGameOver, 
+            handleAddToScore, setScore,setShowLeaderboard, getCubeWidth, setGameMode, setLevel, setShowPuzzleEnd,setPuzzleEnd, decrementLevel, incrementLevel}}>
             {children}
           </NumbleUpdateContext.Provider>
       </NumbleContext.Provider>
