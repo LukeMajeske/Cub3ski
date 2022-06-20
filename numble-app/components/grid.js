@@ -330,10 +330,9 @@ export default function Grid(props){
                     <div className={styles.sidebar}>
                             <Instructions/>
                             <RefreshGrid refresh={props.refresh} setSwapCount={setSwapCount}/>
-                            <GameOver/>
+                            {mode === 0 ? <><GameOver/><LeaderBoard/><button className={styles.sidebarButton} onClick={()=>handleGameOver(true)}>End Game</button></>:null}
                             <PuzzleEnd refresh={props.refresh}/>
-                            <LeaderBoard/>
-                            <button className={styles.sidebarButton} onClick={()=>handleGameOver(true)}>End Game</button>
+                            
                             <GameMode refresh={props.refresh}/>
                     </div>
                     : null}

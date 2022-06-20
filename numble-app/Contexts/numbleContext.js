@@ -59,7 +59,7 @@ export function NumbleProvider({ children }) {
     }
 
     const decrementLevel = () => {
-        if(level.current+1 >= 0){
+        if(level.current-1 > 0){
             level.current--;
             let levelState = JSON.parse(localStorage.getItem('levelState'));
             levelState.currentLevel = level.current;
