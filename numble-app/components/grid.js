@@ -25,8 +25,9 @@ export default function Grid(props){
     const empty_indexes = useRef([]);
     const cur_grid = useRef(props.numblock_grid);
     //const [swapCount, setSwapCount] = useState(3);//When > 0, cubes whose sum > 10 can be swapped.
+    const refreshGrid = props.refresh;
     const {key_count,match_anim_status,score} = useNumbleContext();
-    const {handleTutorial,handleGameOver, handleAddToScore, getCubeWidth, handlePuzzleComplete} = useNumbleUpdateContext();
+    const {handleTutorial,handleGameOver, handleAddToScore, getCubeWidth, handlePuzzleComplete,incrementLevel, decrementLevel} = useNumbleUpdateContext();
     const swapCount = useRef(props.swapCount);
     let minHeight = ((Math.floor((cur_grid.current.length)/6)+1)*getCubeWidth())+'px';
     //console.log("minHeight",minHeight);
@@ -39,6 +40,18 @@ export default function Grid(props){
     }
     const addToSwapCount=(count)=>{
         swapCount.current += count;
+    }
+
+    const handlePrevLevel=()=>{
+        decrementLevel();
+        refreshGrid();
+
+    }
+
+    const handleNextLevel=()=>{
+        incrementLevel();
+        refreshGrid();
+
     }
 
     const [springs,api] = useSprings(size, index => ({
@@ -70,8 +83,11 @@ export default function Grid(props){
         if(empty_indexes.current.length > 0){
             if(!tutorialMode){
                 //Before removing the matches, empty_indexes.current represents the current matches on the grid.
-                const addScore = scoreMatches(cur_grid.current, empty_indexes.current);
-                handleAddToScore(addScore);   
+                if(mode === 0){
+                    const addScore = scoreMatches(cur_grid.current, empty_indexes.current);
+                    handleAddToScore(addScore);   
+                }
+
             }
 
             removeMatches(empty_indexes.current);
@@ -207,7 +223,7 @@ export default function Grid(props){
             //Save grid state into local storage
             //gameStatus:start,inProgress, gameOver
             //console.log("Localstorage Score:",score.current);
-            localStorage.setItem("gameState",JSON.stringify({score:score.current,swaps:swapCount.current,gridState:cur_grid.current,gameStatus:"inProgress"}));
+            localStorage.setItem("gameState",JSON.stringify({score:score.current,swaps:swapCount.current,gridState:cur_grid.current,gameStatus:"inProgress",gameMode:mode}));
         }
         setNumblocks(prevBlocks => prevBlocks = new_numblocks);
     }
@@ -306,7 +322,9 @@ export default function Grid(props){
         return(
             <>
             {props.showScore ? <div className={styles.topbar}><Score/><Swap swapCount={swapCount.current}/></div> : null}
-            {props.showLevel ? <div className={styles.topbar}><Level/></div> : null}
+            {props.showLevel ? <div className={styles.topbar}><button onClick={()=>{handlePrevLevel();}}>Prev Level</button>
+            <Level levelName={props.levelName}/><Swap swapCount={swapCount.current}/>
+            <button onClick={()=>{handleNextLevel();}}>Next Level</button></div> : null}
             <div className={styles.instructGrid}>
                 {props.showSidebar ?
                     <div className={styles.sidebar}>

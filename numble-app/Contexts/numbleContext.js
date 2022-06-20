@@ -26,7 +26,7 @@ export function NumbleProvider({ children }) {
     //CHANGE CUBE ANIMATIONS BASED ON MEDIA QUERY
     const isMobile = useMediaQuery({ query: '(max-width: 467px)' });
     const isTinyMobile = useMediaQuery({ query: '(max-width: 330px)' })
-    
+  
     const getCubeWidth = () =>{
         if(isTinyMobile){
             return 55;
@@ -70,7 +70,6 @@ export function NumbleProvider({ children }) {
         }
 
     }
-
     
 
     let selectNumblock = (numblock) =>{ 
