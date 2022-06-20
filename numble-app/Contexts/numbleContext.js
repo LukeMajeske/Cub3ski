@@ -1,5 +1,6 @@
 import { createContext, useContext, useState,useRef } from "react";
 import { useMediaQuery } from 'react-responsive'
+import cub3skiGrids from '../src/cub3ski_grids'
 
 
 export const NumbleContext = createContext();
@@ -16,7 +17,7 @@ export function NumbleProvider({ children }) {
     const [step,setStep] = useState(1);//Keeps track of what step of the tutorial user is on.
     const [numblock_grid, setNumblockGrid] = useState([]);
     //const [score, setScore] = useState(0);
-    const gameMode = useRef(1)//0=endless, 1=puzzle
+    const gameMode = useRef(0)//0=endless, 1=puzzle
     const level = useRef(1);//Represents the current level for puzzle mode.
     const score = useRef(0);
     const key_count = useRef(1);//For cubes
@@ -45,17 +46,29 @@ export function NumbleProvider({ children }) {
     }
 
     const incrementLevel = () => {
-        level.current++;
-        let levelState = JSON.parse(localStorage.getItem('levelState'));
-        levelState.currentLevel = level.current;
-        localStorage.setItem('levelState',JSON.stringify(levelState));
+        if(level.current+1 <= cub3skiGrids[1].length){
+            level.current++;
+            let levelState = JSON.parse(localStorage.getItem('levelState'));
+            levelState.currentLevel = level.current;
+            localStorage.setItem('levelState',JSON.stringify(levelState));
+        }
+        else{
+            alert("There are no more levels :(");
+        }
+
     }
 
     const decrementLevel = () => {
-        level.current--;
-        let levelState = JSON.parse(localStorage.getItem('levelState'));
-        levelState.currentLevel = level.current;
-        localStorage.setItem('levelState',JSON.stringify(levelState));
+        if(level.current+1 >= 0){
+            level.current--;
+            let levelState = JSON.parse(localStorage.getItem('levelState'));
+            levelState.currentLevel = level.current;
+            localStorage.setItem('levelState',JSON.stringify(levelState));
+        }
+        else{
+            alert("There is no 0th level.");
+        }
+
     }
 
     

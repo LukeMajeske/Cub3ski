@@ -5,9 +5,10 @@ import {DataStore} from 'aws-amplify';
 import {Highscores} from "../src/models";
 
 
-export default function PuzzleEnd(){
+export default function PuzzleEnd(props){
     const {showPuzzleEnd} = useNumbleContext();
     const {setShowPuzzleEnd,setPuzzleEnd, incrementLevel} = useNumbleUpdateContext();
+    const RefreshGrid = props.refresh;
 
 
     let handleClose = () => {
@@ -18,6 +19,7 @@ export default function PuzzleEnd(){
         incrementLevel();
         setShowPuzzleEnd(false);
         setPuzzleEnd(false);
+        RefreshGrid();
     }
 
     let puzzleEndBody = () =>{

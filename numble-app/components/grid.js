@@ -6,6 +6,7 @@ import Instructions from './instructions'
 import GameOver from './gameOver'
 import GameMode from './gameMode'
 import LeaderBoard from './leaderBoard'
+import Level from './level'
 import { useEffect, useRef, useState } from 'react';
 import {scoreMatches,checkForMatches, randomNumber, 
     getEmptyIndexes,checkGameOver,checkForSwapCubes, getYPos, checkPuzzleComplete} from '../numblock_functions/grid_functions';
@@ -13,7 +14,6 @@ import {useSpringRef, useSprings, config} from "react-spring";
 import Swap from './swap'
 import RefreshGrid from './refreshGrid'
 import PuzzleEnd from './puzzleEnd'
-import Level from './level'
 
 export default function Grid(props){
     const [numblock_grid,setNumblockGrid] = useState(props.numblock_grid);
@@ -83,23 +83,19 @@ export default function Grid(props){
 
         }
     }
-    let handleDropPhase = () => {
-        //console.log("Drop Phase");
-    }
     let handleGridUpdate = () => {
         if(cur_grid.current !== undefined){
             //console.log("updating after drop:",cur_grid.current);
             setNumblockGrid(prevGrid => prevGrid = cur_grid.current);
         }
     }
-    let setDropNumblock = (numblock_index, yDir=-1) => {
+    let setDropNumblock = (numblock_index, yDir=-1, isLastCube = false) => {
         api.start(index => {
             if (index === numblock_index){
                 return({
                     from:{y:getCubeWidth()*yDir, x:0, opacity:1,scale:1,zIndex:1},
                     to:{y:0, x:0, opacity:1,scale:1,zIndex:1},
-                    onStart: ()=>{handleDropPhase()},
-                    onRest: ()=>{handleMatchCheck()},
+                    onRest: ()=>{console.log("Match Check After match animation"); if(isLastCube){handleMatchCheck()}},
                     config: config.stiff,
                     immediate: key => key === "zIndex"
                 });
@@ -107,7 +103,7 @@ export default function Grid(props){
         })
     }
 
-    let setMatchNumblock = (numblock_index) => {
+    let setMatchNumblock = (numblock_index, isLastCube = false) => {
         api.start(index => {
             if (index === numblock_index){
                 //console.log("Starting anim for index: ", index);
@@ -117,7 +113,7 @@ export default function Grid(props){
                         {opacity:1, scale:1},
                         {opacity:0,scale:0}],
                     onStart:() => {match_anim_status.current = true;},
-                    onRest:()=>{match_anim_status.current = false; dropNumblocks(cur_grid.current); handleTutorial(4,5);},
+                    onRest:()=>{match_anim_status.current = false; if(isLastCube){dropNumblocks(cur_grid.current)}; handleTutorial(4,5);},
                     config:{tension:450,friction:30}
                     
                 });
@@ -129,9 +125,15 @@ export default function Grid(props){
         match_indexes = match_indexes.flat();
         match_indexes = [...new Set(match_indexes)];
         //console.log("Remove Matches",match_indexes);
-        match_indexes.forEach(index => {
-            setMatchNumblock(index);
-            cur_grid.current[index] = "";
+        match_indexes.forEach((cubeIndex, ind) => {
+            if(ind === match_indexes.length-1){
+                console.log("Last match cube to remove!");
+                setMatchNumblock(cubeIndex, true);
+            }
+            else{
+                setMatchNumblock(cubeIndex);
+            }
+            cur_grid.current[cubeIndex] = "";
         })
 
     }
@@ -185,7 +187,7 @@ export default function Grid(props){
     let updateNumblocks = () => {
         //console.log("Update Numblocks...");
         let new_numblocks = [];
-
+        console.log("updating numblocks to:", cur_grid.current)
         
         for(var i = 1; i < size+1; i++){
             new_numblocks.push(createNumblock(i-1,springs[i-1]));
@@ -222,6 +224,7 @@ export default function Grid(props){
         let emptyIndexes = getEmptyIndexes(grid);
         let drop_grid = [...grid];
         let didDrop = false;//if no blocks dropped, still run a match check
+        let cubeIndexesToDrop = [];//Used to get a list of all cubes to be dropped. Call to check for matches only after the last cube has been dropped.
         emptyIndexes.forEach(startIndex => {
             let searchIndex = startIndex + dropDirection;
             let new_numblocks = [];
@@ -230,21 +233,32 @@ export default function Grid(props){
                 if(drop_grid[searchIndex] !== ""){
                     drop_grid[startIndex] = drop_grid[searchIndex];
                     drop_grid[searchIndex] = "";
-                    setDropNumblock(startIndex, Math.sign(dropDirection)); //Math.sign(x) gives the direction which to drop numblocks. Positive is up, negative is down.
+                    cubeIndexesToDrop.push(startIndex);
                     startIndex += dropDirection;
                     didDrop = true;
                 }
                 searchIndex += dropDirection;
             }
+            for(const [ind,cubeIndex] of cubeIndexesToDrop.entries()){
+                if(ind === cubeIndexesToDrop.length-1){
+                    //Math.sign(x) gives the direction which to drop numblocks. Positive is up, negative is down.
+                    setDropNumblock(cubeIndex, Math.sign(dropDirection), true);
+                }
+                else{
+                    setDropNumblock(cubeIndex, Math.sign(dropDirection));
+                }
+
+            }
         })
         cur_grid.current = drop_grid;
-        if(didDrop === false){
+        if(didDrop === false && mode === 1){
             updateNumblocks();
+            console.log("Match Check After checking for dropped cubes");
             handleMatchCheck();
         }
         else{
             newNumblocks(Math.sign(dropDirection));
-            updateNumblocks();
+            //updateNumblocks();
         }
     }
 
@@ -299,7 +313,7 @@ export default function Grid(props){
                             <Instructions/>
                             <RefreshGrid refresh={props.refresh} setSwapCount={setSwapCount}/>
                             <GameOver/>
-                            <PuzzleEnd/>
+                            <PuzzleEnd refresh={props.refresh}/>
                             <LeaderBoard/>
                             <button className={styles.sidebarButton} onClick={()=>handleGameOver(true)}>End Game</button>
                             <GameMode refresh={props.refresh}/>

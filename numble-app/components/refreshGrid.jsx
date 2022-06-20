@@ -8,8 +8,6 @@ export default function RefreshGrid(props) {
     const {setScore,deSelectNumblock} = useNumbleUpdateContext();
 
     const handleRefresh = () => {
-        setScore(0);
-        setSwapCount(0);
         deSelectNumblock();
         refreshGrid();
     }

@@ -20,6 +20,7 @@ export default function Home() {
 
   const handleRefresh = () => {
     setGrid(prevGrid=> prevGrid = gen_grid());
+    setScore(0);
     localStorage.setItem("gameState",JSON.stringify({score:0,swaps:3,gridState:generatedGrid.current,gameStatus:"start"}));
   }
   
