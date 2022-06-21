@@ -18,12 +18,13 @@ export default function Home() {
 
 
   const handleRefresh = (changeMode=false) => {
-    if(gameMode === 0 && changeMode === false){
+    setGrid(prevGrid=> prevGrid = gen_grid());
+    if(gameMode.current === 0 && changeMode === false){
+      console.log("reset");
       setScore(0);
       localStorage.setItem("gameState",JSON.stringify({score:0,swaps:3,gridState:generatedGrid.current,gameStatus:"start"}));
     }
     localStorage.setItem("gameMode",JSON.stringify(gameMode.current));
-    setGrid(prevGrid=> prevGrid = gen_grid());
   }
   
   const gen_grid = () => {
