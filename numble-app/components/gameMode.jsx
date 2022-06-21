@@ -8,7 +8,7 @@ export default function GameMode(props){
     
     const handleGameModeChange = (mode) =>{
         setGameMode(mode);
-        RefreshGrid();
+        RefreshGrid(true);
     }
 
     return(

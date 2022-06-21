@@ -72,14 +72,16 @@ export default function Grid(props){
     }
 
     let handleMatchCheck = () =>{
+        console.log("Running match check");
         if(cur_grid.current === undefined){
+            console.log("grid is undefined for match check");
             return;
         }
         empty_indexes.current = checkForMatches(cur_grid.current);
         swapIncrementOnFiveChain(empty_indexes.current);
         addToSwapCount(checkForSwapCubes(cur_grid.current,empty_indexes.current));
 
-        //console.log("empty indexs: ", empty_indexes.current);
+        console.log("empty indexs: ", empty_indexes.current);
         if(empty_indexes.current.length > 0){
             if(!tutorialMode){
                 //Before removing the matches, empty_indexes.current represents the current matches on the grid.
@@ -157,13 +159,22 @@ export default function Grid(props){
     let newNumblocks = (dropDirection = -1) => {
         //fill in empty spaces with new numbers
         //console.log("New Numblocks", cur_grid.current);
+        let new_cube_indexes = [];
         if(mode === 0){//If in endless mode
             for(var i = size; i >= 0; i--){
                 if(cur_grid.current[i] == ""){
                     cur_grid.current[i] = randomNumber();
-                    setDropNumblock(i, dropDirection);
+                    new_cube_indexes.push(i);
                 }
             }
+            new_cube_indexes.forEach((cubeIndex,index)=>{
+                if(index+1 === new_cube_indexes.length){
+                    setDropNumblock(cubeIndex, dropDirection,true);
+                }
+                else{
+                    setDropNumblock(cubeIndex, dropDirection);
+                }
+            })
         }
         updateNumblocks();
     }
@@ -223,7 +234,9 @@ export default function Grid(props){
             //Save grid state into local storage
             //gameStatus:start,inProgress, gameOver
             //console.log("Localstorage Score:",score.current);
-            localStorage.setItem("gameState",JSON.stringify({score:score.current,swaps:swapCount.current,gridState:cur_grid.current,gameStatus:"inProgress",gameMode:mode}));
+            if(mode === 0){
+                localStorage.setItem("gameState",JSON.stringify({score:score.current,swaps:swapCount.current,gridState:cur_grid.current,gameStatus:"inProgress"}));
+            }          
         }
         setNumblocks(prevBlocks => prevBlocks = new_numblocks);
     }

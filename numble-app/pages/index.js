@@ -13,15 +13,17 @@ export default function Home() {
   //DEFINE STATE
   const {grid_key_count,gameMode, level} = useNumbleContext();
   const {setScore, setLevel, setGameMode} = useNumbleUpdateContext();
-  let gameState = {};
   const generatedGrid = useRef();
   
 
 
-  const handleRefresh = () => {
+  const handleRefresh = (changeMode=false) => {
+    if(gameMode === 0 && changeMode === false){
+      setScore(0);
+      localStorage.setItem("gameState",JSON.stringify({score:0,swaps:3,gridState:generatedGrid.current,gameStatus:"start"}));
+    }
+    localStorage.setItem("gameMode",JSON.stringify(gameMode.current));
     setGrid(prevGrid=> prevGrid = gen_grid());
-    setScore(0);
-    localStorage.setItem("gameState",JSON.stringify({score:0,swaps:3,gridState:generatedGrid.current,gameStatus:"start",gameMode:gameMode.current}));
   }
   
   const gen_grid = () => {
@@ -42,11 +44,12 @@ export default function Home() {
     let showLevel = false;
     let swapCount = 3;
     let levelName = ""
+    let gameState = JSON.parse(localStorage.getItem("gameState"));
     switch(gameMode.current){
       case 0:
         gridNumber = Math.floor(Math.random() * (cub3skiGrids[0].length));
         showScore = true;
-        generatedGrid.current = [...cub3skiGrids[gameMode.current][gridNumber]];
+        generatedGrid.current = gameState.gameStatus === "inProgress" ? gameState.gridState : [...cub3skiGrids[gameMode.current][gridNumber]];
         break;
       case 1:
         gridNumber = level.current - 1;
@@ -59,7 +62,7 @@ export default function Home() {
     }
     console.log("Grid Number", gridNumber);   
   
-    //console.log("generate grid!", Math.random() * (cub3skiGrids.length+1));
+    console.log("generated grid!", generatedGrid.current);
   
     const grid = <Grid key={grid_key_count.current} gameMode={gameMode.current} numblock_grid = {generatedGrid.current} 
     showScore={showScore} showLevel={showLevel} showSidebar={true} tutorialMode={false} swapCount={swapCount} levelName={levelName} refresh={handleRefresh}> </Grid>;
@@ -84,19 +87,29 @@ export default function Home() {
   useEffect(()=>{
     createLevelLocalStorage();
 
-    gameState = JSON.parse(localStorage.getItem("gameState"));
+    let gameState = JSON.parse(localStorage.getItem("gameState"));
+    let mode = JSON.parse(localStorage.getItem("gameMode"));
 
     if(gameState === null){
-      localStorage.setItem("gameState",JSON.stringify({score:0,swaps:3,gridState:[],gameStatus:"start",gameMode:0}));
-      gameState = {score:0,swaps:3,gridState:[],gameStatus:"start",gameMode:0};
+      localStorage.setItem("gameState",JSON.stringify({score:0,swaps:3,gridState:[],gameStatus:"start"}));
+      gameState = {score:0,swaps:3,gridState:[],gameStatus:"start"};
+    }
+    if(mode === null){
+      setGameMode(0);
+      localStorage.setItem("gameMode",JSON.stringify(0));
     }
     if(gameState.gameStatus === "inProgress"){
       setScore(gameState.score);
 
-      setGameMode(gameState.gameMode);
-
-      setGrid(<Grid key={grid_key_count.current} numblock_grid = {gameState.gridState} 
+      setGameMode(mode);
+      if(mode === 0){
+        setGrid(<Grid key={grid_key_count.current} gameMode={mode} numblock_grid = {gameState.gridState} 
         showScore={true} showSidebar={true} tutorialMode={false} swapCount={gameState.swaps} refresh={handleRefresh}> </Grid>);
+        grid_key_count.current++;
+      }
+      else{
+        setGrid(gen_grid());
+      }
     }
     else{
       setGrid(gen_grid());

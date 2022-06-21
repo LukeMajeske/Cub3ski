@@ -105,7 +105,7 @@ export function NumbleProvider({ children }) {
     const handlePuzzleComplete = (puzzleComplete) => {
         if(puzzleComplete){
             let levelState = JSON.parse(localStorage.getItem("levelState"));
-            levelState.levelsCompleted[level.current] = 1;
+            levelState.levelsCompleted[level.current-1] = 1;
             localStorage.setItem("levelState",JSON.stringify(levelState));
             setShowPuzzleEnd(true);
             setPuzzleEnd(true);
