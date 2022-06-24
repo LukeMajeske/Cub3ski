@@ -14,6 +14,7 @@ import {useSpringRef, useSprings, config} from "react-spring";
 import Swap from './swap'
 import RefreshGrid from './refreshGrid'
 import PuzzleEnd from './puzzleEnd'
+import SoundToggle from './soundToggle'
 
 export default function Grid(props){
     const [numblock_grid,setNumblockGrid] = useState(props.numblock_grid);
@@ -342,6 +343,7 @@ export default function Grid(props){
                 {props.showSidebar ?
                     <div className={styles.sidebar}>
                             <Instructions/>
+                            <SoundToggle/>
                             <RefreshGrid refresh={props.refresh} setSwapCount={setSwapCount}/>
                             {mode === 0 ? <><GameOver/><LeaderBoard/><button className={styles.sidebarButton} onClick={()=>handleGameOver(true)}>End Game</button></>:null}
                             <PuzzleEnd refresh={props.refresh}/>

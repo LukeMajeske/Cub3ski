@@ -27,13 +27,14 @@ export function NumbleProvider({ children }) {
     const key_count = useRef(1);//For cubes
     const grid_key_count = useRef(1);//For grids
     const match_anim_status = useRef(false); //True = match animation is in process
+    const soundEnable = useRef(false);
     //CHANGE CUBE ANIMATIONS BASED ON MEDIA QUERY
     const isMobile = useMediaQuery({ query: '(max-width: 467px)' });
     const isTinyMobile = useMediaQuery({ query: '(max-width: 330px)' })
 
     //SOUNDS
-    const[click, {stop}]= useSound(clickSound,{volume:0.25});
-    const[deselect, {deselectStop}]= useSound(deselectSound,{volume:0.25});
+    const[click, {stop}]= useSound(clickSound,{volume:0.25,soundEnabled:soundEnable.current});
+    const[deselect, {deselectStop}]= useSound(deselectSound,{volume:0.25,soundEnabled:soundEnable.current});
   
     const getCubeWidth = () =>{
         if(isTinyMobile){
@@ -47,6 +48,14 @@ export function NumbleProvider({ children }) {
 
     const setGameMode = (mode) =>{
         gameMode.current = mode;
+    }
+
+    const toggleSoundEnable = () =>{
+        soundEnable.current = !soundEnable.current;
+    }
+
+    const setSoundEnable = (enable) =>{
+        soundEnable.current = enable;
     }
 
     const setLevel = (newLevel) =>{
@@ -129,10 +138,10 @@ export function NumbleProvider({ children }) {
   
     return (
       <NumbleContext.Provider value={{activeNumblock, numblock_grid, key_count, 
-      tutorialMode, step, match_anim_status,gameOver,showGameOver,score, level, showLeaderboard, grid_key_count, gameMode, showPuzzleEnd}}>
+      tutorialMode, step, match_anim_status,gameOver,showGameOver,score, level, showLeaderboard, grid_key_count, gameMode,soundEnable, showPuzzleEnd}}>
           <NumbleUpdateContext.Provider value={{selectNumblock, deSelectNumblock, 
             updateNumblockGrid,setTutorialMode,handleTutorial, setStep,handleGameOver, handlePuzzleComplete,setShowGameOver, 
-            handleAddToScore, setScore,setShowLeaderboard, getCubeWidth, setGameMode, setLevel, setShowPuzzleEnd,setPuzzleEnd, decrementLevel, incrementLevel}}>
+            handleAddToScore, setScore,setShowLeaderboard, getCubeWidth, setGameMode, setLevel, setShowPuzzleEnd,setPuzzleEnd, decrementLevel, incrementLevel,toggleSoundEnable, setSoundEnable}}>
             {children}
           </NumbleUpdateContext.Provider>
       </NumbleContext.Provider>

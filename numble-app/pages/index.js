@@ -85,6 +85,16 @@ export default function Home() {
     }
   }
 
+  const createSoundLocalStorage = () => {
+    const soundLocalStorage = JSON.parse(localStorage.getItem("isSound"));
+    if(levelLocalStorage === null){
+      localStorage.setItem("levelState",JSON.stringify({currentLevel:1,levelsCompleted:Array(100).fill(0)}));
+    }
+    else{
+      setLevel(levelLocalStorage.currentLevel);
+    }
+  }
+
   useEffect(()=>{
     createLevelLocalStorage();
 
