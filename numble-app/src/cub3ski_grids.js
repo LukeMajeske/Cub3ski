@@ -107,8 +107,13 @@ const cub3skiGrids = [[
 	{levelGrid:["","","","","","","","","","","","",2,"",1,2,2,2,2,1,3,3,1,3,3],swapCount:0,levelName:"Straight Forward"},
 	{levelGrid:["","","","","","","","","","","","","","","",5,5,6,5,5,6,6,5,6,6],swapCount:1,levelName:"Swap 'Em"},
 	{levelGrid:["",9,"",9,"","",10,"",10,"","",10,1,10,"",2,2,1,2,2,9,10,9,10,9],swapCount:0,levelName:"One Move To Rule Them All"},
-	{levelGrid:[5,8,10,3,7,5,8,10,3,7,6,5,8,7,4,5,8,10,3,7,5,8,10,3,7],swapCount:3,levelName:"Horizontal Thinking"},
+	{levelGrid:[5,8,10,3,7,5,8,10,3,7,6,5,8,7,4,5,8,10,3,7,5,8,10,3,7],swapCount:1,levelName:"Horizontal Thinking"},
 	{levelGrid:[7,"",7,"",7,4,7,1,7,3,2,1,7,2,2,1,7,2,7,1,6,2,1,1,6],swapCount:0,levelName:"Lucky Sevens"},
+	{levelGrid:[1,2,8,3,2,5,8,3,8,3,5,5,8,5,5,3,8,3,8,3,4,4,8,3,5],swapCount:2,levelName:"Crazy Eights"},
+	{levelGrid:["","","","","",1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10],swapCount:4,levelName:"Ones and Zeros"},
+	{levelGrid:["","",5,"","","","",4,"","","",5,3,5,"","",4,1,3,"",4,3,1,2,2],swapCount:0,levelName:"Falling Into Place"},
+	{levelGrid:["","","","","","","",5,"","","",4,11,5,"","",5,4,3,"",4,3,3,2,2],swapCount:4,levelName:"Swapping Into Place"},
+	{levelGrid:[5,6,7,8,9,9,8,7,6,5,5,9,8,7,6,6,5,9,8,7,7,6,5,9,8],swapCount:18,levelName:"Swap Til You Drop"},
 
 
 

@@ -3,6 +3,11 @@ import styles from '../styles/Home.module.css';
 import { useState, useEffect } from "react";
 import { useSpring, animated, config} from "react-spring";
 import {HiSwitchHorizontal} from 'react-icons/hi';
+import useSound from 'use-sound'
+import clickSound from '../public/sounds/SnappyButton3.mp3';
+import deselectSound from '../public/sounds/SnappyButton2.mp3';
+
+
 
 
 
@@ -13,12 +18,18 @@ export default function Numblock(props){
     const [selected, toggleSelected] = useState(false);
     const [visible, setVisible] = useState(num === "" ? "hidden" : "visible");
     const displayItem = num === 11 ? <HiSwitchHorizontal/> : num;
+    //SOUNDS
+    const[click, {stop}]= useSound(clickSound,{volume:0.25});
+    const[deselect, {deselctStop}]= useSound(deselectSound,{volume:0.25});
 
     const {pop} = useSpring({
         from:{x:0},
         pop:selected ? 1 : 0,
         config: config.wobbly
     })
+
+
+ 
 
     let startAddAnimation = (cube_index,cubes_to_update,xDir, yDir) =>{
         anim_api.start(ind => {
@@ -106,7 +117,9 @@ export default function Numblock(props){
 
     let handleSelect = () => {
         handleTutorial(1);
+        selected ? deselect():click();
         toggleSelected(!selected);
+        
     }
 
     return(

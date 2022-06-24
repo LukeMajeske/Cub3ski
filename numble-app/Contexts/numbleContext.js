@@ -1,6 +1,8 @@
 import { createContext, useContext, useState,useRef } from "react";
 import { useMediaQuery } from 'react-responsive'
 import cub3skiGrids from '../src/cub3ski_grids'
+import useSound from 'use-sound'
+
 
 
 export const NumbleContext = createContext();
@@ -26,6 +28,8 @@ export function NumbleProvider({ children }) {
     //CHANGE CUBE ANIMATIONS BASED ON MEDIA QUERY
     const isMobile = useMediaQuery({ query: '(max-width: 467px)' });
     const isTinyMobile = useMediaQuery({ query: '(max-width: 330px)' })
+
+    //SOUNDS
   
     const getCubeWidth = () =>{
         if(isTinyMobile){
