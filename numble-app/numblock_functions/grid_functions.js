@@ -155,7 +155,7 @@ let checkForMatches = (grid) =>{
                     end = true;
                 }
                 if(match_number === 11){
-                    match_number = grid[searchIndex+direction];
+                    grid[searchIndex+direction]!==""?match_number = grid[searchIndex+direction]:end=true;
                     //console.log("Started with 11, next num is",match_number);
                 }
                 if(match_number === grid[searchIndex+direction] || grid[searchIndex+direction] === 11){
