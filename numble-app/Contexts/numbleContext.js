@@ -2,6 +2,8 @@ import { createContext, useContext, useState,useRef } from "react";
 import { useMediaQuery } from 'react-responsive'
 import cub3skiGrids from '../src/cub3ski_grids'
 import useSound from 'use-sound'
+import clickSound from '../public/sounds/SnappyButton3.mp3';
+import deselectSound from '../public/sounds/SnappyButton2.mp3';
 
 
 
@@ -30,6 +32,8 @@ export function NumbleProvider({ children }) {
     const isTinyMobile = useMediaQuery({ query: '(max-width: 330px)' })
 
     //SOUNDS
+    const[click, {stop}]= useSound(clickSound,{volume:0.25});
+    const[deselect, {deselectStop}]= useSound(deselectSound,{volume:0.25});
   
     const getCubeWidth = () =>{
         if(isTinyMobile){
@@ -76,21 +80,14 @@ export function NumbleProvider({ children }) {
     }
     
 
-    let selectNumblock = (numblock) =>{ 
-        /*if(tutorialMode){
-            setActiveTutorialNumblock(prevNumblock => prevNumblock = numblock);
-            return;
-        }*/
+    let selectNumblock = (numblock) =>{
+        click();
         setActiveNumblock(prevNumblock => prevNumblock = numblock);
     }
 
-    let deSelectNumblock = () => {
-        /*if(tutorialMode){
-            setActiveTutorialNumblock(prevNumblock => prevNumblock = {index:-1,num:0,x:-10,y:-10});
-            return;
-        }*/
+    let deSelectNumblock = (playSound=true) => {
+        playSound?deselect():null;
         setActiveNumblock(prevNumblock => prevNumblock = {index:-1,num:0,x:-10,y:-10});
-
     }
 
     let handleTutorial = (...args) => {

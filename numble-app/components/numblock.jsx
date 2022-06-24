@@ -3,9 +3,7 @@ import styles from '../styles/Home.module.css';
 import { useState, useEffect } from "react";
 import { useSpring, animated, config} from "react-spring";
 import {HiSwitchHorizontal} from 'react-icons/hi';
-import useSound from 'use-sound'
-import clickSound from '../public/sounds/SnappyButton3.mp3';
-import deselectSound from '../public/sounds/SnappyButton2.mp3';
+
 
 
 
@@ -18,9 +16,6 @@ export default function Numblock(props){
     const [selected, toggleSelected] = useState(false);
     const [visible, setVisible] = useState(num === "" ? "hidden" : "visible");
     const displayItem = num === 11 ? <HiSwitchHorizontal/> : num;
-    //SOUNDS
-    const[click, {stop}]= useSound(clickSound,{volume:0.25});
-    const[deselect, {deselctStop}]= useSound(deselectSound,{volume:0.25});
 
     const {pop} = useSpring({
         from:{x:0},
@@ -76,7 +71,7 @@ export default function Numblock(props){
 
         if(index === activeNumblock.index){
             //deselect numblock
-            selectNumblock({index:-1,num:0,x:-10,y:-10});
+            deSelectNumblock();
             return;
         }
         else if(num === "" || match_anim_status.current === true || ((num + activeNumblock.num) > 10 && swapCount <= 0)){
@@ -104,22 +99,20 @@ export default function Numblock(props){
             let numblocks = [{index:index, num:num}, {index:activeNumblock.index,num:""}];
             //Delete previous numblock;
             startAddAnimation(activeNumblock.index,numblocks, xDir, yDir);
-            selectNumblock({index:-1,num:0,x:-10,y:-10});
+            deSelectNumblock();
             handleTutorial(2);
             return;
         }
 
         //console.log("Active Numblock", activeNumblock);
         //console.log("This Numblock", props);
-
         selectNumblock({index,num,x,y});
     }
 
     let handleSelect = () => {
         handleTutorial(1);
-        selected ? deselect():click();
-        toggleSelected(!selected);
-        
+        toggleSelected(prevSelected => prevSelected = !selected);
+        numblockLogic();
     }
 
     return(
@@ -127,11 +120,11 @@ export default function Numblock(props){
             {activeNumblock.index === props.index 
                 ?<animated.div className={styles.selected} style={{scale:pop.to({range:[0,0.25,0.5,0.75,1],
                     output:[1,0.9,1.2,0.95,1]}),zIndex:2}}
-                onClick={() => {handleSelect(); numblockLogic(props);}}>
+                onClick={() => {handleSelect();}}>
                     <p className={styles.noselect}>{displayItem}</p>
                 </animated.div>
                 :
-                <animated.div className={styles.card} style={{...animation,visibility:visible}}  onClick={() => {handleSelect(); numblockLogic(props);}}>
+                <animated.div className={styles.card} style={{...animation,visibility:visible}}  onClick={() => {handleSelect();}}>
                         <p className={styles.noselect}>{displayItem}</p>
                 </animated.div>
             }
