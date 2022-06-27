@@ -6,11 +6,11 @@ import styles from '../styles/Home.module.css'
 
 export default function SoundToggle(){
     const {soundEnable} = useNumbleContext();
-    const {setSoundEnable, toggleSoundEnable} = useNumbleUpdateContext();
+    const {setSoundEnable} = useNumbleUpdateContext();
 
     const handleSoundEnable = () => {
-        localStorage.setItem("soundEnable",JSON.stringify(!soundEnable.current));
-        toggleSoundEnable();
+        localStorage.setItem("soundEnable",JSON.stringify(!soundEnable));
+        setSoundEnable(!soundEnable);
     }
 
     useEffect(()=>{
@@ -27,7 +27,7 @@ export default function SoundToggle(){
 
     return(
         <>
-            {soundEnable.current?<GoUnmute className={styles.sidebarButton} onClick={()=>{handleSoundEnable();}}/>:<GoMute className={styles.sidebarButton} onClick={()=>{handleSoundEnable();}}/>}
+            {soundEnable?<GoUnmute className={styles.sidebarButton} onClick={()=>{handleSoundEnable();}}/>:<GoMute className={styles.sidebarButton} onClick={()=>{handleSoundEnable();}}/>}
         </>
     )
 }
