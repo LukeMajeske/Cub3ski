@@ -3,6 +3,8 @@ import styles from '../styles/Home.module.css';
 import { useState, useEffect } from "react";
 import { useSpring, animated, config} from "react-spring";
 import {HiSwitchHorizontal} from 'react-icons/hi';
+import useSound from 'use-sound'
+
 
 
 
@@ -11,7 +13,7 @@ import {HiSwitchHorizontal} from 'react-icons/hi';
 
 export default function Numblock(props){
     const {activeNumblock,tutorialMode,step,match_anim_status} = useNumbleContext();
-    const {selectNumblock,deSelectNumblock,handleTutorial, getCubeWidth} = useNumbleUpdateContext();
+    const {selectNumblock,deSelectNumblock,handleTutorial, getCubeWidth, playSwapSound} = useNumbleUpdateContext();
     const {index,num, x,y,updateGrid,decrementSwapCount,swapCount,animation,anim_api} = props;
     const [selected, toggleSelected] = useState(false);
     const [visible, setVisible] = useState(num === "" ? "hidden" : "visible");
@@ -23,7 +25,7 @@ export default function Numblock(props){
         config: config.wobbly
     })
 
-
+    
  
 
     let startAddAnimation = (cube_index,cubes_to_update,xDir, yDir) =>{
@@ -41,6 +43,7 @@ export default function Numblock(props){
     }
 
     let startSwapAnimation = (cube1_index,cube2_index,cubes_to_update,xDir, yDir) =>{
+        
         anim_api.start(ind => {
             if (ind === cube1_index){
                 return({
@@ -53,7 +56,7 @@ export default function Numblock(props){
                 return({
                     from:{x:getCubeWidth()*-xDir,y:getCubeWidth()*-yDir,zIndex:1},
                     to:{x:0,y:0,zIndex:1},
-                    onStart:()=>{ updateGrid(cubes_to_update, true);},
+                    onStart:()=>{playSwapSound(); updateGrid(cubes_to_update, true);},
                     onRest:()=>{handleTutorial(3); updateGrid(cubes_to_update,false,true);},
                     immediate: key => key === "zIndex"
                 });
@@ -91,7 +94,7 @@ export default function Numblock(props){
 
             //console.log("number of swaps ", swapCount);
             
-            deSelectNumblock();
+            deSelectNumblock(false);
             return;
         }
         else if(isAdjacent){

@@ -4,6 +4,7 @@ import cub3skiGrids from '../src/cub3ski_grids'
 import useSound from 'use-sound'
 import clickSound from '../public/sounds/SnappyButton3.mp3';
 import deselectSound from '../public/sounds/SnappyButton2.mp3';
+import swapSound from '../public/sounds/LittleSwoosh1a.mp3';
 
 
 
@@ -36,6 +37,7 @@ export function NumbleProvider({ children }) {
     //SOUNDS
     const[click, {stop}]= useSound(clickSound,{volume:0.25,soundEnabled:soundEnable});
     const[deselect, {deselectStop}]= useSound(deselectSound,{volume:0.25,soundEnabled:soundEnable});
+    const [playSwapSound] = useSound(swapSound,{volume:0.25,soundEnabled:soundEnable});
   
     const getCubeWidth = () =>{
         if(isTinyMobile){
@@ -134,7 +136,7 @@ export function NumbleProvider({ children }) {
       tutorialMode, step, match_anim_status,gameOver,showGameOver,score, level, showLeaderboard, grid_key_count, gameMode,soundEnable, showPuzzleEnd}}>
           <NumbleUpdateContext.Provider value={{selectNumblock, deSelectNumblock, 
             updateNumblockGrid,setTutorialMode,handleTutorial, setStep,handleGameOver, handlePuzzleComplete,setShowGameOver, 
-            handleAddToScore, setScore,setShowLeaderboard, getCubeWidth, setGameMode, setLevel, setShowPuzzleEnd,setPuzzleEnd, decrementLevel, incrementLevel, setSoundEnable}}>
+            handleAddToScore, setScore,setShowLeaderboard, getCubeWidth, setGameMode, setLevel, setShowPuzzleEnd,setPuzzleEnd, decrementLevel, incrementLevel, setSoundEnable, playSwapSound}}>
             {children}
           </NumbleUpdateContext.Provider>
       </NumbleContext.Provider>
