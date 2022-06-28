@@ -114,7 +114,7 @@ const cub3skiGrids = [[
 	{levelGrid:["","",5,"","","","",4,"","","",5,3,5,"","",4,1,3,"",4,3,1,2,2],swapCount:0,levelName:"Falling Into Place"},
 	{levelGrid:["","","","","","","",5,"","","",4,11,5,"","",5,4,3,"",4,3,3,2,2],swapCount:4,levelName:"Swapping Into Place"},
 	{levelGrid:[5,6,7,8,9,9,8,7,6,5,5,9,8,7,6,6,5,9,8,7,7,6,5,9,8],swapCount:18,levelName:"Swap Til You Drop"},
-	{levelGrid:["","",1,1,1,"","",1,3,2,1,1,1,4,1,1,1,1,2,3,10,9,1,10,10],swapCount:0,levelName:"Conga Line"},
+	{levelGrid:["","","",1,1,"","",1,1,4,"",1,1,2,2,"",1,2,3,1,10,9,1,10,10],swapCount:0,levelName:"Conga Line"},
 	{levelGrid:[1,1,"",1,1,1,1,"",1,1,2,2,"",3,3,1,1,2,1,1,1,1,2,1,1],swapCount:0,levelName:"Condense to 10's"},
 	{levelGrid:["","",10,"","","","",9,"","","","",4,"","","","",2,"","","",1,3,1,""],swapCount:0,levelName:"Distribute"},
 	{levelGrid:["","",10,"","",1,"",1,"",2,1,"",2,"",1,2,"",1,"",1,2,1,2,1,2],swapCount:0,levelName:"Distribute 2"},

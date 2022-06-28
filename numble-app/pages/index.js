@@ -6,6 +6,7 @@ import Page from '../components/next-seo'
 import cub3skiGrids from '../src/cub3ski_grids'
 import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext';
 import { useEffect, useState, useRef } from 'react'
+import{FaFacebookSquare} from 'react-icons/fa'
 
 
 
@@ -106,8 +107,8 @@ export default function Home() {
       gameState = {score:0,swaps:3,gridState:[],gameStatus:"start"};
     }
     if(mode === null){
-      setGameMode(0);
-      localStorage.setItem("gameMode",JSON.stringify(0));
+      setGameMode(1);
+      localStorage.setItem("gameMode",JSON.stringify(1));
     }
     if(gameState.gameStatus === "inProgress"){
       setScore(gameState.score);
@@ -143,8 +144,9 @@ export default function Home() {
         crossOrigin="anonymous"></script>
 
       </Head>
-
+      <nav className={styles.navbar}><FaFacebookSquare color='#4267B2'size='1.5em'/></nav>
       <main className={styles.main}>
+        
         <h1 className={styles.title}>
           Welcome to Cub3Ski
         </h1>

@@ -23,7 +23,7 @@ export function NumbleProvider({ children }) {
     const [numblock_grid, setNumblockGrid] = useState([]);
     const [soundEnable, setSoundEnable] = useState(false);
     //const [score, setScore] = useState(0);
-    const gameMode = useRef(0)//0=endless, 1=puzzle
+    const gameMode = useRef(1)//0=endless, 1=puzzle
     const level = useRef(1);//Represents the current level for puzzle mode.
     const score = useRef(0);
     const key_count = useRef(1);//For cubes

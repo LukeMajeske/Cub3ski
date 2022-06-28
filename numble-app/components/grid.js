@@ -27,7 +27,7 @@ export default function Grid(props){
     const cur_grid = useRef(props.numblock_grid);
     //const [swapCount, setSwapCount] = useState(3);//When > 0, cubes whose sum > 10 can be swapped.
     const refreshGrid = props.refresh;
-    const {key_count,match_anim_status,score} = useNumbleContext();
+    const {key_count,match_anim_status,score,level} = useNumbleContext();
     const {handleTutorial,handleGameOver, handleAddToScore, getCubeWidth, handlePuzzleComplete,incrementLevel, decrementLevel} = useNumbleUpdateContext();
     const swapCount = useRef(props.swapCount);
     let minHeight = ((Math.floor((cur_grid.current.length)/6)+1)*getCubeWidth())+'px';
@@ -122,7 +122,7 @@ export default function Grid(props){
         })
     }
 
-    let setMatchNumblock = (numblock_index, isLastCube = false) => {
+    let setMatchNumblock = (numblock_index, isLastCube = false, delay = 0) => {
         api.start(index => {
             if (index === numblock_index){
                 //console.log("Starting anim for index: ", index);
@@ -131,6 +131,7 @@ export default function Grid(props){
                     to:[{opacity:1, scale:0.5},
                         {opacity:1, scale:1},
                         {opacity:0,scale:0}],
+                    delay:delay,
                     onStart:() => {match_anim_status.current = true;},
                     onRest:()=>{match_anim_status.current = false; if(isLastCube){dropNumblocks(cur_grid.current)}; handleTutorial(4,5);},
                     config:{tension:450,friction:30}
@@ -144,14 +145,16 @@ export default function Grid(props){
         match_indexes = match_indexes.flat();
         match_indexes = [...new Set(match_indexes)];
         //console.log("Remove Matches",match_indexes);
+        let delay = 0;
         match_indexes.forEach((cubeIndex, ind) => {
             if(ind === match_indexes.length-1){
                 console.log("Last match cube to remove!");
-                setMatchNumblock(cubeIndex, true);
+                setMatchNumblock(cubeIndex, true,delay);
             }
             else{
-                setMatchNumblock(cubeIndex);
+                setMatchNumblock(cubeIndex,false,delay);
             }
+            delay += 100;
             cur_grid.current[cubeIndex] = "";
         })
 
@@ -325,6 +328,26 @@ export default function Grid(props){
 
     }
 
+    const puzzleTopBar = () =>{
+        const levelState = JSON.parse(localStorage.getItem("levelState"));
+        const didCompleteLevel = levelState.levelsCompleted[level.current-1];
+        let nextLvlButton = <button>Next Level Locked</button>;
+        let prevLvlButton = null;
+        if(didCompleteLevel === 1){
+            nextLvlButton = <button onClick={()=>{handleNextLevel();}}>Next Level</button>;
+        }
+        if(level.current !== 1){
+            prevLvlButton = <button onClick={()=>{handlePrevLevel();}}>Prev Level</button>;
+        }
+
+        return(
+        <div className={styles.topbar}>
+            {prevLvlButton}
+            <Level levelName={props.levelName}/><Swap swapCount={swapCount.current}/>
+            {nextLvlButton}
+        </div>)
+    }
+
     let renderGrid = () => {
         if(tutorialMode){
             return(
@@ -336,9 +359,7 @@ export default function Grid(props){
         return(
             <>
             {props.showScore ? <div className={styles.topbar}><Score/><Swap swapCount={swapCount.current}/></div> : null}
-            {props.showLevel ? <div className={styles.topbar}><button onClick={()=>{handlePrevLevel();}}>Prev Level</button>
-            <Level levelName={props.levelName}/><Swap swapCount={swapCount.current}/>
-            <button onClick={()=>{handleNextLevel();}}>Next Level</button></div> : null}
+            {props.showLevel ? puzzleTopBar() : null}
             <div className={styles.instructGrid}>
                 {props.showSidebar ?
                     <div className={styles.sidebar}>
