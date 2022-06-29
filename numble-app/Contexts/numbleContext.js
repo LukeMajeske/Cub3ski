@@ -33,6 +33,8 @@ export function NumbleProvider({ children }) {
     const isTinyMobile = useMediaQuery({ query: '(max-width: 330px)' })
 
     //SOUNDS
+    const[playbackRate, setPlaybackRate] = useState(1);
+
     const spriteMap = {
         disableSound: [0,503],
         swapSound: [503,578],
@@ -42,7 +44,7 @@ export function NumbleProvider({ children }) {
         selectSound:[1829,143]
 
     }
-    const[playSound] = useSound(soundSpriteMap,{volume:0.25,soundEnabled:soundEnable,sprite:spriteMap});
+    const[playSound] = useSound(soundSpriteMap,{volume:0.25,playbackRate:playbackRate,soundEnabled:soundEnable,sprite:spriteMap});
     const[playUnmutableSound] = useSound(soundSpriteMap,{volume:0.25,sprite:{disableSound: [0,503],enableSound: [1081,501],matchSound:[1582,59]}});
   
     const getCubeWidth = () =>{
@@ -135,11 +137,6 @@ export function NumbleProvider({ children }) {
         setNumblockGrid(prevGrid => prevGrid = new_grid);
     }
 
-    const playPopSound = () =>{
-        console.log("Sound Enabled?", soundEnable);
-        playSound({id:'enableSound'});
-    }
-
   
     return (
       <NumbleContext.Provider value={{activeNumblock, numblock_grid, key_count, 
@@ -148,7 +145,7 @@ export function NumbleProvider({ children }) {
             updateNumblockGrid,setTutorialMode,handleTutorial, setStep,handleGameOver, handlePuzzleComplete,setShowGameOver, 
             handleAddToScore, setScore,setShowLeaderboard, getCubeWidth, setGameMode, 
             setLevel, setShowPuzzleEnd,setPuzzleEnd, 
-            decrementLevel, incrementLevel, setSoundEnable,playSound,playUnmutableSound, playPopSound}}>
+            decrementLevel, incrementLevel, setSoundEnable,playSound,playUnmutableSound, setPlaybackRate}}>
             {children}
           </NumbleUpdateContext.Provider>
       </NumbleContext.Provider>

@@ -3,17 +3,12 @@ import styles from '../styles/Home.module.css';
 import { useState, useEffect, forwardRef, useImperativeHandle} from "react";
 import { useSpring, animated, config} from "react-spring";
 import {HiSwitchHorizontal} from 'react-icons/hi';
-import useSound from 'use-sound'
-
-
-
-
 
 
 
 const Numblock = forwardRef((props, ref) => {
     const {activeNumblock,tutorialMode,step,match_anim_status} = useNumbleContext();
-    const {selectNumblock,deSelectNumblock,handleTutorial, getCubeWidth, playSound} = useNumbleUpdateContext();
+    const {selectNumblock,deSelectNumblock,handleTutorial, getCubeWidth, playSound, setPlaybackRate} = useNumbleUpdateContext();
     const {index,num, x,y,updateGrid,decrementSwapCount,dropNumblocks,swapCount,animation,anim_api} = props;
     const [selected, toggleSelected] = useState(false);
     const [visible, setVisible] = useState(num === "" ? "hidden" : "visible");
@@ -76,8 +71,8 @@ const Numblock = forwardRef((props, ref) => {
                             {opacity:1, scale:1},
                             {opacity:0,scale:0}],
                         delay:delay,
-                        onStart:() => {if(startCount===0){playSound({id:'matchSound'});match_anim_status.current = true; startCount++}},
-                        onRest:()=>{match_anim_status.current = false; if(isLastCube){dropNumblocks()}; handleTutorial(4,5);},
+                        onStart:() => {if(startCount===0){playSound({id:'matchSound'}); setPlaybackRate(prevRate => prevRate+=0.1);match_anim_status.current = true; startCount++}},
+                        onRest:()=>{setPlaybackRate(prevRate => prevRate=1);match_anim_status.current = false; if(isLastCube){dropNumblocks()}; handleTutorial(4,5);},
                         config:{tension:450,friction:30}
                         
                     });
