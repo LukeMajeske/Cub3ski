@@ -78,12 +78,12 @@ export default  function Instructions(){
     const displayButtons = () => {
         let buttons = []
         if(step != 1){
-            buttons.push(<button onClick={()=>setStep(prevStep=>prevStep -= 1)}>Back</button>);
+            buttons.push(<button key={1} onClick={()=>setStep(prevStep=>prevStep -= 1)}>Back</button>);
         }
         if(step != 6){
-            buttons.push(<button onClick={()=>setStep(prevStep=>prevStep += 1)}>Next</button>);
+            buttons.push(<button key={2} onClick={()=>setStep(prevStep=>prevStep += 1)}>Next</button>);
         }
-        buttons.push(<label><input type="checkbox" checked={!showOnLoad} onChange={handleShowOnLoad}/>Dont Show Me This Again</label>);
+        buttons.push(<label key={3}><input type="checkbox" checked={!showOnLoad} onChange={handleShowOnLoad}/>Dont Show Me This Again</label>);
         return(buttons);
 
     }

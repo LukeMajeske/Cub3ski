@@ -23,13 +23,14 @@ export default function Grid(props){
     const tutorialMode = props.tutorialMode;
     const [numblocks, setNumblocks] = useState([]);
     const initial_render = useRef(0);
+    const cube_ref = useRef();
     const empty_indexes = useRef([]);
     const cur_grid = useRef(props.numblock_grid);
     //const [swapCount, setSwapCount] = useState(3);//When > 0, cubes whose sum > 10 can be swapped.
     const refreshGrid = props.refresh;
     const {key_count,match_anim_status,score,level} = useNumbleContext();
     const {handleTutorial,handleGameOver, handleAddToScore, getCubeWidth, 
-        handlePuzzleComplete,incrementLevel, decrementLevel,playSound, playPopSound} = useNumbleUpdateContext();
+        handlePuzzleComplete,incrementLevel, decrementLevel} = useNumbleUpdateContext();
     const swapCount = useRef(props.swapCount);
     let minHeight = ((Math.floor((cur_grid.current.length)/6)+1)*getCubeWidth())+'px';
     //console.log("minHeight",minHeight);
@@ -103,12 +104,7 @@ export default function Grid(props){
 
         }
     }
-    let handleGridUpdate = () => {
-        if(cur_grid.current !== undefined){
-            //console.log("updating after drop:",cur_grid.current);
-            setNumblockGrid(prevGrid => prevGrid = cur_grid.current);
-        }
-    }
+
     let setDropNumblock = (numblock_index, yDir=-1, isLastCube = false) => {
         api.start(index => {
             if (index === numblock_index){
@@ -123,7 +119,7 @@ export default function Grid(props){
         })
     }
 
-    let setMatchNumblock = (numblock_index, isLastCube = false, delay = 0) => {
+    /*const setMatchNumblock = (numblock_index, isLastCube = false, delay = 0) => {
         api.start(index => {
             let startCount = 0;
             if (index === numblock_index){
@@ -134,14 +130,14 @@ export default function Grid(props){
                         {opacity:1, scale:1},
                         {opacity:0,scale:0}],
                     delay:delay,
-                    onStart:() => {if(startCount===0){playPopSound(); match_anim_status.current = true; startCount++}},
+                    onStart:() => {if(startCount===0){match_anim_status.current = true; startCount++}},
                     onRest:()=>{match_anim_status.current = false; if(isLastCube){dropNumblocks(cur_grid.current)}; handleTutorial(4,5);},
                     config:{tension:450,friction:30}
                     
                 });
             }
         })
-    }
+    }*/
 
     let removeMatches = (match_indexes) => {
         match_indexes = match_indexes.flat();
@@ -151,10 +147,10 @@ export default function Grid(props){
         match_indexes.forEach((cubeIndex, ind) => {
             if(ind === match_indexes.length-1){
                 console.log("Last match cube to remove!");
-                setMatchNumblock(cubeIndex, true,delay);
+                cube_ref.current.setMatchNumblock(cubeIndex, true,delay);
             }
             else{
-                setMatchNumblock(cubeIndex,false,delay);
+                cube_ref.current.setMatchNumblock(cubeIndex,false,delay);
             }
             delay += 100;
             cur_grid.current[cubeIndex] = "";
@@ -189,11 +185,13 @@ export default function Grid(props){
         let xpos = (index) % 5;
         let ypos = Math.floor((index)/5);
         let numblock = <Numblock key={key_count.current}
+                            ref ={cube_ref}
                             num={num} 
                             x={xpos} y={ypos} 
                             index={index}
                             updateGrid={updateGrid}
                             decrementSwapCount = {decrementSwapCount}
+                            dropNumblocks = {dropNumblocks}
                             swapCount = {swapCount.current}
                             tutorialMode={tutorialMode}
                             animation = {animation}
@@ -249,15 +247,15 @@ export default function Grid(props){
 
     //If numblock has empty space beneath it, let it drop to the bottom.
     //give index or indexes of empty spaces
-    let dropNumblocks = (grid,dropDirection = -5) => {
+    let dropNumblocks = (dropDirection = -5) => {
         if(mode != 0){//if not in endless mode, always drop cubes downwards;
             dropDirection = -5;
         }
         if(match_anim_status.current === true){
             return;
         }
-        let emptyIndexes = getEmptyIndexes(grid);
-        let drop_grid = [...grid];
+        let emptyIndexes = getEmptyIndexes(cur_grid.current);
+        let drop_grid = [...cur_grid.current];
         let didDrop = false;//if no blocks dropped, still run a match check
         let cubeIndexesToDrop = [];//Used to get a list of all cubes to be dropped. Call to check for matches only after the last cube has been dropped.
         emptyIndexes.forEach(startIndex => {
@@ -324,7 +322,7 @@ export default function Grid(props){
             handleMatchCheck();
         }
         else{
-            dropNumblocks(cur_grid.current, dropDirection * 5);
+            dropNumblocks(dropDirection * 5);
         }
         
 

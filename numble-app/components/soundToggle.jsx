@@ -6,30 +6,13 @@ import styles from '../styles/Home.module.css'
 
 export default function SoundToggle(){
     const {soundEnable} = useNumbleContext();
-    const {setSoundEnable, playSound} = useNumbleUpdateContext();
+    const {setSoundEnable, playUnmutableSound} = useNumbleUpdateContext();
 
     const handleSoundEnable = () => {
         localStorage.setItem("soundEnable",JSON.stringify(!soundEnable));
-        setSoundEnable(!soundEnable);
-        if(soundEnable){
-            playSound({id:'enableSound'});    
-        }
-        else{
-            playSound({id:'disableSound'});    
-        }
+        setSoundEnable(prevSoundEnable => prevSoundEnable = !soundEnable);
+        soundEnable?playUnmutableSound({id:'disableSound'}):playUnmutableSound({id:'enableSound'});
     }
-
-    useEffect(()=>{
-        let soundEnableLocalStorage = JSON.parse(localStorage.getItem("soundEnable"));
-
-        if (soundEnableLocalStorage  === null){
-            localStorage.setItem("soundEnable","true");
-            setSoundEnable(true);
-        }
-        if(soundEnableLocalStorage === true){
-            setSoundEnable(true);
-        }
-    },[]) 
 
     return(
         <>

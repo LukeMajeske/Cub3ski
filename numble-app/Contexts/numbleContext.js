@@ -25,7 +25,7 @@ export function NumbleProvider({ children }) {
     const level = useRef(1);//Represents the current level for puzzle mode.
     const score = useRef(0);
     const key_count = useRef(1);//For cubes
-    const grid_key_count = useRef(1);//For grids
+    const grid_key_count = useRef(10);//For grids
     const match_anim_status = useRef(false); //True = match animation is in process
     
     //CHANGE CUBE ANIMATIONS BASED ON MEDIA QUERY
@@ -43,6 +43,7 @@ export function NumbleProvider({ children }) {
 
     }
     const[playSound] = useSound(soundSpriteMap,{volume:0.25,soundEnabled:soundEnable,sprite:spriteMap});
+    const[playUnmutableSound] = useSound(soundSpriteMap,{volume:0.25,sprite:{disableSound: [0,503],enableSound: [1081,501],matchSound:[1582,59]}});
   
     const getCubeWidth = () =>{
         if(isTinyMobile){
@@ -135,8 +136,10 @@ export function NumbleProvider({ children }) {
     }
 
     const playPopSound = () =>{
-        playSound({id:'matchSound'});
+        console.log("Sound Enabled?", soundEnable);
+        playSound({id:'enableSound'});
     }
+
   
     return (
       <NumbleContext.Provider value={{activeNumblock, numblock_grid, key_count, 
@@ -145,7 +148,7 @@ export function NumbleProvider({ children }) {
             updateNumblockGrid,setTutorialMode,handleTutorial, setStep,handleGameOver, handlePuzzleComplete,setShowGameOver, 
             handleAddToScore, setScore,setShowLeaderboard, getCubeWidth, setGameMode, 
             setLevel, setShowPuzzleEnd,setPuzzleEnd, 
-            decrementLevel, incrementLevel, setSoundEnable,playSound, playPopSound}}>
+            decrementLevel, incrementLevel, setSoundEnable,playSound,playUnmutableSound, playPopSound}}>
             {children}
           </NumbleUpdateContext.Provider>
       </NumbleContext.Provider>

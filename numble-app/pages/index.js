@@ -13,7 +13,7 @@ import{FaFacebookSquare} from 'react-icons/fa'
 export default function Home() {
   //DEFINE STATE
   const {grid_key_count,gameMode, level} = useNumbleContext();
-  const {setScore, setLevel, setGameMode} = useNumbleUpdateContext();
+  const {setScore, setLevel, setGameMode, setSoundEnable} = useNumbleUpdateContext();
   const generatedGrid = useRef();
   
 
@@ -87,17 +87,20 @@ export default function Home() {
   }
 
   const createSoundLocalStorage = () => {
-    const soundLocalStorage = JSON.parse(localStorage.getItem("isSound"));
-    if(levelLocalStorage === null){
-      localStorage.setItem("levelState",JSON.stringify({currentLevel:1,levelsCompleted:Array(100).fill(0)}));
+    let soundEnableLocalStorage = JSON.parse(localStorage.getItem("soundEnable"));
+
+    if (soundEnableLocalStorage  === null){
+        localStorage.setItem("soundEnable","true");
+        setSoundEnable(true);
     }
-    else{
-      setLevel(levelLocalStorage.currentLevel);
+    if(soundEnableLocalStorage === true){
+        setSoundEnable(true);
     }
   }
 
   useEffect(()=>{
     createLevelLocalStorage();
+    createSoundLocalStorage();
 
     let gameState = JSON.parse(localStorage.getItem("gameState"));
     let mode = JSON.parse(localStorage.getItem("gameMode"));

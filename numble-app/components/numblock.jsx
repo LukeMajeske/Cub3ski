@@ -1,6 +1,6 @@
 import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext';
 import styles from '../styles/Home.module.css';
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef, useImperativeHandle} from "react";
 import { useSpring, animated, config} from "react-spring";
 import {HiSwitchHorizontal} from 'react-icons/hi';
 import useSound from 'use-sound'
@@ -11,10 +11,10 @@ import useSound from 'use-sound'
 
 
 
-export default function Numblock(props){
+const Numblock = forwardRef((props, ref) => {
     const {activeNumblock,tutorialMode,step,match_anim_status} = useNumbleContext();
     const {selectNumblock,deSelectNumblock,handleTutorial, getCubeWidth, playSound} = useNumbleUpdateContext();
-    const {index,num, x,y,updateGrid,decrementSwapCount,swapCount,animation,anim_api} = props;
+    const {index,num, x,y,updateGrid,decrementSwapCount,dropNumblocks,swapCount,animation,anim_api} = props;
     const [selected, toggleSelected] = useState(false);
     const [visible, setVisible] = useState(num === "" ? "hidden" : "visible");
     const displayItem = num === 11 ? <HiSwitchHorizontal/> : num;
@@ -63,6 +63,29 @@ export default function Numblock(props){
             }
         })
     }
+
+    useImperativeHandle(ref,() => ({
+        setMatchNumblock(numblock_index, isLastCube = false, delay = 0){
+            anim_api.start(index => {
+                let startCount = 0;
+                if (index === numblock_index){
+                    //console.log("Starting anim for index: ", index);
+                    return({
+                        from:{opacity:1,scale:1},
+                        to:[{opacity:1, scale:0.5},
+                            {opacity:1, scale:1},
+                            {opacity:0,scale:0}],
+                        delay:delay,
+                        onStart:() => {if(startCount===0){playSound({id:'matchSound'});match_anim_status.current = true; startCount++}},
+                        onRest:()=>{match_anim_status.current = false; if(isLastCube){dropNumblocks()}; handleTutorial(4,5);},
+                        config:{tension:450,friction:30}
+                        
+                    });
+                }
+            })
+        }
+    }));
+
 
     let numblockLogic = () => {
         //console.log("Match Anim Status: ", match_anim_status.current);
@@ -133,4 +156,6 @@ export default function Numblock(props){
             }
         </>
     )
-}
+});
+
+export default Numblock;
