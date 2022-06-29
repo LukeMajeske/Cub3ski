@@ -17,6 +17,9 @@
   height: 50px;
   padding-top: 1em;
 }
+.mediaIcon{
+  cursor: pointer;
+}
 
 
 .footer {

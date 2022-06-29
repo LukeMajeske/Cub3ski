@@ -144,7 +144,11 @@ export default function Home() {
         crossOrigin="anonymous"></script>
 
       </Head>
-      <nav className={styles.navbar}><FaFacebookSquare color='#4267B2'size='1.5em'/></nav>
+      <nav className={styles.navbar}>
+        <a href='https://www.facebook.com/Cub3Ski-114386264612649'>
+          <FaFacebookSquare className={styles.mediaIcon} color='#4267B2'size='1.5em'/>
+        </a>
+      </nav>
       <main className={styles.main}>
         
         <h1 className={styles.title}>

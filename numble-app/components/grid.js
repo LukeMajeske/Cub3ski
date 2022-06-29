@@ -28,7 +28,8 @@ export default function Grid(props){
     //const [swapCount, setSwapCount] = useState(3);//When > 0, cubes whose sum > 10 can be swapped.
     const refreshGrid = props.refresh;
     const {key_count,match_anim_status,score,level} = useNumbleContext();
-    const {handleTutorial,handleGameOver, handleAddToScore, getCubeWidth, handlePuzzleComplete,incrementLevel, decrementLevel} = useNumbleUpdateContext();
+    const {handleTutorial,handleGameOver, handleAddToScore, getCubeWidth, 
+        handlePuzzleComplete,incrementLevel, decrementLevel,playSound, playPopSound} = useNumbleUpdateContext();
     const swapCount = useRef(props.swapCount);
     let minHeight = ((Math.floor((cur_grid.current.length)/6)+1)*getCubeWidth())+'px';
     //console.log("minHeight",minHeight);
@@ -124,6 +125,7 @@ export default function Grid(props){
 
     let setMatchNumblock = (numblock_index, isLastCube = false, delay = 0) => {
         api.start(index => {
+            let startCount = 0;
             if (index === numblock_index){
                 //console.log("Starting anim for index: ", index);
                 return({
@@ -132,7 +134,7 @@ export default function Grid(props){
                         {opacity:1, scale:1},
                         {opacity:0,scale:0}],
                     delay:delay,
-                    onStart:() => {match_anim_status.current = true;},
+                    onStart:() => {if(startCount===0){playPopSound(); match_anim_status.current = true; startCount++}},
                     onRest:()=>{match_anim_status.current = false; if(isLastCube){dropNumblocks(cur_grid.current)}; handleTutorial(4,5);},
                     config:{tension:450,friction:30}
                     

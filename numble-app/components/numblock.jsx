@@ -13,7 +13,7 @@ import useSound from 'use-sound'
 
 export default function Numblock(props){
     const {activeNumblock,tutorialMode,step,match_anim_status} = useNumbleContext();
-    const {selectNumblock,deSelectNumblock,handleTutorial, getCubeWidth, playSwapSound} = useNumbleUpdateContext();
+    const {selectNumblock,deSelectNumblock,handleTutorial, getCubeWidth, playSound} = useNumbleUpdateContext();
     const {index,num, x,y,updateGrid,decrementSwapCount,swapCount,animation,anim_api} = props;
     const [selected, toggleSelected] = useState(false);
     const [visible, setVisible] = useState(num === "" ? "hidden" : "visible");
@@ -56,7 +56,7 @@ export default function Numblock(props){
                 return({
                     from:{x:getCubeWidth()*-xDir,y:getCubeWidth()*-yDir,zIndex:1},
                     to:{x:0,y:0,zIndex:1},
-                    onStart:()=>{playSwapSound(); updateGrid(cubes_to_update, true);},
+                    onStart:()=>{playSound({id:'swapSound'}); updateGrid(cubes_to_update, true);},
                     onRest:()=>{handleTutorial(3); updateGrid(cubes_to_update,false,true);},
                     immediate: key => key === "zIndex"
                 });

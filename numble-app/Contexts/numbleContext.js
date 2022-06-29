@@ -2,9 +2,7 @@ import { createContext, useContext, useState,useRef } from "react";
 import { useMediaQuery } from 'react-responsive'
 import cub3skiGrids from '../src/cub3ski_grids'
 import useSound from 'use-sound'
-import clickSound from '../public/sounds/SnappyButton3.mp3';
-import deselectSound from '../public/sounds/SnappyButton2.mp3';
-import swapSound from '../public/sounds/LittleSwoosh1a.mp3';
+import soundSpriteMap from '../public/sounds/Sound_SpriteMap.mp3';
 
 
 
@@ -35,9 +33,16 @@ export function NumbleProvider({ children }) {
     const isTinyMobile = useMediaQuery({ query: '(max-width: 330px)' })
 
     //SOUNDS
-    const[click, {stop}]= useSound(clickSound,{volume:0.25,soundEnabled:soundEnable});
-    const[deselect, {deselectStop}]= useSound(deselectSound,{volume:0.25,soundEnabled:soundEnable});
-    const [playSwapSound] = useSound(swapSound,{volume:0.25,soundEnabled:soundEnable});
+    const spriteMap = {
+        disableSound: [0,503],
+        swapSound: [503,578],
+        enableSound: [1081,501],
+        matchSound:[1582,59],
+        deselectSound:[1641,188],
+        selectSound:[1829,143]
+
+    }
+    const[playSound] = useSound(soundSpriteMap,{volume:0.25,soundEnabled:soundEnable,sprite:spriteMap});
   
     const getCubeWidth = () =>{
         if(isTinyMobile){
@@ -85,12 +90,12 @@ export function NumbleProvider({ children }) {
     
 
     let selectNumblock = (numblock) =>{
-        click();
+        playSound({id:'selectSound'});
         setActiveNumblock(prevNumblock => prevNumblock = numblock);
     }
 
-    let deSelectNumblock = (playSound=true) => {
-        playSound?deselect():null;
+    let deSelectNumblock = (doSound=true) => {
+        doSound?playSound({id:'deselectSound'}):null;
         setActiveNumblock(prevNumblock => prevNumblock = {index:-1,num:0,x:-10,y:-10});
     }
 
@@ -129,14 +134,18 @@ export function NumbleProvider({ children }) {
         setNumblockGrid(prevGrid => prevGrid = new_grid);
     }
 
-
+    const playPopSound = () =>{
+        playSound({id:'matchSound'});
+    }
   
     return (
       <NumbleContext.Provider value={{activeNumblock, numblock_grid, key_count, 
       tutorialMode, step, match_anim_status,gameOver,showGameOver,score, level, showLeaderboard, grid_key_count, gameMode,soundEnable, showPuzzleEnd}}>
           <NumbleUpdateContext.Provider value={{selectNumblock, deSelectNumblock, 
             updateNumblockGrid,setTutorialMode,handleTutorial, setStep,handleGameOver, handlePuzzleComplete,setShowGameOver, 
-            handleAddToScore, setScore,setShowLeaderboard, getCubeWidth, setGameMode, setLevel, setShowPuzzleEnd,setPuzzleEnd, decrementLevel, incrementLevel, setSoundEnable, playSwapSound}}>
+            handleAddToScore, setScore,setShowLeaderboard, getCubeWidth, setGameMode, 
+            setLevel, setShowPuzzleEnd,setPuzzleEnd, 
+            decrementLevel, incrementLevel, setSoundEnable,playSound, playPopSound}}>
             {children}
           </NumbleUpdateContext.Provider>
       </NumbleContext.Provider>
