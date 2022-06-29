@@ -153,4 +153,6 @@ const Numblock = forwardRef((props, ref) => {
     )
 });
 
+Numblock.displayName = 'Numblock'
+
 export default Numblock;
