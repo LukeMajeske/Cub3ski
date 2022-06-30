@@ -110,9 +110,10 @@ const Numblock = forwardRef((props, ref) => {
             deSelectNumblock();
             return;
         }
-        else if(num === "" || match_anim_status.current === true || ((num + activeNumblock.num) > 10 && swapCount <= 0)){
+        else if(num === "" || match_anim_status.current === true || ((num + activeNumblock.num) > 10  && swapCount <= 0)){
             //deselect numblocks and shake numblock to show it can't be added to make a number over 10
             deSelectNumblock();
+            selectNumblock({index,num,x,y});
             return;
         }
         //SWAP CUBES!!
