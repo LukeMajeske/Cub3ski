@@ -13,6 +13,21 @@ const Numblock = forwardRef((props, ref) => {
     const [selected, toggleSelected] = useState(false);
     const [visible, setVisible] = useState(num === "" ? "hidden" : "visible");
     const displayItem = num === 11 ? <HiSwitchHorizontal/> : num;
+    const cubeColors = {
+        '1':'red',
+        '2':'',
+        '3':'#25b509',
+        '4':'gold',
+        '5':'darkorange',
+        '6':'skyblue',
+        '7':'peru',
+        '8':'seagreen',
+        '9':'deeppink',
+        '10':'darkblue',
+        '11':'purple',
+    }
+    const cubeColor = cubeColors[num];
+
 
     const {pop} = useSpring({
         from:{x:0},
@@ -133,17 +148,23 @@ const Numblock = forwardRef((props, ref) => {
     let handleSelect = () => {
         handleTutorial(1);
         toggleSelected(prevSelected => prevSelected = !selected);
+        console.log("Cube Color",cubeColor);
         numblockLogic();
     }
 
+    const popCube = () =>{
+        return(
+            <animated.div className={styles.selected} style={{scale:pop.to({range:[0,0.25,0.5,0.75,1],
+                output:[1,0.9,1.2,0.95,1]}),zIndex:2,color:cubeColor,borderColor:cubeColor}}
+            onClick={() => {handleSelect();}}>
+                <p className={styles.noselect}>{displayItem}</p>
+            </animated.div>
+        )
+    }
     return(
         <>
             {activeNumblock.index === props.index 
-                ?<animated.div className={styles.selected} style={{scale:pop.to({range:[0,0.25,0.5,0.75,1],
-                    output:[1,0.9,1.2,0.95,1]}),zIndex:2}}
-                onClick={() => {handleSelect();}}>
-                    <p className={styles.noselect}>{displayItem}</p>
-                </animated.div>
+                ?popCube()
                 :
                 <animated.div className={styles.card} style={{...animation,visibility:visible}}  onClick={() => {handleSelect();}}>
                         <p className={styles.noselect}>{displayItem}</p>
