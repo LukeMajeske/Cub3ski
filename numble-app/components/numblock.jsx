@@ -1,6 +1,6 @@
 import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext';
 import styles from '../styles/Home.module.css';
-import { useState, useEffect, forwardRef, useImperativeHandle} from "react";
+import { useState, useEffect,useRef, forwardRef, useImperativeHandle} from "react";
 import { useSpring, animated, config} from "react-spring";
 import {HiSwitchHorizontal} from 'react-icons/hi';
 
@@ -12,6 +12,7 @@ const Numblock = forwardRef((props, ref) => {
     const {index,num, x,y,updateGrid,decrementSwapCount,dropNumblocks,swapCount,animation,anim_api} = props;
     const [selected, toggleSelected] = useState(false);
     const [visible, setVisible] = useState(num === "" ? "hidden" : "visible");
+    const unmounted = useRef(false);
     const displayItem = num === 11 ? <HiSwitchHorizontal/> : num;
     const cubeColors = {
         '1':'red',
@@ -78,6 +79,10 @@ const Numblock = forwardRef((props, ref) => {
         setMatchNumblock(numblock_index, isLastCube = false, delay = 0){
             anim_api.start(index => {
                 let startCount = 0;
+                
+                if(unmounted.current){
+                    return;
+                }
                 if (index === numblock_index){
                     //console.log("Starting anim for index: ", index);
                     return({
@@ -86,8 +91,8 @@ const Numblock = forwardRef((props, ref) => {
                             {opacity:1, scale:1},
                             {opacity:0,scale:0}],
                         delay:delay,
-                        onStart:() => {if(startCount===0){playSound({id:'matchSound'}); setPlaybackRate(prevRate => prevRate+=0.1);match_anim_status.current = true; startCount++}},
-                        onRest:()=>{setPlaybackRate(prevRate => prevRate=1);match_anim_status.current = false; if(isLastCube){dropNumblocks()}; handleTutorial(4,5);},
+                        onStart:() => {if(startCount===0 && unmounted.current){playSound({id:'matchSound'}); setPlaybackRate(prevRate => prevRate+=0.1);match_anim_status.current = true; startCount++}},
+                        onRest:()=>{if(unmounted.current)return; setPlaybackRate(prevRate => prevRate=1);match_anim_status.current = false; if(isLastCube){dropNumblocks()}; handleTutorial(4,5);},
                         config:{tension:450,friction:30}
                         
                     });
@@ -162,6 +167,13 @@ const Numblock = forwardRef((props, ref) => {
             </animated.div>
         )
     }
+
+    useEffect(()=>{
+        return () => {
+            console.log("unmounted");
+            unmounted.current = true;
+        }
+    })
     return(
         <>
             {activeNumblock.index === props.index 

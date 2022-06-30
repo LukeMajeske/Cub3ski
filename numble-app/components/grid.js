@@ -26,6 +26,7 @@ export default function Grid(props){
     const cube_ref = useRef();
     const empty_indexes = useRef([]);
     const cur_grid = useRef(props.numblock_grid);
+    const unmounted = useRef(false);
     //const [swapCount, setSwapCount] = useState(3);//When > 0, cubes whose sum > 10 can be swapped.
     const refreshGrid = props.refresh;
     const {key_count,match_anim_status,score,level} = useNumbleContext();
@@ -147,10 +148,10 @@ export default function Grid(props){
         match_indexes.forEach((cubeIndex, ind) => {
             if(ind === match_indexes.length-1){
                 console.log("Last match cube to remove!");
-                cube_ref.current.setMatchNumblock(cubeIndex, true,delay);
+                cube_ref.current.setMatchNumblock(cubeIndex, true,delay,unmounted.current);
             }
             else{
-                cube_ref.current.setMatchNumblock(cubeIndex,false,delay);
+                cube_ref.current.setMatchNumblock(cubeIndex,false,delay,unmounted.current);
             }
             delay += 100;
             cur_grid.current[cubeIndex] = "";
@@ -389,6 +390,7 @@ export default function Grid(props){
         if(initial_render.current === 0){
             initNumblocks();
         }
+
     },[])
 
     return(renderGrid())

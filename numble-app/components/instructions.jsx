@@ -62,17 +62,17 @@ export default  function Instructions(){
     let displayGrid= () => {
         if(step === 4){
             //setGrid(prevGrid => prevGrid = [4,6,10,10]);
-            return(<Grid key={3} numblock_grid={[4,6,10,10]} tutorialMode={true} swapCount={0}></Grid>);
+            return(<Grid key={3} numblock_grid={[4,6,10,10]} gameMode={0} tutorialMode={true} swapCount={0}></Grid>);
         }
         if(step === 5){
             //setGrid(prevGrid => prevGrid = [4,6,10,10]);
-            return(<Grid key={4} numblock_grid={[11,10,10]} tutorialMode={true} swapCount={1}></Grid>);
+            return(<Grid key={4} numblock_grid={[11,10,10]} gameMode={0} tutorialMode={true} swapCount={1}></Grid>);
         }
         if(step === 6){
             //setGrid(prevGrid => prevGrid = [4,6,10,10]);
-            return(<Grid key={5} numblock_grid={[9,7,4,8,5,3,8,8,3,9]} tutorialMode={true} swapCount={0}></Grid>);
+            return(<Grid key={5} numblock_grid={[9,7,4,8,5,3,8,8,3,9]} gameMode={0} tutorialMode={true} swapCount={0}></Grid>);
         }
-        return(<Grid key={2} numblock_grid={[4,6]} tutorialMode={true} swapCount={1}></Grid>);
+        return(<Grid key={2} numblock_grid={[4,6]} gameMode={0} tutorialMode={true} swapCount={1}></Grid>);
     }
 
     const displayButtons = () => {
