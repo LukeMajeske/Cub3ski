@@ -13,6 +13,7 @@ const Numblock = forwardRef((props, ref) => {
     const [selected, toggleSelected] = useState(false);
     const [visible, setVisible] = useState(num === "" ? "hidden" : "visible");
     const unmounted = useRef(false);
+    const selectSound = "selectSound"+num;
     const displayItem = num === 11 ? <HiSwitchHorizontal/> : num;
     const cubeColors = {
         '1':'red',
@@ -80,9 +81,6 @@ const Numblock = forwardRef((props, ref) => {
             anim_api.start(index => {
                 let startCount = 0;
                 
-                if(unmounted.current){
-                    return;
-                }
                 if (index === numblock_index){
                     //console.log("Starting anim for index: ", index);
                     return({
@@ -91,8 +89,28 @@ const Numblock = forwardRef((props, ref) => {
                             {opacity:1, scale:1},
                             {opacity:0,scale:0}],
                         delay:delay,
-                        onStart:() => {if(startCount===0 && unmounted.current){playSound({id:'matchSound'}); setPlaybackRate(prevRate => prevRate+=0.1);match_anim_status.current = true; startCount++}},
-                        onRest:()=>{if(unmounted.current)return; setPlaybackRate(prevRate => prevRate=1);match_anim_status.current = false; if(isLastCube){dropNumblocks()}; handleTutorial(4,5);},
+                        onStart:() => {
+                                if(startCount===0){
+                                    /*if(!unmounted.current){
+                                        setPlaybackRate(prevRate => prevRate+=0.1);
+                                    }*/
+                                    playSound({id:'matchSound'});
+                                    setPlaybackRate(prevRate => prevRate+=0.1);
+                                    match_anim_status.current = true; 
+                                    startCount++
+                                }
+                            },
+                        onRest:()=>{
+                                /*if(!unmounted.current){
+                                    setPlaybackRate(prevRate => prevRate=1);
+                                }*/
+                                setPlaybackRate(prevRate => prevRate=1);
+                                match_anim_status.current = false; 
+                                if(isLastCube){
+                                    dropNumblocks()
+                                }; 
+                                handleTutorial(4,5);
+                            },
                         config:{tension:450,friction:30}
                         
                     });
@@ -117,8 +135,8 @@ const Numblock = forwardRef((props, ref) => {
         }
         else if(num === "" || match_anim_status.current === true || ((num + activeNumblock.num) > 10  && swapCount <= 0)){
             //deselect numblocks and shake numblock to show it can't be added to make a number over 10
-            deSelectNumblock();
-            selectNumblock({index,num,x,y});
+            deSelectNumblock(false);
+            selectNumblock({index,num,x,y},selectSound);
             return;
         }
         //SWAP CUBES!!
@@ -141,14 +159,14 @@ const Numblock = forwardRef((props, ref) => {
             let numblocks = [{index:index, num:num}, {index:activeNumblock.index,num:""}];
             //Delete previous numblock;
             startAddAnimation(activeNumblock.index,numblocks, xDir, yDir);
-            deSelectNumblock();
+            deSelectNumblock(false);
             handleTutorial(2);
             return;
         }
 
         //console.log("Active Numblock", activeNumblock);
         //console.log("This Numblock", props);
-        selectNumblock({index,num,x,y});
+        selectNumblock({index,num,x,y},selectSound);
     }
 
     let handleSelect = () => {

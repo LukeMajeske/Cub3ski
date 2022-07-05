@@ -148,10 +148,10 @@ export default function Grid(props){
         match_indexes.forEach((cubeIndex, ind) => {
             if(ind === match_indexes.length-1){
                 console.log("Last match cube to remove!");
-                cube_ref.current.setMatchNumblock(cubeIndex, true,delay,unmounted.current);
+                cube_ref.current.setMatchNumblock(cubeIndex, true,delay);
             }
             else{
-                cube_ref.current.setMatchNumblock(cubeIndex,false,delay,unmounted.current);
+                cube_ref.current.setMatchNumblock(cubeIndex,false,delay);
             }
             delay += 100;
             cur_grid.current[cubeIndex] = "";
@@ -285,6 +285,7 @@ export default function Grid(props){
             }
         })
         cur_grid.current = drop_grid;
+        console.log("mode",mode);
         if(didDrop === false && mode === 1){
             updateNumblocks();
             console.log("Match Check After checking for dropped cubes");
@@ -390,7 +391,6 @@ export default function Grid(props){
         if(initial_render.current === 0){
             initNumblocks();
         }
-
     },[])
 
     return(renderGrid())

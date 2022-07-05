@@ -2,7 +2,7 @@ import { createContext, useContext, useState,useRef } from "react";
 import { useMediaQuery } from 'react-responsive'
 import cub3skiGrids from '../src/cub3ski_grids'
 import useSound from 'use-sound'
-import soundSpriteMap from '../public/sounds/Sound_SpriteMap.mp3';
+import soundSpriteMap from '../public/sounds/Cub3Ski_SpriteMapWNotes.mp3';
 
 
 
@@ -40,13 +40,29 @@ export function NumbleProvider({ children }) {
         swapSound: [503,578],
         enableSound: [1081,501],
         matchSound:[1582,59],
-        deselectSound:[1641,188],
-        selectSound:[1829,143]
+        deselectSound:[1641,240],
+        selectSound1:[1641,240],
+        selectSound2:[1881,240],
+        selectSound3:[2122,240],
+        selectSound4:[2362,240],
+        selectSound5:[2602,240],
+        selectSound6:[2843,240],
+        selectSound7:[3083,240],
+        selectSound8:[3324,240],
+        selectSound9:[3564,240],
+        selectSound10:[3804,240],
+        selectSound11:[4045,240],
+
 
     }
-    const[playSound] = useSound(soundSpriteMap,{volume:0.25,playbackRate:playbackRate,soundEnabled:soundEnable,sprite:spriteMap});
+    const[playSound,sound] = useSound(soundSpriteMap,
+        {volume:0.25,
+        playbackRate:playbackRate,
+        soundEnabled:soundEnable,
+        sprite:spriteMap,interrupt:true
+    });
     const[playUnmutableSound] = useSound(soundSpriteMap,{volume:0.25,sprite:{disableSound: [0,503],enableSound: [1081,501],matchSound:[1582,59]}});
-  
+    
     const getCubeWidth = () =>{
         if(isTinyMobile){
             return 55;
@@ -92,12 +108,15 @@ export function NumbleProvider({ children }) {
     }
     
 
-    let selectNumblock = (numblock) =>{
-        playSound({id:'selectSound'});
+    let selectNumblock = (numblock,soundToPlay) =>{
+        playSound({id:soundToPlay});
+        
+        //setPlaybackRate(prevRate => prevRate = 1);
         setActiveNumblock(prevNumblock => prevNumblock = numblock);
     }
 
     let deSelectNumblock = (doSound=true) => {
+        console.log("Do deselect sound",doSound);
         doSound?playSound({id:'deselectSound'}):null;
         setActiveNumblock(prevNumblock => prevNumblock = {index:-1,num:0,x:-10,y:-10});
     }
