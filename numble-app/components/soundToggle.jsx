@@ -1,12 +1,12 @@
-import {useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext'
+import {useCub3skiContext, useCub3skiUpdateContext} from '../Contexts/cub3skiContext'
 import{useEffect} from 'react'
 import{GoMute,GoUnmute} from 'react-icons/go'
 import styles from '../styles/Home.module.css'
 
 
 export default function SoundToggle(){
-    const {soundEnable} = useNumbleContext();
-    const {setSoundEnable, playUnmutableSound} = useNumbleUpdateContext();
+    const {soundEnable} = useCub3skiContext();
+    const {setSoundEnable, playUnmutableSound} = useCub3skiUpdateContext();
 
     const handleSoundEnable = () => {
         localStorage.setItem("soundEnable",JSON.stringify(!soundEnable));

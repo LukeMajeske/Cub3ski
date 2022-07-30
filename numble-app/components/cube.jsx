@@ -1,15 +1,13 @@
-import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext';
+import { useCub3skiContext, useCub3skiUpdateContext} from '../Contexts/cub3skiContext';
 import styles from '../styles/Home.module.css';
 import { useState, useEffect,useRef, forwardRef, useImperativeHandle} from "react";
 import { useSpring, animated, config} from "react-spring";
 import {HiSwitchHorizontal} from 'react-icons/hi';
 
-
-
-const Numblock = forwardRef((props, ref) => {
-    const {activeNumblock,tutorialMode,step,match_anim_status} = useNumbleContext();
-    const {selectNumblock,deSelectNumblock,handleTutorial, getCubeWidth, playSound, setPlaybackRate} = useNumbleUpdateContext();
-    const {index,num, x,y,updateGrid,decrementSwapCount,dropNumblocks,swapCount,animation,anim_api} = props;
+const Cube = forwardRef((props, ref) => {
+    const {activeCube,step,match_anim_status} = useCub3skiContext();
+    const {selectCube,deSelectCube,handleTutorial, getCubeWidth, playSound, setPlaybackRate} = useCub3skiUpdateContext();
+    const {index,num, x,y,updateGrid,decrementSwapCount,dropCubes,swapCount,animation,anim_api} = props;
     const [selected, toggleSelected] = useState(false);
     const [visible, setVisible] = useState(num === "" ? "hidden" : "visible");
     const unmounted = useRef(false);
@@ -40,7 +38,7 @@ const Numblock = forwardRef((props, ref) => {
     
  
 
-    let startAddAnimation = (cube_index,cubes_to_update,xDir, yDir) =>{
+    const startAddAnimation = (cube_index,cubes_to_update,xDir, yDir) =>{
         anim_api.start(ind => {
             if (ind === cube_index){
                 console.log("Starting anim for index: ", cube_index);
@@ -54,7 +52,7 @@ const Numblock = forwardRef((props, ref) => {
         })
     }
 
-    let startSwapAnimation = (cube1_index,cube2_index,cubes_to_update,xDir, yDir) =>{
+    const startSwapAnimation = (cube1_index,cube2_index,cubes_to_update,xDir, yDir) =>{
         
         anim_api.start(ind => {
             if (ind === cube1_index){
@@ -76,12 +74,15 @@ const Numblock = forwardRef((props, ref) => {
         })
     }
 
+    //Called from Grid component. When a cube is matched, start the match animation
+    //and play the match sound for this cube. If this cube is the last cube for all sets of
+    //matches, start the logic for dropping cubes.
     useImperativeHandle(ref,() => ({
-        setMatchNumblock(numblock_index, isLastCube = false, delay = 0){
+        setMatchCube(cube_index, isLastCube = false, delay = 0){
             anim_api.start(index => {
                 let startCount = 0;
                 
-                if (index === numblock_index){
+                if (index === cube_index){
                     //console.log("Starting anim for index: ", index);
                     return({
                         from:{opacity:1,scale:1},
@@ -107,7 +108,7 @@ const Numblock = forwardRef((props, ref) => {
                                 setPlaybackRate(prevRate => prevRate=1);
                                 match_anim_status.current = false; 
                                 if(isLastCube){
-                                    dropNumblocks()
+                                    dropCubes();
                                 }; 
                                 handleTutorial(4,5);
                             },
@@ -119,63 +120,67 @@ const Numblock = forwardRef((props, ref) => {
         }
     }));
 
-
-    let numblockLogic = () => {
+    //Handles the behavior of a cube
+    const cubeLogic = () => {
         //console.log("Match Anim Status: ", match_anim_status.current);
-        let xDir = x - activeNumblock.x;
-        let yDir = y - activeNumblock.y;
-        let isAdjacentX = (Math.abs(x - activeNumblock.x) ===  1)&&((y - activeNumblock.y)===0);
-        let isAdjacentY = (Math.abs(y - activeNumblock.y) ===  1)&&((x - activeNumblock.x)===0);
+
+        //get the difference in x & y coords between the currently selected cube and this
+        //clicked cube
+        let xDir = x - activeCube.x;
+        let yDir = y - activeCube.y;
+        let isAdjacentX = (Math.abs(xDir) ===  1)&&((yDir)===0);
+        let isAdjacentY = (Math.abs(yDir) ===  1)&&((xDir)===0);
         let isAdjacent = (isAdjacentX || isAdjacentY);
 
-        if(index === activeNumblock.index){
-            //deselect numblock
-            deSelectNumblock();
+        //Deselect if clicking the currently selected cube
+        if(index === activeCube.index){
+            deSelectCube();
             return;
         }
-        else if(num === "" || match_anim_status.current === true || ((num + activeNumblock.num) > 10  && swapCount <= 0)){
-            //deselect numblocks and shake numblock to show it can't be added to make a number over 10
-            deSelectNumblock(false);
-            selectNumblock({index,num,x,y},selectSound);
+        else if(num === "" || match_anim_status.current === true || ((num + activeCube.num) > 10  && swapCount <= 0)){
+            
+            deSelectCube(false);
+            selectCube({index,num,x,y},selectSound);
             return;
         }
         //SWAP CUBES!!
-        else if((num + activeNumblock.num) > 10 && swapCount > 0 && isAdjacent){
-            let numblocks = [{index:index, num:activeNumblock.num}, {index:activeNumblock.index,num:num}];
-            //let numblocks = [{index:activeNumblock.index,num:activeNumblock.num}, {index:index, num:num}];
+        else if((num + activeCube.num) > 10 && swapCount > 0 && isAdjacent){
+            let cubes = [{index:index, num:activeCube.num}, {index:activeCube.index,num:num}];
+            //let cubes = [{index:activeCube.index,num:activeCube.num}, {index:index, num:num}];
             //Swap Numbers
-            startSwapAnimation(activeNumblock.index,index,numblocks, xDir, yDir);
+            startSwapAnimation(activeCube.index,index,cubes, xDir, yDir);
             //console.log("number of swaps ", swapCount);
             
             decrementSwapCount();
 
             //console.log("number of swaps ", swapCount);
             
-            deSelectNumblock(false);
+            deSelectCube(false);
             return;
         }
         else if(isAdjacent){
-            num += activeNumblock.num;
-            let numblocks = [{index:index, num:num}, {index:activeNumblock.index,num:""}];
-            //Delete previous numblock;
-            startAddAnimation(activeNumblock.index,numblocks, xDir, yDir);
-            deSelectNumblock(false);
+            num += activeCube.num;
+            let cubes = [{index:index, num:num}, {index:activeCube.index,num:""}];
+            //Delete previous cube;
+            startAddAnimation(activeCube.index,cubes, xDir, yDir);
+            deSelectCube(false);
             handleTutorial(2);
             return;
         }
 
-        //console.log("Active Numblock", activeNumblock);
-        //console.log("This Numblock", props);
-        selectNumblock({index,num,x,y},selectSound);
+        //console.log("Active Cube", activeCube);
+        //console.log("This Cube", props);
+        selectCube({index,num,x,y},selectSound);
     }
 
     let handleSelect = () => {
         handleTutorial(1);
         toggleSelected(prevSelected => prevSelected = !selected);
         console.log("Cube Color",cubeColor);
-        numblockLogic();
+        cubeLogic();
     }
 
+    //Animation when a cube is clicked
     const popCube = () =>{
         return(
             <animated.div className={styles.selected} style={{scale:pop.to({range:[0,0.25,0.5,0.75,1],
@@ -194,7 +199,7 @@ const Numblock = forwardRef((props, ref) => {
     })
     return(
         <>
-            {activeNumblock.index === props.index 
+            {activeCube.index === props.index 
                 ?popCube()
                 :
                 <animated.div className={styles.card} style={{...animation,visibility:visible}}  onClick={() => {handleSelect();}}>
@@ -205,6 +210,6 @@ const Numblock = forwardRef((props, ref) => {
     )
 });
 
-Numblock.displayName = 'Numblock'
+Cube.displayName = 'Cube'
 
-export default Numblock;
+export default Cube;

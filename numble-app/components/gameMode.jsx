@@ -1,10 +1,10 @@
-import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext'
+import { useCub3skiContext, useCub3skiUpdateContext} from '../Contexts/cub3skiContext'
 import styles from '../styles/Home.module.css'
 
 export default function GameMode(props){
     const RefreshGrid = props.refresh;
-    const{gameMode} = useNumbleContext();
-    const{setGameMode} = useNumbleUpdateContext();
+    const{gameMode} = useCub3skiContext();
+    const{setGameMode} = useCub3skiUpdateContext();
     
     const handleGameModeChange = (mode) =>{
         setGameMode(mode);

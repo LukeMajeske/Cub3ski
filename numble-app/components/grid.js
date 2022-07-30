@@ -1,6 +1,6 @@
 import styles from '../styles/Home.module.css'
-import Numblock from './numblock'
-import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext'
+import Cube from './cube'
+import { useCub3skiContext, useCub3skiUpdateContext} from '../Contexts/cub3skiContext'
 import Score from './score'
 import Instructions from './instructions'
 import GameOver from './gameOver'
@@ -9,32 +9,29 @@ import LeaderBoard from './leaderBoard'
 import Level from './level'
 import { useEffect, useRef, useState } from 'react';
 import {scoreMatches,checkForMatches, randomNumber, 
-    getEmptyIndexes,checkGameOver,checkForSwapCubes, getYPos, checkPuzzleComplete} from '../numblock_functions/grid_functions';
-import {useSpringRef, useSprings, config} from "react-spring";
+    getEmptyIndexes,checkGameOver,checkForSwapCubes, checkPuzzleComplete} from '../cub3ski_functions/grid_functions';
+import {useSprings, config} from "react-spring";
 import Swap from './swap'
 import RefreshGrid from './refreshGrid'
 import PuzzleEnd from './puzzleEnd'
 import SoundToggle from './soundToggle'
 
 export default function Grid(props){
-    const [numblock_grid,setNumblockGrid] = useState(props.numblock_grid);
     const [mode, setMode] = useState(props.gameMode)//0=endlessMode, 1=puzzleMode
-    const size = props.numblock_grid.length;
+    const size = props.cube_grid.length;
     const tutorialMode = props.tutorialMode;
-    const [numblocks, setNumblocks] = useState([]);
+    const [cubes, setCubes] = useState([]);
     const initial_render = useRef(0);
     const cube_ref = useRef();
-    const empty_indexes = useRef([]);
-    const cur_grid = useRef(props.numblock_grid);
+    const empty_indexes = useRef([]);//Used to track empty spaces in the grid.
+    const cur_grid = useRef(props.cube_grid);
     const unmounted = useRef(false);
-    //const [swapCount, setSwapCount] = useState(3);//When > 0, cubes whose sum > 10 can be swapped.
     const refreshGrid = props.refresh;
-    const {key_count,match_anim_status,score,level} = useNumbleContext();
-    const {handleTutorial,handleGameOver, handleAddToScore, getCubeWidth, 
-        handlePuzzleComplete,incrementLevel, decrementLevel} = useNumbleUpdateContext();
+    const {key_count,match_anim_status,score,level} = useCub3skiContext();
+    const {handleGameOver, handleAddToScore, getCubeWidth, 
+        handlePuzzleComplete,incrementLevel, decrementLevel} = useCub3skiUpdateContext();
     const swapCount = useRef(props.swapCount);
     let minHeight = ((Math.floor((cur_grid.current.length)/6)+1)*getCubeWidth())+'px';
-    //console.log("minHeight",minHeight);
 
     const decrementSwapCount=()=>{
         swapCount.current--;
@@ -49,13 +46,11 @@ export default function Grid(props){
     const handlePrevLevel=()=>{
         decrementLevel();
         refreshGrid();
-
     }
 
     const handleNextLevel=()=>{
         incrementLevel();
         refreshGrid();
-
     }
 
     const [springs,api] = useSprings(size, index => ({
@@ -75,7 +70,7 @@ export default function Grid(props){
         }
     }
 
-    let handleMatchCheck = () =>{
+    const handleMatchCheck = () =>{
         console.log("Running match check");
         if(cur_grid.current === undefined){
             console.log("grid is undefined for match check");
@@ -106,9 +101,9 @@ export default function Grid(props){
         }
     }
 
-    let setDropNumblock = (numblock_index, yDir=-1, isLastCube = false) => {
+    const setDropCube = (cube_index, yDir=-1, isLastCube = false) => {
         api.start(index => {
-            if (index === numblock_index){
+            if (index === cube_index){
                 return({
                     from:{y:getCubeWidth()*yDir, x:0, opacity:1,scale:1,zIndex:1},
                     to:{y:0, x:0, opacity:1,scale:1,zIndex:1},
@@ -120,38 +115,17 @@ export default function Grid(props){
         })
     }
 
-    /*const setMatchNumblock = (numblock_index, isLastCube = false, delay = 0) => {
-        api.start(index => {
-            let startCount = 0;
-            if (index === numblock_index){
-                //console.log("Starting anim for index: ", index);
-                return({
-                    from:{opacity:1,scale:1},
-                    to:[{opacity:1, scale:0.5},
-                        {opacity:1, scale:1},
-                        {opacity:0,scale:0}],
-                    delay:delay,
-                    onStart:() => {if(startCount===0){match_anim_status.current = true; startCount++}},
-                    onRest:()=>{match_anim_status.current = false; if(isLastCube){dropNumblocks(cur_grid.current)}; handleTutorial(4,5);},
-                    config:{tension:450,friction:30}
-                    
-                });
-            }
-        })
-    }*/
-
-    let removeMatches = (match_indexes) => {
+    const removeMatches = (match_indexes) => {
         match_indexes = match_indexes.flat();
         match_indexes = [...new Set(match_indexes)];
-        //console.log("Remove Matches",match_indexes);
         let delay = 0;
         match_indexes.forEach((cubeIndex, ind) => {
             if(ind === match_indexes.length-1){
                 console.log("Last match cube to remove!");
-                cube_ref.current.setMatchNumblock(cubeIndex, true,delay);
+                cube_ref.current.setMatchCube(cubeIndex, true,delay);
             }
             else{
-                cube_ref.current.setMatchNumblock(cubeIndex,false,delay);
+                cube_ref.current.setMatchCube(cubeIndex,false,delay);
             }
             delay += 100;
             cur_grid.current[cubeIndex] = "";
@@ -159,9 +133,8 @@ export default function Grid(props){
 
     }
 
-    let newNumblocks = (dropDirection = -1) => {
+    const newCubes = (dropDirection = -1) => {
         //fill in empty spaces with new numbers
-        //console.log("New Numblocks", cur_grid.current);
         let new_cube_indexes = [];
         if(mode === 0){//If in endless mode
             for(var i = size; i >= 0; i--){
@@ -172,61 +145,53 @@ export default function Grid(props){
             }
             new_cube_indexes.forEach((cubeIndex,index)=>{
                 if(index+1 === new_cube_indexes.length){
-                    setDropNumblock(cubeIndex, dropDirection,true);
+                    setDropCube(cubeIndex, dropDirection,true);
                 }
                 else{
-                    setDropNumblock(cubeIndex, dropDirection);
+                    setDropCube(cubeIndex, dropDirection);
                 }
             })
         }
-        updateNumblocks();
+        updateCubes();
     }
 
-    let createNumblock = (index, animation, num=cur_grid.current[index]) =>{ 
+    const createCube = (index, animation, num=cur_grid.current[index]) =>{ 
         let xpos = (index) % 5;
         let ypos = Math.floor((index)/5);
-        let numblock = <Numblock key={key_count.current}
+        let cube = <Cube key={key_count.current}
                             ref ={cube_ref}
                             num={num} 
                             x={xpos} y={ypos} 
                             index={index}
                             updateGrid={updateGrid}
                             decrementSwapCount = {decrementSwapCount}
-                            dropNumblocks = {dropNumblocks}
+                            dropCubes = {dropCubes}
                             swapCount = {swapCount.current}
                             tutorialMode={tutorialMode}
                             animation = {animation}
                             anim_api = {api}
                             />;
         key_count.current += 1;
-        return(numblock)
+        return(cube)
     }
 
-    let initNumblocks = () =>{
-        let new_numblocks = [];
+    const initCubes = () =>{
+        let new_cubes = [];
 
         for(var i = 1; i < size+1; i++){
             //console.log(springs[i-1]);
-            new_numblocks.push(createNumblock(i-1,springs[i-1]));
+            new_cubes.push(createCube(i-1,springs[i-1]));
         }
-
-
-
         initial_render.current += 1;
-        setNumblocks(prevBlocks => prevBlocks = new_numblocks);
+        setCubes(prevCubes => prevCubes = new_cubes);
     }
 
-    let updateNumblocks = () => {
-        //console.log("Update Numblocks...");
-        let new_numblocks = [];
-        console.log("updating numblocks to:", cur_grid.current)
+    const updateCubes = () => {
+        let new_cubes = [];
         
         for(var i = 1; i < size+1; i++){
-            new_numblocks.push(createNumblock(i-1,springs[i-1]));
-            //new_numblocks.push(createNumblock(i-1,match_spring));
+            new_cubes.push(createCube(i-1,springs[i-1]));
         }
-        //console.log(new_numblocks);
-
         //If there are no matches on the board, check to see if the game is over
         if(!tutorialMode){
             if(mode === 0){
@@ -243,12 +208,12 @@ export default function Grid(props){
                 localStorage.setItem("gameState",JSON.stringify({score:score.current,swaps:swapCount.current,gridState:cur_grid.current,gameStatus:"inProgress"}));
             }          
         }
-        setNumblocks(prevBlocks => prevBlocks = new_numblocks);
+        setCubes(prevBlocks => prevBlocks = new_cubes);
     }
 
-    //If numblock has empty space beneath it, let it drop to the bottom.
+    //If cube has empty space beneath it, let it drop to the bottom.
     //give index or indexes of empty spaces
-    let dropNumblocks = (dropDirection = -5) => {
+    const dropCubes = (dropDirection = -5) => {
         if(mode != 0){//if not in endless mode, always drop cubes downwards;
             dropDirection = -5;
         }
@@ -261,7 +226,6 @@ export default function Grid(props){
         let cubeIndexesToDrop = [];//Used to get a list of all cubes to be dropped. Call to check for matches only after the last cube has been dropped.
         emptyIndexes.forEach(startIndex => {
             let searchIndex = startIndex + dropDirection;
-            let new_numblocks = [];
             while(searchIndex >= 0 && searchIndex <= 24){
                 //console.log("Drop Search Index:",searchIndex);
                 if(drop_grid[searchIndex] !== ""){
@@ -275,11 +239,11 @@ export default function Grid(props){
             }
             for(const [ind,cubeIndex] of cubeIndexesToDrop.entries()){
                 if(ind === cubeIndexesToDrop.length-1){
-                    //Math.sign(x) gives the direction which to drop numblocks. Positive is up, negative is down.
-                    setDropNumblock(cubeIndex, Math.sign(dropDirection), true);
+                    //Math.sign(x) gives the direction which to drop cubes. Positive is up, negative is down.
+                    setDropCube(cubeIndex, Math.sign(dropDirection), true);
                 }
                 else{
-                    setDropNumblock(cubeIndex, Math.sign(dropDirection));
+                    setDropCube(cubeIndex, Math.sign(dropDirection));
                 }
 
             }
@@ -287,44 +251,41 @@ export default function Grid(props){
         cur_grid.current = drop_grid;
         console.log("mode",mode);
         if(didDrop === false && mode === 1){
-            updateNumblocks();
-            console.log("Match Check After checking for dropped cubes");
+            updateCubes();
             handleMatchCheck();
         }
         else{
-            newNumblocks(Math.sign(dropDirection));
-            //updateNumblocks();
+            newCubes(Math.sign(dropDirection));
         }
     }
 
-    let getNumblocks = () =>{
-        //console.log("Rendering Numblocks",numblocks);
+    const getCubes = () =>{
         return (<div className={styles.grid} style={{minHeight:minHeight,height:minHeight}}>
-                    {numblocks}
+                    {cubes}
                 </div>);
     }
 
-    let updateGrid = (numblocksUpdate, updateGridOnly = false, swap = false, dropDirection = -1) => {
-        //Adding two numblocks together
+    const updateGrid = (cubesUpdate, updateGridOnly = false, swap = false, dropDirection = -1) => {
+        //Adding two cubes together
         //console.log("Updating Grid");
-        let activeIndex = [numblocksUpdate[1].index];
+        let activeIndex = [cubesUpdate[1].index];
         
-        numblocksUpdate.forEach(numblock => {
-            cur_grid.current[numblock.index] = numblock.num;
+        cubesUpdate.forEach(cube => {
+            cur_grid.current[cube.index] = cube.num;
         });
         
         //repeat until there are no matches or empty spaces
         //empty_indexes.current = activeIndex;
         
         if(updateGridOnly === true){
-            newNumblocks();
-            updateNumblocks();
+            newCubes();
+            updateCubes();
         }
         else if(swap === true){
             handleMatchCheck();
         }
         else{
-            dropNumblocks(dropDirection * 5);
+            dropCubes(dropDirection * 5);
         }
         
 
@@ -350,11 +311,11 @@ export default function Grid(props){
         </div>)
     }
 
-    let renderGrid = () => {
+    const renderGrid = () => {
         if(tutorialMode){
             return(
                 <>
-                    {getNumblocks()}
+                    {getCubes()}
                 </> 
             )
         }
@@ -376,7 +337,7 @@ export default function Grid(props){
                     : null}
 
                 <div className={styles.gridCont}>
-                    {getNumblocks()}
+                    {getCubes()}
                 </div>
 
             </div>
@@ -389,7 +350,7 @@ export default function Grid(props){
 
     useEffect(()=>{        
         if(initial_render.current === 0){
-            initNumblocks();
+            initCubes();
         }
     },[])
 

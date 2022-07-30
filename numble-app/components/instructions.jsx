@@ -1,13 +1,13 @@
 import styles from '../styles/Home.module.css'
 import Modal from './modal'
 import Grid from './grid';
-import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext';
+import { useCub3skiContext, useCub3skiUpdateContext} from '../Contexts/cub3skiContext';
 import {useRef, useState, useEffect} from 'react';
 import {BsFillQuestionCircleFill} from 'react-icons/bs';
 
 export default  function Instructions(){
-    const {step} = useNumbleContext();
-    const {setTutorialMode, deSelectNumblock,setStep} = useNumbleUpdateContext();
+    const {step} = useCub3skiContext();
+    const {setTutorialMode, deSelectCube,setStep} = useCub3skiUpdateContext();
     const [showOnLoad,setShowOnLoad] = useState(false);
     const [show,setShow] = useState(false);
     const [grid, setGrid] = useState([4,6]);
@@ -15,14 +15,14 @@ export default  function Instructions(){
     const handleShow = () => {
         setShow(true);
         setTutorialMode(true);
-        deSelectNumblock();
+        deSelectCube();
     }
 
     const handleClose = () => {
         setShow(false);
         setTutorialMode(false);
         setStep(prevStep => prevStep = 1);
-        deSelectNumblock();
+        deSelectCube();
     }
 
     const handleShowOnLoad = () =>{
@@ -62,17 +62,17 @@ export default  function Instructions(){
     let displayGrid= () => {
         if(step === 4){
             //setGrid(prevGrid => prevGrid = [4,6,10,10]);
-            return(<Grid key={3} numblock_grid={[4,6,10,10]} gameMode={0} tutorialMode={true} swapCount={0}></Grid>);
+            return(<Grid key={3} cube_grid={[4,6,10,10]} gameMode={0} tutorialMode={true} swapCount={0}></Grid>);
         }
         if(step === 5){
             //setGrid(prevGrid => prevGrid = [4,6,10,10]);
-            return(<Grid key={4} numblock_grid={[11,10,10]} gameMode={0} tutorialMode={true} swapCount={1}></Grid>);
+            return(<Grid key={4} cube_grid={[11,10,10]} gameMode={0} tutorialMode={true} swapCount={1}></Grid>);
         }
         if(step === 6){
             //setGrid(prevGrid => prevGrid = [4,6,10,10]);
-            return(<Grid key={5} numblock_grid={[9,7,4,8,5,3,8,8,3,9]} gameMode={0} tutorialMode={true} swapCount={0}></Grid>);
+            return(<Grid key={5} cube_grid={[9,7,4,8,5,3,8,8,3,9]} gameMode={0} tutorialMode={true} swapCount={0}></Grid>);
         }
-        return(<Grid key={2} numblock_grid={[4,6]} gameMode={0} tutorialMode={true} swapCount={1}></Grid>);
+        return(<Grid key={2} cube_grid={[4,6]} gameMode={0} tutorialMode={true} swapCount={1}></Grid>);
     }
 
     const displayButtons = () => {

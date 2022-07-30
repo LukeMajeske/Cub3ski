@@ -1,13 +1,13 @@
 import {useState, useEffect, useRef} from "react";
-import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext';
+import { useCub3skiContext, useCub3skiUpdateContext} from '../Contexts/cub3skiContext';
 import Modal from '../components/modal'
 import {DataStore} from 'aws-amplify';
 import {Highscores} from "../src/models";
 
 
 export default function PuzzleEnd(props){
-    const {showPuzzleEnd} = useNumbleContext();
-    const {setShowPuzzleEnd,setPuzzleEnd, incrementLevel} = useNumbleUpdateContext();
+    const {showPuzzleEnd} = useCub3skiContext();
+    const {setShowPuzzleEnd,setPuzzleEnd, incrementLevel} = useCub3skiUpdateContext();
     const RefreshGrid = props.refresh;
 
 

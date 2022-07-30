@@ -1,4 +1,4 @@
-import {useNumbleContext} from '../Contexts/numbleContext'
+import {useCub3skiContext} from '../Contexts/cub3skiContext'
 
 
 export default function Swap(props){

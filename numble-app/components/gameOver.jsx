@@ -1,13 +1,13 @@
 import {useState, useEffect, useRef} from "react";
-import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext';
+import { useCub3skiContext, useCub3skiUpdateContext} from '../Contexts/cub3skiContext';
 import Modal from '../components/modal'
 import {DataStore} from 'aws-amplify';
 import {Highscores} from "../src/models";
 
 
 export default function GameOver(){
-    const {gameOver,showGameOver,score} = useNumbleContext();
-    const {setShowGameOver} = useNumbleUpdateContext();
+    const {gameOver,showGameOver,score} = useCub3skiContext();
+    const {setShowGameOver} = useCub3skiUpdateContext();
     const [localScore,setLocalScore] = useState([]);
     const [username, setUsername] = useState("anon");
     const scoreSorted = useRef(false); //If scores have been sorted, don't try again.

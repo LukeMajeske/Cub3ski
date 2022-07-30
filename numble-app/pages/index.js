@@ -4,19 +4,17 @@ import Grid from '../components/grid'
 import Script from 'next/script'
 import Page from '../components/next-seo'
 import cub3skiGrids from '../src/cub3ski_grids'
-import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext';
+import { useCub3skiContext, useCub3skiUpdateContext} from '../Contexts/cub3skiContext';
 import { useEffect, useState, useRef } from 'react'
 import{FaFacebookSquare} from 'react-icons/fa'
 
 
 
 export default function Home() {
-  //DEFINE STATE
-  const {grid_key_count,gameMode, level} = useNumbleContext();
-  const {setScore, setLevel, setGameMode, setSoundEnable} = useNumbleUpdateContext();
+  const {grid_key_count,gameMode, level} = useCub3skiContext();
+  const {setScore, setLevel, setGameMode, setSoundEnable} = useCub3skiUpdateContext();
   const generatedGrid = useRef();
-  
-
+  const [grid, setGrid] = useState();
 
   const handleRefresh = (changeMode=false) => {
     setGrid(prevGrid=> prevGrid = gen_grid());
@@ -28,25 +26,14 @@ export default function Home() {
     localStorage.setItem("gameMode",JSON.stringify(gameMode.current));
   }
   
-  const gen_grid = () => {
-    //console.log("Generating grid...");\
-  
-    //let new_grid = [9,8,10,9,10,10,9,8,7,8,1,10,9,6,10,10,5,7,10,10,9,7,5,9,1]; //to test game over
-    //let new_grid = [9,8,7,6,7,2,3,10,8,10,6,5,10,6,9,10,10,6,10,10,10,10,4,10,10]; //to test scoring
-    //let new_grid = [9,8,7,6,7,2,3,10,8,10,6,5,10,6,9,10,10,6,10,10,10,10,4,10,10]; //to test cube swap
-    //const new_grid = [1,2,2,3,2,1,2,3,4,3,3,1,4,1,1,3,2,1,3,3,9,8,3,6,5];
-    /*generatedGrid = [3,2,10,2,2,
-                      3,9,8,7,6,
-                      2,1,3,1,1,
-                      3,2,1,3,3,
-                      3,8,3,6,5];*/
-    
+  const gen_grid = () => {    
     let gridNumber = 0;
     let showScore = false;
     let showLevel = false;
     let swapCount = 3;
-    let levelName = ""
+    let levelName = "";
     let gameState = JSON.parse(localStorage.getItem("gameState"));
+
     switch(gameMode.current){
       case 0:
         gridNumber = Math.floor(Math.random() * (cub3skiGrids[0].length));
@@ -66,15 +53,24 @@ export default function Home() {
   
     console.log("generated grid!", generatedGrid.current);
   
-    const grid = <Grid key={grid_key_count.current} gameMode={gameMode.current} numblock_grid = {generatedGrid.current} 
-    showScore={showScore} showLevel={showLevel} showSidebar={true} tutorialMode={false} swapCount={swapCount} levelName={levelName} refresh={handleRefresh}> </Grid>;
+    const grid = <Grid key={grid_key_count.current} 
+    gameMode={gameMode.current} 
+    cube_grid = {generatedGrid.current} 
+    showScore={showScore} 
+    showLevel={showLevel} 
+    showSidebar={true} 
+    tutorialMode={false} 
+    swapCount={swapCount} 
+    levelName={levelName} 
+    refresh={handleRefresh}>
+    </Grid>;
   
     grid_key_count.current++;
   
     return(grid);
   }
 
-  const [grid, setGrid] = useState();
+  
 
   const createLevelLocalStorage = () => {
     const levelLocalStorage = JSON.parse(localStorage.getItem("levelState"));
@@ -105,23 +101,28 @@ export default function Home() {
     let gameState = JSON.parse(localStorage.getItem("gameState"));
     let mode = JSON.parse(localStorage.getItem("gameMode"));
 
+    //Check Local Storage, initialize local storage if game state or mode is null;
     if(gameState === null){
       localStorage.setItem("gameState",JSON.stringify({score:0,swaps:3,gridState:[],gameStatus:"start"}));
       gameState = {score:0,swaps:3,gridState:[],gameStatus:"start"};
     }
+    //If game mode is null, start the game in Puzzle Mode
     if(mode === null){
       setGameMode(1);
       localStorage.setItem("gameMode",JSON.stringify(1));
     }
+    //If there was a game in progress, generate grid from gameState in local storage.
     if(gameState.gameStatus === "inProgress"){
       setScore(gameState.score);
 
       setGameMode(mode);
+      //If game mode in local storage is set to Endless mode "0", generate grid from gameState in localStorage.
       if(mode === 0){
-        setGrid(<Grid key={grid_key_count.current} gameMode={mode} numblock_grid = {gameState.gridState} 
+        setGrid(<Grid key={grid_key_count.current} gameMode={mode} cube_grid = {gameState.gridState} 
         showScore={true} showSidebar={true} tutorialMode={false} swapCount={gameState.swaps} refresh={handleRefresh}> </Grid>);
         grid_key_count.current++;
       }
+      //Else use gen_grid() to generate grid for puzzle mode.
       else{
         setGrid(gen_grid());
       }

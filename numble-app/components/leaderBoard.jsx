@@ -2,12 +2,12 @@ import {DataStore, Predicates, SortDirection} from 'aws-amplify';
 import {Highscores} from "../src/models";
 import Modal from './modal'
 import {useEffect, useState, useRef} from 'react';
-import { useNumbleContext, useNumbleUpdateContext} from '../Contexts/numbleContext';
+import { useCub3skiContext, useCub3skiUpdateContext} from '../Contexts/cub3skiContext';
 import styles from '../styles/Home.module.css'
 
 export default function LeaderBoard(){
-    const {showLeaderboard} = useNumbleContext();
-    const {setShowLeaderboard} = useNumbleUpdateContext();
+    const {showLeaderboard} = useCub3skiContext();
+    const {setShowLeaderboard} = useCub3skiUpdateContext();
     const [highScores, setHighScores] = useState([]);
     const scoresLoaded = useRef(false);
     

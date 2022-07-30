@@ -6,11 +6,11 @@ import soundSpriteMap from '../public/sounds/Cub3Ski_SpriteMapWNotes.mp3';
 
 
 
-export const NumbleContext = createContext();
-export const NumbleUpdateContext = createContext();
+export const Cub3skiContext = createContext();
+export const Cub3skiUpdateContext = createContext();
 
-export function NumbleProvider({ children }) {
-    const [activeNumblock, setActiveNumblock] = useState({index:-1,num:0,x:-10,y:-10});
+export function Cub3skiProvider({ children }) {
+    const [activeCube, setActiveCube] = useState({index:-1,num:0,x:-10,y:-10});
     const [tutorialMode, setTutorialMode] = useState(false);
     const [showLeaderboard, setShowLeaderboard] = useState(false);
     const [gameOver, setGameOver] = useState(false);
@@ -18,9 +18,7 @@ export function NumbleProvider({ children }) {
     const [showGameOver, setShowGameOver] = useState(false);
     const [showPuzzleEnd, setShowPuzzleEnd] = useState(false);
     const [step,setStep] = useState(1);//Keeps track of what step of the tutorial user is on.
-    const [numblock_grid, setNumblockGrid] = useState([]);
     const [soundEnable, setSoundEnable] = useState(false);
-    //const [score, setScore] = useState(0);
     const gameMode = useRef(1)//0=endless, 1=puzzle
     const level = useRef(1);//Represents the current level for puzzle mode.
     const score = useRef(0);
@@ -108,17 +106,17 @@ export function NumbleProvider({ children }) {
     }
     
 
-    let selectNumblock = (numblock,soundToPlay) =>{
+    let selectCube = (cube,soundToPlay) =>{
         playSound({id:soundToPlay});
         
         //setPlaybackRate(prevRate => prevRate = 1);
-        setActiveNumblock(prevNumblock => prevNumblock = numblock);
+        setActiveCube(prevCube => prevCube = cube);
     }
 
-    let deSelectNumblock = (doSound=true) => {
+    let deSelectCube = (doSound=true) => {
         console.log("Do deselect sound",doSound);
         doSound?playSound({id:'deselectSound'}):null;
-        setActiveNumblock(prevNumblock => prevNumblock = {index:-1,num:0,x:-10,y:-10});
+        setActiveCube(prevCube => prevCube = {index:-1,num:0,x:-10,y:-10});
     }
 
     let handleTutorial = (...args) => {
@@ -152,29 +150,29 @@ export function NumbleProvider({ children }) {
         score.current = newScore;
     }
 
-    let updateNumblockGrid = (new_grid) => {
-        setNumblockGrid(prevGrid => prevGrid = new_grid);
+    let updateCubeGrid = (new_grid) => {
+        setCubeGrid(prevGrid => prevGrid = new_grid);
     }
 
   
     return (
-      <NumbleContext.Provider value={{activeNumblock, numblock_grid, key_count, 
+      <Cub3skiContext.Provider value={{activeCube, key_count, 
       tutorialMode, step, match_anim_status,gameOver,showGameOver,score, level, showLeaderboard, grid_key_count, gameMode,soundEnable, showPuzzleEnd}}>
-          <NumbleUpdateContext.Provider value={{selectNumblock, deSelectNumblock, 
-            updateNumblockGrid,setTutorialMode,handleTutorial, setStep,handleGameOver, handlePuzzleComplete,setShowGameOver, 
+          <Cub3skiUpdateContext.Provider value={{selectCube, deSelectCube, 
+            updateCubeGrid,setTutorialMode,handleTutorial, setStep,handleGameOver, handlePuzzleComplete,setShowGameOver, 
             handleAddToScore, setScore,setShowLeaderboard, getCubeWidth, setGameMode, 
             setLevel, setShowPuzzleEnd,setPuzzleEnd, 
             decrementLevel, incrementLevel, setSoundEnable,playSound,playUnmutableSound, setPlaybackRate}}>
             {children}
-          </NumbleUpdateContext.Provider>
-      </NumbleContext.Provider>
+          </Cub3skiUpdateContext.Provider>
+      </Cub3skiContext.Provider>
     );
 }
 
-export function useNumbleContext() {
-    return useContext(NumbleContext);
+export function useCub3skiContext() {
+    return useContext(Cub3skiContext);
 }
 
-export function useNumbleUpdateContext() {
-    return useContext(NumbleUpdateContext);
+export function useCub3skiUpdateContext() {
+    return useContext(Cub3skiUpdateContext);
 }

@@ -1,4 +1,4 @@
-import {NumbleProvider } from '../Contexts/numbleContext'
+import {Cub3skiProvider} from '../Contexts/cub3skiContext'
 import Home from './index'
 import '../styles/globals.css'
 import Amplify from 'aws-amplify'
@@ -11,9 +11,9 @@ function MyApp({ Component, pageProps }) {
 
   return(
     <>
-      <NumbleProvider>
+      <Cub3skiProvider>
         <Home/>
-      </NumbleProvider>
+      </Cub3skiProvider>
     </>
   )
 }
