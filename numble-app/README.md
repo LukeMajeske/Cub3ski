@@ -45,6 +45,9 @@ The dependency [react-spring](https://react-spring.dev/) is a spring-physics bas
 The dependency [react-responsive](https://github.com/yocontra/react-responsive) provides a React Hook to perform media queries. This is important for performing animations on mobile screens since cubes will travel a shorter distance than they would on a desktop screen. 
 
 ## Structure
+
+![image](https://user-images.githubusercontent.com/29846872/187545757-633c4417-aa61-4864-97ad-583e762d3aa9.png)
+
 ## Components
 
 
