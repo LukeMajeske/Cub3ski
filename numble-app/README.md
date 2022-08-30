@@ -40,9 +40,10 @@ NextJS, a framework built on top of ReactJS, was chosen for this project for it'
 
 This project is deployed to AWS Amplify. Amplify was chosen for it's ability to setup a simple backend environment. In this environment, a DynamoDB database is used to track Highscores for the game. 
 
-##Dependencies
-###Sound
-Cub3Ski uses a variety of sounds during user interaction, adding an element of fun and to confirm certian events have occured correctly(ex. playing a sound when unmuting the game). 
+## Dependencies
+### Sound
+Cub3Ski uses a variety of sounds during user interaction, adding an element of fun and to confirm certian events have occured correctly(ex. playing a sound when unmuting the game).
+
 Different sounds will play during the following events:
 -Selecting a cube
 -Deselecting a cube
@@ -55,18 +56,18 @@ The dependency [use-sound](https://github.com/joshwcomeau/use-sound) allows audi
 
 
 
-`
+```
     const[playSound,sound] = useSound(soundSpriteMap,
         {volume:0.25,
         playbackRate:playbackRate,
         soundEnabled:soundEnable,
         sprite:spriteMap,interrupt:true
     });
-`
+```
 
 
-##Structure
-##Components
+## Structure
+## Components
 
 
 
