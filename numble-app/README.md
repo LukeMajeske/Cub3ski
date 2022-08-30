@@ -7,14 +7,15 @@ This project is deployed to AWS Amplify. Amplify was chosen for it's ability to 
 
 ## Dependencies
 ### Sound
-Cub3Ski uses a variety of sounds during user interaction, adding an element of fun and to confirm certian events have occured correctly(ex. playing a sound when unmuting the game).
+Cub3Ski uses a variety of sounds during user interaction, adding an element of fun and to confirm certian events have occured correctly<br/>
+(ex. playing a sound when unmuting the game).
 
-Different sounds will play during the following events:
-Selecting a cube
-Deselecting a cube
-After player swaps the position of two cubes
-After player completes a match
-Muting and unmuting the game
+Different sounds will play during the following events:<br/>
+-Selecting a cube<br/>
+-Deselecting a cube<br/>
+-After player swaps the position of two cubes<br/>
+-After player completes a match<br/>
+-Muting and unmuting the game<br/>
 
 
 The dependency [use-sound](https://github.com/joshwcomeau/use-sound) allows audio to be prepared and played using a React Hook. This hook utilizes HowlerJS, a powerful audio library for playing and manipulating sounds in a web browser.
