@@ -32,3 +32,41 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+##Documentation
+Cub3Ski is a tile matching game where players use basic math skills to match 3 or more of the same number in a row.
+
+NextJS, a framework built on top of ReactJS, was chosen for this project for it's support for Server Side Rendering (SSR). SSR allows for faster load times for the user and allows for search engines to index and crawl content for better SEO performance.
+
+This project is deployed to AWS Amplify. Amplify was chosen for it's ability to setup a simple backend environment. In this environment, a DynamoDB database is used to track Highscores for the game. 
+
+##Dependencies
+###Sound
+Cub3Ski uses a variety of sounds during user interaction, adding an element of fun and to confirm certian events have occured correctly(ex. playing a sound when unmuting the game). 
+Different sounds will play during the following events:
+-Selecting a cube
+-Deselecting a cube
+-After player swaps the position of two cubes
+-After player completes a match
+-Muting and unmuting the game
+
+
+The dependency [use-sound](https://github.com/joshwcomeau/use-sound) allows audio to be prepared and played using a React Hook. This hook utilizes HowlerJS, a powerful audio library for playing and manipulating sounds in a web browser.
+
+
+
+`
+    const[playSound,sound] = useSound(soundSpriteMap,
+        {volume:0.25,
+        playbackRate:playbackRate,
+        soundEnabled:soundEnable,
+        sprite:spriteMap,interrupt:true
+    });
+`
+
+
+##Structure
+##Components
+
+
+
