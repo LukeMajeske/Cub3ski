@@ -1,4 +1,4 @@
-##Documentation
+## Documentation
 Cub3Ski is a tile matching game where players use basic math skills to match 3 or more of the same number in a row.
 
 NextJS, a framework built on top of ReactJS, was chosen for this project for it's support for Server Side Rendering (SSR). SSR allows for faster load times for the user and allows for search engines to index and crawl content for better SEO performance.
