@@ -55,7 +55,6 @@ Different sounds will play during the following events:
 The dependency [use-sound](https://github.com/joshwcomeau/use-sound) allows audio to be prepared and played using a React Hook. This hook utilizes HowlerJS, a powerful audio library for playing and manipulating sounds in a web browser.
 
 
-
 ```
     const[playSound,sound] = useSound(soundSpriteMap,
         {volume:0.25,
@@ -65,6 +64,20 @@ The dependency [use-sound](https://github.com/joshwcomeau/use-sound) allows audi
     });
 ```
 
+
+### Icons
+
+The dependency [react-icons](https://react-icons.github.io/react-icons/) is used to easily include icons.
+
+
+
+### Animations
+
+The dependency [react-spring](https://react-spring.dev/) is a spring-physics based animation library that is used to animate the cubes.
+
+### Detecting User Device Screen Size
+
+The dependency [react-responsive](https://github.com/yocontra/react-responsive) provides a React Hook to perform media queries. This is important for performing animations on mobile screens since cubes will travel a shorter distance than they would on a desktop screen. 
 
 ## Structure
 ## Components
